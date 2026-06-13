@@ -16,24 +16,24 @@ export function FieldConfig() {
 
   return (
     <div className="flex flex-col h-full bg-[#FCFBF8]">
-      
+
       {/* Tabs */}
       <div className="flex border-b-2 border-gray-200">
-        <button 
+        <button
           onClick={() => setActiveTab("field")}
-          className={`flex-1 py-4 text-sm font-balsamiq font-bold flex items-center justify-center gap-2 transition-colors ${activeTab === 'field' ? 'text-[#8B5CF6] border-b-2 border-[#8B5CF6]' : 'text-gray-500 hover:text-gray-700 hover:bg-gray-50'}`}
+          className={`flex-1 py-4 text-sm font-balsamiq font-bold flex flex-col items-center justify-center gap-1 transition-colors ${activeTab === 'field' ? 'text-[#8B5CF6] border-b-2 border-[#8B5CF6]' : 'text-gray-500 hover:text-gray-700 hover:bg-gray-50'}`}
         >
           <Settings2 className="w-4 h-4" /> Properties
         </button>
-        <button 
+        <button
           onClick={() => setActiveTab("theme")}
-          className={`flex-1 py-4 text-sm font-balsamiq font-bold flex items-center justify-center gap-2 transition-colors ${activeTab === 'theme' ? 'text-[#8B5CF6] border-b-2 border-[#8B5CF6]' : 'text-gray-500 hover:text-gray-700 hover:bg-gray-50'}`}
+          className={`flex-1 py-4 text-sm font-balsamiq font-bold flex flex-col items-center justify-center gap-1 transition-colors ${activeTab === 'theme' ? 'text-[#8B5CF6] border-b-2 border-[#8B5CF6]' : 'text-gray-500 hover:text-gray-700 hover:bg-gray-50'}`}
         >
           <Palette className="w-4 h-4" /> Theme
         </button>
-        <button 
+        <button
           onClick={() => setActiveTab("settings")}
-          className={`flex-1 py-4 text-sm font-balsamiq font-bold flex items-center justify-center gap-2 transition-colors ${activeTab === 'settings' ? 'text-[#8B5CF6] border-b-2 border-[#8B5CF6]' : 'text-gray-500 hover:text-gray-700 hover:bg-gray-50'}`}
+          className={`flex-1 py-4 text-xs font-balsamiq font-bold flex flex-col items-center justify-center gap-1 transition-colors ${activeTab === 'settings' ? 'text-[#8B5CF6] border-b-2 border-[#8B5CF6]' : 'text-gray-500 hover:text-gray-700 hover:bg-gray-50'}`}
         >
           <SlidersHorizontal className="w-4 h-4" /> Settings
         </button>
@@ -79,17 +79,17 @@ export function FieldConfig() {
                     <label className="text-xs font-bold text-gray-500 uppercase tracking-widest block mb-2">Options</label>
                     {((field.config?.options as string[]) || ['Option 1', 'Option 2']).map((opt: string, idx: number) => (
                       <div key={idx} className="flex items-center gap-2">
-                        <input 
-                          type="text" 
-                          value={opt} 
+                        <input
+                          type="text"
+                          value={opt}
                           onChange={(e) => {
                             const newOptions = [...((field.config?.options as string[]) || ['Option 1', 'Option 2'])];
                             newOptions[idx] = e.target.value;
                             updateField(field.id, { config: { ...field.config, options: newOptions } });
                           }}
-                          className="flex-1 px-3 py-2 text-sm bg-white border-2 border-gray-200 rounded-xl focus:border-[#8B5CF6] focus:outline-none transition-all text-[#333333] font-bold" 
+                          className="flex-1 px-3 py-2 text-sm bg-white border-2 border-gray-200 rounded-xl focus:border-[#8B5CF6] focus:outline-none transition-all text-[#333333] font-bold"
                         />
-                        <button 
+                        <button
                           onClick={() => {
                             const newOptions = [...((field.config?.options as string[]) || ['Option 1', 'Option 2'])];
                             newOptions.splice(idx, 1);
@@ -101,7 +101,7 @@ export function FieldConfig() {
                         </button>
                       </div>
                     ))}
-                    <button 
+                    <button
                       onClick={() => {
                         const currentOpts = (field.config?.options as string[]) || ['Option 1', 'Option 2'];
                         const newOptions = [...currentOpts, `Option ${currentOpts.length + 1}`];
@@ -129,12 +129,12 @@ export function FieldConfig() {
         ) : activeTab === "theme" ? (
           /* THEME TAB */
           <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="space-y-6 font-comic">
-            
+
             {/* Quick Themes */}
             <div>
               <label className="text-xs font-bold text-gray-500 uppercase tracking-widest block mb-3">Quick Themes</label>
               <div className="grid grid-cols-2 gap-3">
-                <button 
+                <button
                   onClick={() => setFormMeta({ themeConfig: { fontFamily: "font-balsamiq", backgroundColor: "bg-[#FCFBF8]", accentColor: "border-[#8B5CF6]", borderStyle: "border-2", rounded: "rounded-2xl", formBgColor: "#FCFBF8", fieldBgColor: "#ffffff", textColor: "#333333" } })}
                   className="p-3 border-2 border-[#333333] rounded-xl text-left bg-[#FCFBF8] hover:translate-y-[-2px] hover:shadow-[2px_2px_0px_#333333] transition-all"
                 >
@@ -145,7 +145,7 @@ export function FieldConfig() {
                   <span className="font-balsamiq font-bold text-xs text-[#333333]">Scribble</span>
                 </button>
 
-                <button 
+                <button
                   onClick={() => setFormMeta({ themeConfig: { fontFamily: "font-sans", backgroundColor: "bg-gray-50", accentColor: "border-blue-500", borderStyle: "border", rounded: "rounded-md", formBgColor: "#f9fafb", fieldBgColor: "#ffffff", textColor: "#1f2937" } })}
                   className="p-3 border border-gray-200 rounded-xl text-left bg-gray-50 hover:border-blue-500 hover:shadow-sm transition-all"
                 >
@@ -156,7 +156,7 @@ export function FieldConfig() {
                   <span className="font-sans font-medium text-xs text-gray-700">Modern</span>
                 </button>
 
-                <button 
+                <button
                   onClick={() => setFormMeta({ themeConfig: { fontFamily: "font-mono", backgroundColor: "bg-slate-900", accentColor: "border-green-400", borderStyle: "border-2", rounded: "rounded-none", formBgColor: "#0f172a", fieldBgColor: "#1e293b", textColor: "#4ade80" } })}
                   className="p-3 border-2 border-slate-700 rounded-xl text-left bg-slate-800 hover:border-green-400 transition-all"
                 >
@@ -167,7 +167,7 @@ export function FieldConfig() {
                   <span className="font-mono text-xs text-green-400">Terminal</span>
                 </button>
 
-                <button 
+                <button
                   onClick={() => setFormMeta({ themeConfig: { fontFamily: "font-comic", backgroundColor: "bg-pink-50", accentColor: "border-pink-500", borderStyle: "border-2 border-dashed", rounded: "rounded-3xl", formBgColor: "#fdf2f8", fieldBgColor: "#ffffff", textColor: "#be185d" } })}
                   className="p-3 border-2 border-dashed border-pink-300 rounded-xl text-left bg-pink-50 hover:border-pink-500 transition-all"
                 >
@@ -183,14 +183,14 @@ export function FieldConfig() {
             {/* Customization */}
             <div className="pt-6 border-t-2 border-dashed border-gray-200">
               <h4 className="font-balsamiq font-bold text-[#333333] mb-4 flex items-center gap-2"><Paintbrush className="w-4 h-4" /> Custom Styling</h4>
-              
+
               <div className="space-y-4">
-                
+
                 <div>
                   <label className="text-xs font-bold text-gray-500 block mb-2">Form Background Color</label>
                   <div className="flex items-center gap-3">
-                    <input 
-                      type="color" 
+                    <input
+                      type="color"
                       value={themeConfig?.formBgColor || "#FCFBF8"}
                       onChange={(e) => setFormMeta({ themeConfig: { ...themeConfig!, formBgColor: e.target.value } })}
                       className="w-10 h-10 p-1 bg-white border-2 border-[#333333] rounded-lg cursor-pointer"
@@ -202,8 +202,8 @@ export function FieldConfig() {
                 <div>
                   <label className="text-xs font-bold text-gray-500 block mb-2">Field Background Color</label>
                   <div className="flex items-center gap-3">
-                    <input 
-                      type="color" 
+                    <input
+                      type="color"
                       value={themeConfig?.fieldBgColor || "#ffffff"}
                       onChange={(e) => setFormMeta({ themeConfig: { ...themeConfig!, fieldBgColor: e.target.value } })}
                       className="w-10 h-10 p-1 bg-white border-2 border-[#333333] rounded-lg cursor-pointer"
@@ -215,8 +215,8 @@ export function FieldConfig() {
                 <div>
                   <label className="text-xs font-bold text-gray-500 block mb-2">Text Color</label>
                   <div className="flex items-center gap-3">
-                    <input 
-                      type="color" 
+                    <input
+                      type="color"
                       value={themeConfig?.textColor || "#333333"}
                       onChange={(e) => setFormMeta({ themeConfig: { ...themeConfig!, textColor: e.target.value } })}
                       className="w-10 h-10 p-1 bg-white border-2 border-[#333333] rounded-lg cursor-pointer"
@@ -227,7 +227,7 @@ export function FieldConfig() {
 
                 <div>
                   <label className="text-xs font-bold text-gray-500 block mb-2">Font Style</label>
-                  <select 
+                  <select
                     value={themeConfig?.fontFamily || "font-balsamiq"}
                     onChange={(e) => setFormMeta({ themeConfig: { ...themeConfig!, fontFamily: e.target.value } })}
                     className="w-full px-3 py-2 text-sm bg-white border-2 border-gray-200 rounded-xl font-bold text-[#333333] focus:outline-none focus:border-[#8B5CF6]"
@@ -241,7 +241,7 @@ export function FieldConfig() {
 
                 <div>
                   <label className="text-xs font-bold text-gray-500 block mb-2">Border Style</label>
-                  <select 
+                  <select
                     value={themeConfig?.borderStyle || "border-2"}
                     onChange={(e) => setFormMeta({ themeConfig: { ...themeConfig!, borderStyle: e.target.value } })}
                     className="w-full px-3 py-2 text-sm bg-white border-2 border-gray-200 rounded-xl font-bold text-[#333333] focus:outline-none focus:border-[#8B5CF6]"
@@ -257,7 +257,7 @@ export function FieldConfig() {
                   <label className="text-xs font-bold text-gray-500 block mb-2">Corners</label>
                   <div className="flex gap-2">
                     {["rounded-none", "rounded-md", "rounded-2xl", "rounded-full"].map((r) => (
-                      <button 
+                      <button
                         key={r}
                         onClick={() => setFormMeta({ themeConfig: { ...themeConfig!, rounded: r } })}
                         className={`flex-1 py-2 border-2 ${themeConfig?.rounded === r ? 'border-[#8B5CF6] bg-[#E9D5FF] text-[#8B5CF6]' : 'border-gray-200 bg-white text-gray-500'} ${r} transition-colors flex justify-center`}
@@ -276,11 +276,11 @@ export function FieldConfig() {
           <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="space-y-6 font-comic">
             <div>
               <h4 className="font-balsamiq font-bold text-[#333333] mb-4 flex items-center gap-2"><SlidersHorizontal className="w-4 h-4" /> Form Settings</h4>
-              
+
               <div className="space-y-6">
                 <div>
                   <label className="text-xs font-bold text-gray-500 block mb-2">Success Message</label>
-                  <textarea 
+                  <textarea
                     value={formSettings?.successMessage || ""}
                     onChange={(e) => setFormMeta({ formSettings: { ...formSettings!, successMessage: e.target.value } })}
                     rows={3}
@@ -288,6 +288,18 @@ export function FieldConfig() {
                     className="w-full px-3 py-2 text-sm bg-white border-2 border-gray-200 rounded-xl focus:border-[#8B5CF6] focus:outline-none transition-all resize-none text-[#333333] font-bold"
                   />
                   <p className="text-xs text-gray-400 mt-1 font-sans">Message shown to users after they submit the form.</p>
+                </div>
+
+                <div className="flex items-center justify-between py-2 border-t-2 border-dashed border-gray-200 pt-6">
+                  <div>
+                    <label className="text-sm font-bold text-[#333333] block">Accept Responses</label>
+                    <p className="text-xs text-gray-400 mt-1 font-sans">Turn off to stop accepting new submissions.</p>
+                  </div>
+                  <button onClick={() => setFormMeta({ formSettings: { ...formSettings!, isAcceptingResponses: formSettings?.isAcceptingResponses === false ? true : false } })}
+                    className={`w-12 h-6 rounded-full transition-colors relative border-2 border-[#333333] ${formSettings?.isAcceptingResponses !== false ? "bg-[#34D399]" : "bg-red-500"}`}>
+                    <motion.div animate={{ x: formSettings?.isAcceptingResponses !== false ? 24 : 2 }} transition={{ type: "spring", stiffness: 500, damping: 30 }}
+                      className="absolute top-0.5 w-4 h-4 rounded-full bg-white shadow-sm border border-[#333333]" />
+                  </button>
                 </div>
 
                 <div className="flex items-center justify-between py-2 border-t-2 border-dashed border-gray-200 pt-6">

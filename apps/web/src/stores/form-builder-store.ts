@@ -38,6 +38,11 @@ interface FormBuilderState {
   formSettings: {
     successMessage: string;
     allowMultipleResponses: boolean;
+    isAcceptingResponses?: boolean;
+    automation?: {
+      emailNotifications?: boolean;
+      webhookUrl?: string;
+    };
   };
 
   // Fields
@@ -130,6 +135,7 @@ export const useFormBuilderStore = create<FormBuilderState>((set, get) => ({
   formSettings: {
     successMessage: "Thank You! 🎉 Your response has been successfully recorded.",
     allowMultipleResponses: true,
+    isAcceptingResponses: true,
   },
   fields: [],
   activeFieldId: null,

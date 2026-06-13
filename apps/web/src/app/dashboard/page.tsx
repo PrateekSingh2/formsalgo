@@ -7,9 +7,12 @@
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
-import { Clock, MoreVertical, ExternalLink, Sparkles, Loader2, BarChart3, LayoutDashboard, FileText, Plus, Trophy, MousePointerClick, Calendar } from "lucide-react";
+import { Clock, MoreVertical, ExternalLink, Sparkles, Loader2, BarChart3, LayoutDashboard, FileText, Plus, Trophy, MousePointerClick, Calendar, Search, Trash2, X } from "lucide-react";
 import { useAuth } from "@/providers/auth-provider";
-import { fetchUserForms } from "@/lib/supabase-actions";
+import { fetchUserForms, deleteForm } from "@/lib/supabase-actions";
+import { toast } from "sonner";
+import { FORM_TEMPLATES } from "@/lib/templates";
+import { useRouter } from "next/navigation";
 
 type TabType = "overview" | "forms" | "analytics";
 
@@ -18,6 +21,32 @@ export default function DashboardPage() {
   const [forms, setForms] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState<TabType>("overview");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [sortOption, setSortOption] = useState("newest");
+  const [isDeleting, setIsDeleting] = useState<string | null>(null);
+  const [deleteConfirmId, setDeleteConfirmId] = useState<string | null>(null);
+  const [isTemplateModalOpen, setIsTemplateModalOpen] = useState(false);
+  const router = useRouter();
+
+  const confirmDelete = (id: string) => {
+    setDeleteConfirmId(id);
+  };
+
+  const handleDelete = async () => {
+    if (!deleteConfirmId) return;
+    const id = deleteConfirmId;
+    setIsDeleting(id);
+    try {
+      await deleteForm(id);
+      setForms((prev) => prev.filter((f) => f.id !== id));
+      toast.success("Form deleted successfully.");
+      setDeleteConfirmId(null);
+    } catch (error) {
+      toast.error("Failed to delete form.");
+    } finally {
+      setIsDeleting(null);
+    }
+  };
 
   useEffect(() => {
     async function loadForms() {
@@ -35,7 +64,19 @@ export default function DashboardPage() {
   }, [user]);
 
   const totalResponses = forms.reduce((acc, form) => acc + (form.responses || 0), 0);
+  const totalViews = forms.reduce((acc, form) => acc + (form.views || 0), 0);
   const activeForms = forms.filter(f => f.status === 'Published').length;
+  const avgConversion = totalViews > 0 ? Math.round((totalResponses / totalViews) * 100) : 0;
+  
+  const filteredForms = forms
+    .filter(f => f.title?.toLowerCase().includes(searchQuery.toLowerCase()))
+    .sort((a, b) => {
+      if (sortOption === "newest") return new Date(b.lastUpdated).getTime() - new Date(a.lastUpdated).getTime();
+      if (sortOption === "oldest") return new Date(a.lastUpdated).getTime() - new Date(b.lastUpdated).getTime();
+      if (sortOption === "responses") return (b.responses || 0) - (a.responses || 0);
+      if (sortOption === "alphabetical") return a.title.localeCompare(b.title);
+      return 0;
+    });
 
   if (loading) {
     return (
@@ -129,13 +170,16 @@ export default function DashboardPage() {
                   </div>
                 </Link>
 
-                <button disabled className="w-full flex items-center gap-4 p-4 bg-gray-50 border-2 border-dashed border-gray-300 rounded-2xl opacity-70 cursor-not-allowed">
-                  <div className="w-12 h-12 bg-gray-200 rounded-xl flex items-center justify-center border-2 border-gray-300">
-                    <Sparkles className="w-6 h-6 text-gray-400" />
+                <button 
+                  onClick={() => setIsTemplateModalOpen(true)}
+                  className="w-full flex items-center gap-4 p-4 bg-white border-2 border-[#333333] rounded-2xl shadow-[4px_4px_0px_#333333] hover:translate-y-[2px] hover:shadow-[2px_2px_0px_#333333] transition-all group"
+                >
+                  <div className="w-12 h-12 bg-[#FEF3C7] rounded-xl flex items-center justify-center border-2 border-[#F59E0B] group-hover:scale-105 transition-transform">
+                    <Sparkles className="w-6 h-6 text-[#F59E0B]" />
                   </div>
                   <div className="text-left">
-                    <p className="font-bold font-balsamiq text-gray-500">Use Template</p>
-                    <p className="text-xs text-gray-400 font-comic">Coming soon...</p>
+                    <p className="font-bold font-balsamiq text-[#333333]">Use Template</p>
+                    <p className="text-xs text-gray-500 font-comic">Start from a preset</p>
                   </div>
                 </button>
               </div>
@@ -175,7 +219,7 @@ export default function DashboardPage() {
                           </div>
                         </div>
                         <div className="flex gap-2">
-                          <Link href={`/builder`} className="p-2 text-gray-500 hover:text-[#8B5CF6] hover:bg-[#E9D5FF] rounded-lg transition-colors">
+                          <Link href={`/builder?id=${form.id}`} className="p-2 text-gray-500 hover:text-[#8B5CF6] hover:bg-[#E9D5FF] rounded-lg transition-colors">
                             Edit
                           </Link>
                           {form.slug && (
@@ -195,8 +239,30 @@ export default function DashboardPage() {
 
             {activeTab === "forms" && (
               <motion.div key="forms" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="space-y-6">
-                <div className="flex items-center justify-between">
+                <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                   <h2 className="text-xl font-bold font-balsamiq text-[#333333]">All Forms</h2>
+                  <div className="flex flex-col sm:flex-row gap-3">
+                    <div className="relative">
+                      <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                      <input 
+                        type="text" 
+                        placeholder="Search forms..." 
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        className="pl-9 pr-4 py-2 border-2 border-[#333333] rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#8B5CF6]/50 shadow-[2px_2px_0px_#333333]"
+                      />
+                    </div>
+                    <select 
+                      value={sortOption}
+                      onChange={(e) => setSortOption(e.target.value)}
+                      className="px-4 py-2 border-2 border-[#333333] rounded-xl text-sm font-bold bg-white focus:outline-none focus:ring-2 focus:ring-[#8B5CF6]/50 shadow-[2px_2px_0px_#333333] appearance-none"
+                    >
+                      <option value="newest">Newest First</option>
+                      <option value="oldest">Oldest First</option>
+                      <option value="responses">Most Responses</option>
+                      <option value="alphabetical">Alphabetical</option>
+                    </select>
+                  </div>
                 </div>
 
                 {forms.length === 0 ? (
@@ -210,9 +276,14 @@ export default function DashboardPage() {
                       Create Form ✨
                     </Link>
                   </div>
+                ) : filteredForms.length === 0 ? (
+                  <div className="bg-white border-2 border-dashed border-gray-300 rounded-2xl p-12 text-center">
+                    <h3 className="text-xl font-bold text-[#333333] mb-2 font-balsamiq">No matches found</h3>
+                    <p className="text-gray-500 font-comic">Try adjusting your search query.</p>
+                  </div>
                 ) : (
                   <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-                    {forms.map((form, i) => (
+                    {filteredForms.map((form, i) => (
                       <motion.div
                         key={form.id}
                         initial={{ opacity: 0, y: 20 }}
@@ -228,8 +299,13 @@ export default function DashboardPage() {
                             <Link href={`/dashboard/analytics/${form.id}`} className="text-[#8B5CF6] hover:bg-[#E9D5FF] p-1.5 rounded-lg transition-colors" title="View Analytics">
                               <BarChart3 className="w-4 h-4" />
                             </Link>
-                            <button className="text-gray-400 hover:text-gray-700 p-1.5 rounded-lg transition-colors">
-                              <MoreVertical className="w-4 h-4" />
+                            <button 
+                              onClick={() => confirmDelete(form.id)}
+                              disabled={isDeleting === form.id}
+                              className="text-gray-400 hover:text-red-500 p-1.5 rounded-lg transition-colors"
+                              title="Delete Form"
+                            >
+                              {isDeleting === form.id ? <Loader2 className="w-4 h-4 animate-spin" /> : <Trash2 className="w-4 h-4" />}
                             </button>
                           </div>
                         </div>
@@ -249,7 +325,7 @@ export default function DashboardPage() {
                         </div>
 
                         <div className="mt-auto flex gap-2">
-                          <Link href={`/builder`} className="flex-1 text-center py-2 bg-white border-2 border-[#333333] rounded-xl text-sm font-bold text-[#333333] shadow-[2px_2px_0px_#333333] hover:translate-y-[1px] hover:shadow-none font-comic transition-all">
+                          <Link href={`/builder?id=${form.id}`} className="flex-1 text-center py-2 bg-white border-2 border-[#333333] rounded-xl text-sm font-bold text-[#333333] shadow-[2px_2px_0px_#333333] hover:translate-y-[1px] hover:shadow-none font-comic transition-all">
                             Edit
                           </Link>
                           {form.slug ? (
@@ -271,6 +347,23 @@ export default function DashboardPage() {
 
             {activeTab === "analytics" && (
               <motion.div key="analytics" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="space-y-6">
+                
+                {/* Global Stats Grid */}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+                  <div className="bg-white p-6 rounded-2xl border-2 border-[#333333] shadow-[4px_4px_0px_#333333]">
+                    <p className="text-sm font-bold text-gray-500 uppercase mb-1">Total Form Views</p>
+                    <p className="text-4xl font-balsamiq font-bold text-[#333333]">{totalViews}</p>
+                  </div>
+                  <div className="bg-[#E9D5FF] p-6 rounded-2xl border-2 border-[#8B5CF6] shadow-[4px_4px_0px_#8B5CF6]">
+                    <p className="text-sm font-bold text-[#8B5CF6] uppercase mb-1">Total Responses</p>
+                    <p className="text-4xl font-balsamiq font-bold text-[#333333]">{totalResponses}</p>
+                  </div>
+                  <div className="bg-[#FEF3C7] p-6 rounded-2xl border-2 border-[#F59E0B] shadow-[4px_4px_0px_#F59E0B]">
+                    <p className="text-sm font-bold text-[#F59E0B] uppercase mb-1">Avg Conversion Rate</p>
+                    <p className="text-4xl font-balsamiq font-bold text-[#333333]">{avgConversion}%</p>
+                  </div>
+                </div>
+
                 <div className="bg-white rounded-2xl border-2 border-[#333333] shadow-[4px_4px_0px_#333333] overflow-hidden">
                   <div className="p-6 border-b-2 border-[#333333] bg-gray-50 flex items-center gap-3">
                     <Trophy className="w-6 h-6 text-[#F59E0B]" />
@@ -310,6 +403,92 @@ export default function DashboardPage() {
               </motion.div>
             )}
           </AnimatePresence>
+
+          {/* Template Modal */}
+          <AnimatePresence>
+            {isTemplateModalOpen && (
+              <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/20 backdrop-blur-sm">
+                <motion.div 
+                  initial={{ opacity: 0, scale: 0.95, y: 20 }}
+                  animate={{ opacity: 1, scale: 1, y: 0 }}
+                  exit={{ opacity: 0, scale: 0.95, y: 20 }}
+                  className="bg-white rounded-3xl border-4 border-[#333333] shadow-[8px_8px_0px_#333333] max-w-4xl w-full max-h-[90vh] overflow-hidden flex flex-col"
+                >
+                  <div className="p-6 border-b-2 border-[#333333] flex items-center justify-between bg-gray-50">
+                    <div>
+                      <h2 className="text-2xl font-bold font-balsamiq text-[#333333]">Choose a Template</h2>
+                      <p className="text-gray-500 font-comic text-sm">Kickstart your next form with a pre-designed template.</p>
+                    </div>
+                    <button 
+                      onClick={() => setIsTemplateModalOpen(false)}
+                      className="p-2 hover:bg-gray-200 rounded-xl transition-colors"
+                    >
+                      <X className="w-6 h-6 text-[#333333]" />
+                    </button>
+                  </div>
+                  <div className="p-8 overflow-y-auto bg-[#FCFBF8]">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                      {FORM_TEMPLATES.map((template) => (
+                        <div 
+                          key={template.id}
+                          onClick={() => {
+                            setIsTemplateModalOpen(false);
+                            router.push(`/builder?template=${template.id}`);
+                          }}
+                          className="bg-white p-6 rounded-2xl border-2 border-[#333333] shadow-[4px_4px_0px_#333333] hover:translate-y-[2px] hover:shadow-[2px_2px_0px_#333333] transition-all cursor-pointer group flex flex-col"
+                        >
+                          <div className="text-4xl mb-4 group-hover:scale-110 transition-transform origin-left">{template.icon}</div>
+                          <h3 className="font-bold font-balsamiq text-[#333333] text-lg mb-2">{template.title}</h3>
+                          <p className="text-sm font-comic text-gray-500 mb-6 flex-1">{template.description}</p>
+                          <button className="w-full py-2 bg-gray-100 border-2 border-[#333333] rounded-xl font-bold font-balsamiq text-[#333333] group-hover:bg-[#8B5CF6] group-hover:text-white transition-colors">
+                            Use Template
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </motion.div>
+              </div>
+            )}
+          </AnimatePresence>
+
+          {/* Delete Confirmation Modal */}
+          <AnimatePresence>
+            {deleteConfirmId && (
+              <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/20 backdrop-blur-sm">
+                <motion.div 
+                  initial={{ opacity: 0, scale: 0.95, y: 20 }}
+                  animate={{ opacity: 1, scale: 1, y: 0 }}
+                  exit={{ opacity: 0, scale: 0.95, y: 20 }}
+                  className="bg-white rounded-3xl border-4 border-[#333333] shadow-[8px_8px_0px_#333333] max-w-md w-full overflow-hidden p-8 text-center"
+                >
+                  <div className="w-16 h-16 mx-auto bg-red-100 rounded-full flex items-center justify-center mb-6">
+                    <Trash2 className="w-8 h-8 text-red-500" />
+                  </div>
+                  <h2 className="text-2xl font-bold font-balsamiq text-[#333333] mb-2">Delete Form?</h2>
+                  <p className="text-gray-500 font-comic mb-8">Are you sure you want to delete this form? All responses will be permanently removed. This action cannot be undone.</p>
+                  
+                  <div className="flex gap-4">
+                    <button 
+                      onClick={() => setDeleteConfirmId(null)}
+                      disabled={!!isDeleting}
+                      className="flex-1 py-3 px-4 rounded-xl font-bold font-balsamiq bg-gray-100 text-gray-600 hover:bg-gray-200 transition-colors"
+                    >
+                      Cancel
+                    </button>
+                    <button 
+                      onClick={handleDelete}
+                      disabled={!!isDeleting}
+                      className="flex-1 py-3 px-4 rounded-xl font-bold font-balsamiq bg-red-500 text-white border-2 border-[#333333] shadow-[4px_4px_0px_#333333] hover:translate-y-[2px] hover:shadow-[2px_2px_0px_#333333] transition-all flex items-center justify-center"
+                    >
+                      {isDeleting ? <Loader2 className="w-5 h-5 animate-spin" /> : "Delete"}
+                    </button>
+                  </div>
+                </motion.div>
+              </div>
+            )}
+          </AnimatePresence>
+
     </div>
   );
 }

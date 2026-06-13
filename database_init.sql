@@ -72,6 +72,7 @@ CREATE TABLE IF NOT EXISTS forms (
     logic_rules JSONB DEFAULT '[]'::jsonb,
     layout_type TEXT NOT NULL DEFAULT 'single_page',
     cover_image TEXT,
+    views INTEGER NOT NULL DEFAULT 0,
     published_at TIMESTAMP,
     created_at TIMESTAMP NOT NULL DEFAULT NOW(),
     updated_at TIMESTAMP NOT NULL DEFAULT NOW()
@@ -215,6 +216,16 @@ CREATE TABLE IF NOT EXISTS qr_presets (
 );
 
 -- ============================================================================
+-- 12. RPC FUNCTIONS
+-- ============================================================================
+CREATE OR REPLACE FUNCTION increment_form_views(form_slug TEXT)
+RETURNS void AS $$
+BEGIN
+  UPDATE forms SET views = views + 1 WHERE slug = form_slug;
+END;
+$$ LANGUAGE plpgsql;
+
+-- ============================================================================
 -- TRIGGERS FOR UPDATED_AT TIMESTAMP
 -- ============================================================================
 CREATE OR REPLACE FUNCTION trigger_set_timestamp()
@@ -244,3 +255,19 @@ FOR EACH ROW EXECUTE PROCEDURE trigger_set_timestamp();
 CREATE TRIGGER set_timestamp_comments
 BEFORE UPDATE ON comments
 FOR EACH ROW EXECUTE PROCEDURE trigger_set_timestamp();
+
+-- ============================================================================
+-- ROW LEVEL SECURITY (RLS) POLICIES
+-- ============================================================================
+-- NOTE: Since you are using Firebase Auth, Supabase sees all requests as 'anon'.
+-- To allow your application to work, we must enable public access to these tables.
+-- DO NOT RUN THESE if you switch to Supabase Auth in the future.
+
+ALTER TABLE forms ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Enable public ALL access for forms" ON forms FOR ALL USING (true) WITH CHECK (true);
+
+ALTER TABLE form_fields ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Enable public ALL access for form_fields" ON form_fields FOR ALL USING (true) WITH CHECK (true);
+
+ALTER TABLE submissions ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Enable public ALL access for submissions" ON submissions FOR ALL USING (true) WITH CHECK (true);

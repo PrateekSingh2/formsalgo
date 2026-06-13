@@ -223,11 +223,10 @@ function FieldInput({
               key={star}
               type="button"
               onClick={() => onChange(star === currentVal ? 0 : star)}
-              className={`w-11 h-11 flex items-center justify-center rounded-xl border-2 text-xl transition-all hover:scale-110 ${
-                star <= currentVal
-                  ? "border-[#8B5CF6] bg-[#E9D5FF] grayscale-0"
-                  : "border-gray-200 bg-white grayscale"
-              }`}
+              className={`w-11 h-11 flex items-center justify-center rounded-xl border-2 text-xl transition-all hover:scale-110 ${star <= currentVal
+                ? "border-[#8B5CF6] bg-[#E9D5FF] grayscale-0"
+                : "border-gray-200 bg-white grayscale"
+                }`}
             >
               ⭐
             </button>
@@ -271,11 +270,10 @@ function FieldInput({
                 key={num}
                 type="button"
                 onClick={() => onChange(num)}
-                className={`w-10 h-10 rounded-lg border-2 font-bold font-comic text-sm transition-all hover:scale-105 ${
-                  currentNps === num
-                    ? "border-[#8B5CF6] bg-[#8B5CF6] text-white"
-                    : "border-gray-200 bg-white text-[#333333] hover:border-[#8B5CF6]"
-                }`}
+                className={`w-10 h-10 rounded-lg border-2 font-bold font-comic text-sm transition-all hover:scale-105 ${currentNps === num
+                  ? "border-[#8B5CF6] bg-[#8B5CF6] text-white"
+                  : "border-gray-200 bg-white text-[#333333] hover:border-[#8B5CF6]"
+                  }`}
               >
                 {num}
               </button>
@@ -415,6 +413,14 @@ function FieldInput({
   }
 }
 
+function linkify(text: string) {
+  if (!text) return "";
+  const urlRegex = /(https?:\/\/[^\s]+)/g;
+  return text.replace(urlRegex, function(url) {
+    return `<a href="${url}" target="_blank" rel="noopener noreferrer" class="text-[#8B5CF6] hover:underline">${url}</a>`;
+  });
+}
+
 // ============================================================================
 // Main Published Form View
 // ============================================================================
@@ -429,6 +435,7 @@ export default function PublicFormView() {
   const [fields, setFields] = useState<any[]>([]);
   const [responses, setResponses] = useState<Record<string, any>>({});
   const [alreadySubmitted, setAlreadySubmitted] = useState(false);
+  const [errorDetails, setErrorDetails] = useState<string | null>(null);
 
   useEffect(() => {
     async function loadForm() {
@@ -441,7 +448,9 @@ export default function PublicFormView() {
           const submitted = localStorage.getItem(`form_submitted_${slug}`);
           if (submitted) setAlreadySubmitted(true);
         }
-      } catch {
+      } catch (err: any) {
+        console.error(err);
+        setErrorDetails(err.message || String(err));
         toast.error("Failed to load form. It may not exist.");
       } finally {
         setLoading(false);
@@ -483,6 +492,11 @@ export default function PublicFormView() {
           <p className="text-6xl mb-4">🕵️‍♂️</p>
           <h1 className="text-2xl font-bold text-[#333333]">Form not found!</h1>
           <p className="text-gray-500 mt-2">This link may be invalid or the form has been removed.</p>
+          {errorDetails && (
+            <div className="mt-6 p-4 bg-red-50 text-red-600 rounded-xl text-sm font-sans border border-red-200 inline-block max-w-md text-left">
+              <strong>Error Details:</strong> {errorDetails}
+            </div>
+          )}
         </div>
       </div>
     );
@@ -492,7 +506,18 @@ export default function PublicFormView() {
   const settings = formData?.settings?.formSettings || {
     successMessage: "Thank You! 🎉 Your response has been recorded.",
     allowMultipleResponses: true,
+    isAcceptingResponses: true,
   };
+
+  if (settings.isAcceptingResponses === false) {
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center bg-[#FCFBF8] font-comic p-4 text-center">
+        <p className="text-6xl mb-4">⛔</p>
+        <h1 className="text-3xl font-bold text-[#333333] mb-2 font-balsamiq">Form Closed</h1>
+        <p className="text-gray-500">This form is currently not accepting new responses. Kindly contact to publisher</p>
+      </div>
+    );
+  }
 
   if (alreadySubmitted && settings.allowMultipleResponses === false) {
     return (
@@ -534,9 +559,11 @@ export default function PublicFormView() {
                   {formData.title || "Untitled Form"}
                 </h1>
                 {formData.description && (
-                  <p className="text-base opacity-70" style={{ color: textColor }}>
-                    {formData.description}
-                  </p>
+                  <div 
+                    className="text-base opacity-70 whitespace-pre-line" 
+                    style={{ color: textColor }}
+                    dangerouslySetInnerHTML={{ __html: linkify(formData.description) }}
+                  />
                 )}
               </div>
 

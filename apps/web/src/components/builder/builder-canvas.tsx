@@ -2,7 +2,7 @@
 
 import { motion, AnimatePresence } from "framer-motion";
 import { useFormBuilderStore, type BuilderField } from "@/stores/form-builder-store";
-import { GripVertical, Trash2, Copy, Star, Type, Mail, AlignLeft, Hash, Calendar, Clock, Phone, CheckSquare, CircleDot, ChevronDown, Sliders, Upload, PenTool, MapPin, Link, Image, Grid3X3, BarChart, ArrowUpDown, Share2, List, Video } from "lucide-react";
+import { GripVertical, Trash2, Copy, Star, Type, Mail, AlignLeft, Hash, Calendar, Clock, Phone, CheckSquare, CircleDot, ChevronDown, Sliders, Upload, PenTool, MapPin, Link, Image, Grid3X3, BarChart, ArrowUpDown, Share2, List, Video, Sparkles } from "lucide-react";
 
 import {
   DndContext,
@@ -39,7 +39,7 @@ function LiveField({ field }: { field: BuilderField }) {
   const placeholder = field.config?.placeholder as string || `Enter ${field.label.toLowerCase()}...`;
   const opts = (field.config?.options as string[]) || ["Option A", "Option B", "Option C"];
 
-  const inputCls = "w-full bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-sm text-gray-400 pointer-events-none";
+  const inputCls = "w-full max-w-md bg-[#F9FAFB] border border-gray-200 rounded-xl px-4 py-2.5 text-sm text-gray-400 pointer-events-none font-sans";
 
   switch (field.type) {
     case "short_text":
@@ -98,7 +98,7 @@ function LiveField({ field }: { field: BuilderField }) {
     case "stars":
       return (
         <div className="flex gap-1.5">
-          {[1,2,3,4,5].map((s) => (
+          {[1, 2, 3, 4, 5].map((s) => (
             <div key={s} className="w-9 h-9 flex items-center justify-center rounded-lg border border-gray-200 text-lg grayscale opacity-60">⭐</div>
           ))}
         </div>
@@ -172,21 +172,18 @@ function SortableCanvasField({ field }: { field: BuilderField }) {
     <div
       ref={setNodeRef}
       style={style}
-      onClick={() => setActiveField(field.id)}
-      className={`group relative bg-white rounded-xl cursor-pointer transition-all duration-150 ${
-        isActive
-          ? "border-2 border-[#8B5CF6] shadow-[0_0_0_4px_rgba(139,92,246,0.12)]"
-          : "border border-gray-200 hover:border-gray-300 hover:shadow-sm"
-      }`}
+      onClick={(e) => { e.stopPropagation(); setActiveField(field.id); }}
+      className={`relative group rounded-2xl bg-white border transition-all duration-200 cursor-default flex flex-col
+        ${isActive ? "border-[#8B5CF6] ring-2 ring-[#8B5CF6]/20 shadow-sm" : "border-gray-200 hover:border-gray-300 hover:shadow-sm"}`}
     >
       {/* Drag Handle */}
       <div
         {...attributes}
         {...listeners}
         onClick={(e) => e.stopPropagation()}
-        className="absolute left-0 top-0 bottom-0 w-7 flex items-center justify-center opacity-0 group-hover:opacity-100 cursor-grab active:cursor-grabbing rounded-l-xl transition-opacity"
+        className="absolute -left-3 top-1/2 -translate-y-1/2 w-6 h-10 bg-white border border-gray-200 rounded-md shadow-sm flex items-center justify-center opacity-0 group-hover:opacity-100 cursor-grab active:cursor-grabbing transition-opacity z-10 hover:bg-gray-50"
       >
-        <GripVertical className="w-3.5 h-3.5 text-gray-300" />
+        <GripVertical className="w-4 h-4 text-gray-400" />
       </div>
 
       {/* Action buttons — appear on hover / active */}
@@ -216,26 +213,28 @@ function SortableCanvasField({ field }: { field: BuilderField }) {
         )}
       </AnimatePresence>
 
-      <div className="pl-7 pr-4 py-4">
+      <div className="p-5 w-full">
         {/* Field Header */}
-        <div className="flex items-start justify-between gap-2 mb-3">
-          <div className="flex items-center gap-2 min-w-0">
-            <span className={`text-xs font-bold px-1.5 py-0.5 rounded font-mono ${isActive ? 'bg-[#E9D5FF] text-[#8B5CF6]' : 'bg-gray-100 text-gray-400'}`}>
-              {field.order + 1}
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center gap-3">
+            <span className="w-7 h-7 flex items-center justify-center bg-gray-100 rounded-lg text-xs font-bold text-gray-500 font-sans">
+              {(typeof field.order === 'number' && !isNaN(field.order) ? field.order : 0) + 1}
             </span>
-            <span className={`font-semibold text-sm leading-snug ${isActive ? 'text-[#333333]' : 'text-gray-600'}`}>
+            <span className="font-semibold text-[15px] text-[#333333] font-sans">
               {field.label}
             </span>
             {field.required && <span className="text-red-400 text-sm font-bold shrink-0">*</span>}
           </div>
-          <FieldIcon className={`w-4 h-4 shrink-0 mt-0.5 ${isActive ? 'text-[#8B5CF6]' : 'text-gray-300'}`} />
+          <div className="flex items-center gap-2 text-gray-300">
+            <FieldIcon className="w-5 h-5 stroke-[1.5]" />
+          </div>
         </div>
 
         {field.description && (
-          <p className="text-xs text-gray-400 mb-3 leading-relaxed">{field.description}</p>
+          <p className="text-xs text-gray-400 mb-3 leading-relaxed ml-10 font-sans">{field.description}</p>
         )}
 
-        <div className="pointer-events-none">
+        <div className="pointer-events-none ml-10">
           <LiveField field={field} />
         </div>
       </div>
@@ -264,8 +263,23 @@ export function BuilderCanvas() {
   };
 
   return (
-    <div className="max-w-2xl mx-auto pb-32 px-2">
-      {/* Form Title */}
+    <div 
+      className="max-w-2xl mx-auto pb-32 px-2 min-h-full"
+      onDragOver={(e) => {
+        if (e.dataTransfer.types.includes('application/formforge-field')) {
+          e.preventDefault();
+          e.dataTransfer.dropEffect = 'copy';
+        }
+      }}
+      onDrop={(e) => {
+        const type = e.dataTransfer.getData('application/formforge-field');
+        if (type) {
+          e.preventDefault();
+          useFormBuilderStore.getState().addField(type as any);
+        }
+      }}
+    >
+      {/* Form Title & Description */}
       <div className="mb-8 mt-2">
         <input
           type="text"
@@ -274,7 +288,19 @@ export function BuilderCanvas() {
           className="w-full font-balsamiq text-3xl font-bold text-[#333333] bg-transparent border-none focus:outline-none focus:ring-2 focus:ring-[#8B5CF6]/30 rounded-lg px-2 py-1.5 transition-all hover:bg-black/[0.02] placeholder:text-gray-300"
           placeholder="Untitled Form"
         />
-        <div className="h-px bg-gradient-to-r from-[#8B5CF6]/30 to-transparent mt-2 ml-2" />
+        <div className="h-px bg-gradient-to-r from-[#8B5CF6]/30 to-transparent mt-2 ml-2 mb-2" />
+        <textarea
+          value={useFormBuilderStore.getState().description || ""}
+          onChange={(e) => setFormMeta({ description: e.target.value })}
+          className="w-full font-comic text-base text-gray-500 bg-transparent border-none focus:outline-none focus:ring-2 focus:ring-[#8B5CF6]/30 rounded-lg px-2 py-1.5 transition-all hover:bg-black/[0.02] placeholder:text-gray-300 resize-none overflow-hidden"
+          placeholder="Add a description or instructions (optional)"
+          rows={1}
+          onInput={(e) => {
+            const target = e.target as HTMLTextAreaElement;
+            target.style.height = "auto";
+            target.style.height = `${target.scrollHeight}px`;
+          }}
+        />
       </div>
 
       {/* Fields */}
@@ -293,13 +319,23 @@ export function BuilderCanvas() {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="mt-8 text-center py-24 bg-white rounded-2xl border border-dashed border-gray-200"
+          className="mt-8 text-center py-24 bg-white/50 backdrop-blur-sm rounded-3xl border-2 border-dashed border-gray-300 relative overflow-hidden group"
         >
-          <div className="w-16 h-16 mx-auto mb-5 rounded-2xl bg-gray-50 border border-gray-200 flex items-center justify-center">
-            <Type className="w-8 h-8 text-gray-300" />
-          </div>
-          <h3 className="font-balsamiq text-xl font-bold text-gray-400 mb-2">Your form is empty</h3>
-          <p className="text-gray-300 text-sm font-comic">Add fields from the left panel to get started</p>
+          <div className="absolute inset-0 bg-gradient-to-br from-[#8B5CF6]/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+
+          <motion.div
+            animate={{ y: [0, -10, 0] }}
+            transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+            className="w-20 h-20 mx-auto mb-6 rounded-2xl bg-white border-2 border-gray-200 shadow-sm flex items-center justify-center relative"
+          >
+            <div className="absolute -top-3 -right-3 w-8 h-8 bg-[#FEF3C7] rounded-full border-2 border-[#F59E0B] flex items-center justify-center animate-bounce">
+              <Sparkles className="w-4 h-4 text-[#F59E0B]" />
+            </div>
+            <Type className="w-10 h-10 text-gray-300" />
+          </motion.div>
+
+          <h3 className="font-balsamiq text-2xl font-bold text-[#333333] mb-2">Build your masterpiece</h3>
+          <p className="text-gray-500 text-sm font-comic max-w-sm mx-auto">Drag and drop fields from the left panel to start creating your form. It's that easy!</p>
         </motion.div>
       )}
     </div>

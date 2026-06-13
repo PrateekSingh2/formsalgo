@@ -63,31 +63,53 @@ export function FieldPalette() {
   const addField = useFormBuilderStore((s) => s.addField);
 
   return (
-    <div className="p-4">
-      <h3 className="text-sm font-bold text-heading mb-4">Fields</h3>
-      {fieldCategories.map((cat, ci) => (
-        <div key={cat.name} className="mb-5">
-          <p className="text-[10px] font-bold text-muted uppercase tracking-widest mb-2">{cat.name}</p>
-          <div className="space-y-0.5">
-            {cat.fields.map((field, fi) => (
-              <motion.button
-                key={field.type}
-                initial={{ opacity: 0, x: -10 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: ci * 0.05 + fi * 0.02 }}
-                whileHover={{ x: 4, backgroundColor: "rgba(139,92,246,0.06)" }}
-                whileTap={{ scale: 0.97 }}
-                onClick={() => addField(field.type)}
-                className="w-full flex items-center gap-2.5 px-3 py-2 text-sm text-body hover:text-violet rounded-lg transition-all text-left group"
-              >
-                <field.icon className="w-4 h-4 shrink-0 text-muted group-hover:text-violet transition-colors" />
-                <span className="flex-1">{field.label}</span>
-                <Plus className="w-3 h-3 opacity-0 group-hover:opacity-50 transition-opacity" />
-              </motion.button>
-            ))}
-          </div>
+    <div className="p-6 bg-white h-full border-r-2 border-[#333333]">
+      <h3 className="text-xl font-balsamiq font-bold text-[#333333] mb-6 flex items-center gap-2">
+        <div className="w-8 h-8 rounded-lg bg-[#FEF3C7] border-2 border-[#F59E0B] flex items-center justify-center">
+          <Plus className="w-5 h-5 text-[#F59E0B]" />
         </div>
-      ))}
+        Add Fields
+      </h3>
+
+      <div className="space-y-6">
+        {fieldCategories.map((cat, ci) => (
+          <div key={cat.name} className="mb-2">
+            <p className="text-xs font-bold text-black uppercase tracking-widest mb-3 flex items-center gap-2">
+              {cat.name}
+              <span className="flex-1 h-px bg-gray-200"></span>
+            </p>
+            <div className="space-y-3">
+              {cat.fields.map((field, fi) => (
+                <div
+                  key={field.type}
+                  draggable
+                  onDragStart={(e) => {
+                    e.dataTransfer.setData('application/formforge-field', field.type);
+                    e.dataTransfer.effectAllowed = 'copy';
+                  }}
+                  className="cursor-grab active:cursor-grabbing"
+                >
+                  <motion.button
+                    initial={{ opacity: 0, x: -10 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: ci * 0.05 + fi * 0.02 }}
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    onClick={() => addField(field.type)}
+                    className="w-full flex items-center gap-3 px-3 py-2 text-sm text-[#333333] bg-white border-2 border-[#333333] hover:bg-[#F5F3FF] rounded-xl transition-all text-left group shadow-[2px_2px_0px_#333333] hover:translate-y-[-2px] hover:shadow-[4px_4px_0px_#333333]"
+                  >
+                    <div className="w-8 h-8 rounded-lg bg-gray-100 border-2 border-[#333333] flex items-center justify-center group-hover:bg-white transition-colors pointer-events-none">
+                      <field.icon className="w-4 h-4 shrink-0 text-[#333333]" />
+                    </div>
+                    <span className="flex-1 font-bold font-balsamiq pointer-events-none">{field.label}</span>
+                    <Plus className="w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity text-[#333333] pointer-events-none" />
+                  </motion.button>
+                </div>
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }

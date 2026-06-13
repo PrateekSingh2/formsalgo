@@ -136,6 +136,31 @@ export async function fetchFormBySlug(slug: string) {
 
   if (formError || !form) throw new Error("Form not found");
 
+  // Increment view count in background (fire and forget)
+  supabase.rpc('increment_form_views', { form_slug: slug }).then(({ error }) => {
+    if (error) console.error("Failed to increment views:", error);
+  });
+
+  const { data: fields, error: fieldsError } = await supabase
+    .from('form_fields')
+    .select('*')
+    .eq('form_id', form.id)
+    .order('order', { ascending: true });
+
+  if (fieldsError) throw new Error("Could not load form fields");
+
+  return { form, fields };
+}
+
+export async function fetchFormById(id: string) {
+  const { data: form, error: formError } = await supabase
+    .from('forms')
+    .select('*')
+    .eq('id', id)
+    .single();
+
+  if (formError || !form) throw new Error("Form not found");
+
   const { data: fields, error: fieldsError } = await supabase
     .from('form_fields')
     .select('*')
@@ -188,7 +213,7 @@ export async function fetchUserForms(firebaseUid: string | null) {
     title: form.title,
     status: form.status === 'published' ? 'Published' : 'Draft',
     responses: form.submissions?.[0]?.count || 0,
-    views: 0, // Placeholder until view tracking is added
+    views: form.views || 0,
     lastUpdated: new Date(form.updated_at || form.created_at).toLocaleDateString(),
     theme: form.settings?.themeConfig?.fontFamily || form.settings?.fontFamily || "Scribble"
   }));
@@ -217,9 +242,34 @@ export async function fetchFormSubmissions(formId: string) {
       
     if (fieldsError) throw fieldsError;
 
-    return { submissions: submissions || [], fields: fields || [] };
+    // Get form metadata for views (fallback if views column doesn't exist)
+    const { data: form, error: formError } = await supabase
+      .from('forms')
+      .select('*')
+      .eq('id', formId)
+      .single();
+
+    // Don't throw on form metadata error just to allow submissions to load
+    // in case the views column hasn't been added to the database yet.
+    return { 
+      submissions: submissions || [], 
+      fields: fields || [], 
+      form: form || { title: "Form Analytics", views: 0 } 
+    };
   } catch (error) {
     console.error("fetchFormSubmissions failed:", error);
     throw error;
   }
+}
+
+export async function deleteForm(formId: string) {
+  // Supabase RLS policies should allow the owner to delete, and cascade delete should handle form_fields and submissions
+  // If not cascade, we need to delete fields and submissions first. 
+  // Let's assume cascade is set up or we can delete them explicitly if not.
+  const { error: fieldsError } = await supabase.from('form_fields').delete().eq('form_id', formId);
+  const { error: subsError } = await supabase.from('submissions').delete().eq('form_id', formId);
+  
+  const { error } = await supabase.from('forms').delete().eq('id', formId);
+  if (error) throw new Error("Failed to delete form");
+  return true;
 }

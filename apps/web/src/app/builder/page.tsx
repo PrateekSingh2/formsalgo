@@ -11,9 +11,81 @@ import { FieldConfig } from "@/components/builder/field-config";
 import { BuilderToolbar } from "@/components/builder/builder-toolbar";
 import { useFormBuilderStore } from "@/stores/form-builder-store";
 import { AuthGuard } from "@/components/auth-guard";
+import { useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
+import { fetchFormById } from "@/lib/supabase-actions";
+import { Loader2 } from "lucide-react";
+import { FORM_TEMPLATES } from "@/lib/templates";
 
 export default function BuilderPage() {
-  const { previewMode, themeConfig } = useFormBuilderStore();
+  const { previewMode, themeConfig, loadForm, formId } = useFormBuilderStore();
+  const searchParams = useSearchParams();
+  const id = searchParams.get("id");
+  const templateId = searchParams.get("template");
+  const [loading, setLoading] = useState(!!id && id !== formId);
+
+  useEffect(() => {
+    async function load() {
+      if (id && id !== formId) {
+        try {
+          const { form, fields } = await fetchFormById(id);
+          loadForm(
+            form.id,
+            form.title,
+            form.description || "",
+            fields as any // Hydrate fields
+          );
+        } catch (error) {
+          console.error("Failed to load form:", error);
+        }
+      } else if (templateId && !id && !formId) {
+        // Load template
+        const template = FORM_TEMPLATES.find(t => t.id === templateId);
+        if (template) {
+          loadForm(
+            "", // New form
+            template.title,
+            template.description,
+            template.fields as any
+          );
+          // Force apply theme config
+          useFormBuilderStore.getState().setFormMeta({ themeConfig: template.themeConfig as any });
+        }
+      } else if (!id && !templateId && !formId) {
+        // Brand new form, check for global defaults
+        const saved = localStorage.getItem("formforge_global_defaults");
+        if (saved) {
+          const defaults = JSON.parse(saved);
+          useFormBuilderStore.getState().setFormMeta({
+            themeConfig: {
+              fontFamily: defaults.fontFamily,
+              textColor: defaults.textColor,
+              backgroundColor: defaults.backgroundColor,
+              formBgColor: "#FCFBF8",
+              fieldBgColor: "#ffffff",
+              accentColor: "border-[#8B5CF6]",
+              borderStyle: "border-2",
+              rounded: "rounded-2xl"
+            },
+            formSettings: {
+              successMessage: defaults.successMessage,
+              allowMultipleResponses: true
+            }
+          });
+        }
+      }
+      setLoading(false);
+    }
+    load();
+  }, [id, templateId, formId, loadForm]);
+
+  if (loading) {
+    return (
+      <div className="flex h-screen items-center justify-center bg-gray-50">
+        <Loader2 className="w-8 h-8 text-[#8B5CF6] animate-spin" />
+      </div>
+    );
+  }
 
   return (
     <AuthGuard requireAuth={true}>

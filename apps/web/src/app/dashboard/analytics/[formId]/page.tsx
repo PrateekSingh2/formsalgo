@@ -3,7 +3,8 @@
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { fetchFormSubmissions } from "@/lib/supabase-actions";
-import { Loader2, ArrowLeft, Users, MousePointerClick, Calendar, BarChart3 } from "lucide-react";
+import { Loader2, ArrowLeft, Users, MousePointerClick, Calendar, BarChart3, TrendingUp } from "lucide-react";
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { toast } from "sonner";
@@ -16,13 +17,30 @@ export default function AnalyticsPage() {
   const [loading, setLoading] = useState(true);
   const [submissions, setSubmissions] = useState<any[]>([]);
   const [fields, setFields] = useState<any[]>([]);
+  const [formData, setFormData] = useState<any>(null);
+  const [chartData, setChartData] = useState<any[]>([]);
 
   useEffect(() => {
     async function loadData() {
       try {
-        const { submissions: subData, fields: fieldData } = await fetchFormSubmissions(formId);
+        const { submissions: subData, fields: fieldData, form: fData } = await fetchFormSubmissions(formId);
         setSubmissions(subData);
         setFields(fieldData);
+        setFormData(fData);
+        
+        // Process data for chart
+        const groupedByDay = subData.reduce((acc: Record<string, number>, sub: any) => {
+          const date = new Date(sub.started_at).toLocaleDateString();
+          acc[date] = (acc[date] || 0) + 1;
+          return acc;
+        }, {});
+        
+        const chartDataArr = Object.entries(groupedByDay).map(([date, count]) => ({
+          date,
+          Responses: count
+        })).reverse(); // Oldest to newest
+        
+        setChartData(chartDataArr);
       } catch (error) {
         toast.error("Failed to load analytics.");
       } finally {
@@ -52,7 +70,7 @@ export default function AnalyticsPage() {
           <ArrowLeft className="w-5 h-5 text-[#333333]" />
         </button>
         <div>
-          <h1 className="text-2xl font-bold font-balsamiq text-[#333333]">Form Analytics</h1>
+          <h1 className="text-2xl font-bold font-balsamiq text-[#333333]">{formData?.title || "Form Analytics"}</h1>
           <p className="text-sm text-gray-500 font-comic">Review your responses and insights.</p>
         </div>
       </div>
@@ -75,7 +93,21 @@ export default function AnalyticsPage() {
           </div>
           <div>
             <p className="text-sm font-bold text-gray-500 uppercase">Views</p>
-            <p className="text-3xl font-bold font-balsamiq text-[#333333]">--</p>
+            <p className="text-3xl font-bold font-balsamiq text-[#333333]">{formData?.views || 0}</p>
+          </div>
+        </div>
+        
+        <div className="bg-white p-6 rounded-2xl border-2 border-[#333333] shadow-[4px_4px_0px_#333333] flex items-center gap-4">
+          <div className="w-12 h-12 rounded-xl bg-[#FEF3C7] border-2 border-[#F59E0B] flex items-center justify-center">
+            <TrendingUp className="w-6 h-6 text-[#F59E0B]" />
+          </div>
+          <div>
+            <p className="text-sm font-bold text-gray-500 uppercase">Conversion Rate</p>
+            <p className="text-3xl font-bold font-balsamiq text-[#333333]">
+              {formData?.views > 0 
+                ? Math.round((submissions.length / formData.views) * 100) + "%" 
+                : "0%"}
+            </p>
           </div>
         </div>
 
@@ -94,6 +126,26 @@ export default function AnalyticsPage() {
           </div>
         </div>
       </div>
+      
+      {/* Chart */}
+      {submissions.length > 0 && (
+        <div className="bg-white p-6 rounded-2xl border-2 border-[#333333] shadow-[4px_4px_0px_#333333] mb-10">
+          <h2 className="text-lg font-bold font-balsamiq flex items-center gap-2 mb-6">
+            <BarChart3 className="w-5 h-5 text-[#8B5CF6]" /> Responses Over Time
+          </h2>
+          <div className="h-64 w-full">
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={chartData} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
+                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E5E7EB" />
+                <XAxis dataKey="date" axisLine={false} tickLine={false} tick={{ fontSize: 12, fill: '#9CA3AF' }} />
+                <YAxis axisLine={false} tickLine={false} tick={{ fontSize: 12, fill: '#9CA3AF' }} allowDecimals={false} />
+                <Tooltip cursor={{ fill: '#F5F3FF' }} contentStyle={{ borderRadius: '12px', border: '2px solid #333333', boxShadow: '4px 4px 0px #333333', fontWeight: 'bold' }} />
+                <Bar dataKey="Responses" fill="#8B5CF6" radius={[4, 4, 0, 0]} maxBarSize={50} />
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
+      )}
 
       {/* Responses Table */}
       <div className="bg-white rounded-2xl border-2 border-[#333333] shadow-[4px_4px_0px_#333333] overflow-hidden">

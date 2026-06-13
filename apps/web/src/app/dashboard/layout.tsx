@@ -8,7 +8,7 @@ import { useAuth } from "@/providers/auth-provider";
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { LayoutDashboard, Users, Settings, Plus, LogOut, Star } from "lucide-react";
+import { LayoutDashboard, Users, Settings, Plus, LogOut, Star, Webhook } from "lucide-react";
 import { usePathname } from "next/navigation";
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
@@ -21,6 +21,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   const navItems = [
     { name: "My Forms", href: "/dashboard", icon: LayoutDashboard },
     { name: "Audiences", href: "/dashboard/audiences", icon: Users },
+    { name: "Integrations", href: "/dashboard/integrations", icon: Webhook },
     { name: "Settings", href: "/dashboard/settings", icon: Settings },
   ];
 
