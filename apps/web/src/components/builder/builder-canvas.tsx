@@ -112,8 +112,8 @@ function LiveField({ field }: { field: BuilderField }) {
             <div className="absolute left-1/2 -translate-x-1/2 -translate-y-1 w-4 h-4 rounded-full bg-gray-300 border-2 border-white shadow" />
           </div>
           <div className="flex justify-between text-xs text-gray-300">
-            <span>{field.config?.sliderMin ?? 0}</span>
-            <span>{field.config?.sliderMax ?? 100}</span>
+            <span>{String(field.config?.sliderMin ?? 0)}</span>
+            <span>{String(field.config?.sliderMax ?? 100)}</span>
           </div>
         </div>
       );

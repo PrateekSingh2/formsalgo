@@ -53,7 +53,7 @@ interface FormBuilderState {
   isDirty: boolean;
 
   // Actions
-  setFormMeta: (meta: Partial<Pick<FormBuilderState, "formId" | "title" | "description" | "layoutType" | "themeConfig" | "status" | "formSlug" | "formSettings">>) => void;
+  setFormMeta: (meta: Partial<Pick<FormBuilderState, "formId" | "title" | "description" | "layoutType" | "themeConfig" | "status" | "formSlug" | "formSettings" | "isDirty">>) => void;
   addField: (type: FieldType, atIndex?: number) => void;
   removeField: (id: string) => void;
   updateField: (id: string, updates: Partial<BuilderField>) => void;
@@ -138,7 +138,7 @@ export const useFormBuilderStore = create<FormBuilderState>((set, get) => ({
   previewMode: false,
   isDirty: false,
 
-  setFormMeta: (meta) => set((state) => ({ ...state, ...meta, isDirty: true })),
+  setFormMeta: (meta) => set((state) => ({ ...state, isDirty: true, ...meta })),
 
   addField: (type, atIndex) =>
     set((state) => {
