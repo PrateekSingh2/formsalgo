@@ -1,0 +1,21 @@
+{
+  "name": "@formforge/trpc",
+  "version": "0.1.0",
+  "private": true,
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "clean": "rm -rf dist"
+  },
+  "dependencies": {
+    "@trpc/server": "^11.1.0",
+    "@formforge/db": "workspace:*",
+    "@formforge/types": "workspace:*",
+    "superjson": "^2.2.0",
+    "zod": "^3.24.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.8.0"
+  }
+}

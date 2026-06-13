@@ -1,0 +1,207 @@
+@import "tailwindcss";
+
+@source "../components";
+@source "../providers";
+@source "../stores";
+@source "../lib";
+
+/* ============================================================================
+   FORMFORGE DESIGN SYSTEM — Tailwind v4 Theme Tokens
+   ============================================================================ */
+
+@theme {
+  /* Backgrounds */
+  --color-cream: #F8F4EE;
+  --color-cream-dark: #EDE8DF;
+  --color-cream-light: #FDFBF7;
+  --color-paper: #F6F1E8;
+
+  /* Primary accent palette */
+  --color-violet: #8B5CF6;
+  --color-violet-light: #A78BFA;
+  --color-violet-dark: #7C3AED;
+  --color-violet-subtle: #F0EBFF;
+  --color-pink: #EC4899;
+  --color-pink-light: #F472B6;
+  --color-pink-subtle: #FDF2F8;
+  --color-green: #22C55E;
+  --color-green-light: #4ADE80;
+  --color-green-subtle: #ECFDF5;
+  --color-blue: #3B82F6;
+  --color-blue-light: #60A5FA;
+  --color-blue-subtle: #EFF6FF;
+  --color-amber: #F59E0B;
+  --color-amber-light: #FBBF24;
+  --color-amber-subtle: #FFFBEB;
+
+  /* Semantic text */
+  --color-heading: #111827;
+  --color-body: #374151;
+  --color-muted: #9CA3AF;
+  --color-border: #E5E7EB;
+  --color-border-light: #F3F4F6;
+
+  /* Dark mode (admin) */
+  --color-dark-bg: #0B0B14;
+  --color-dark-surface: #13132A;
+  --color-dark-card: #1C1C3A;
+  --color-dark-border: #2A2A50;
+  --color-dark-text: #E5E7EB;
+  --color-dark-text-secondary: #9CA3AF;
+
+  /* Shadows */
+  --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.04);
+  --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.06), 0 4px 12px rgba(0, 0, 0, 0.04);
+  --shadow-lifted: 0 4px 6px rgba(0, 0, 0, 0.04), 0 10px 24px rgba(0, 0, 0, 0.08);
+  --shadow-heavy: 0 8px 16px rgba(0, 0, 0, 0.06), 0 20px 48px rgba(0, 0, 0, 0.1);
+}
+
+/* ============================================================================
+   BASE STYLES
+   ============================================================================ */
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  font-family: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
+  color: var(--color-body);
+  background-color: var(--color-cream);
+  line-height: 1.65;
+  font-size: 16px;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: var(--color-heading);
+  line-height: 1.2;
+}
+
+/* Headings with Caveat handwriting font — only applied via .font-handwriting */
+.font-handwriting {
+  font-family: "Caveat", cursive;
+}
+
+/* ============================================================================
+   PAPER TEXTURE OVERLAY
+   ============================================================================ */
+
+.paper-texture {
+  position: relative;
+}
+
+.paper-texture::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  opacity: 0.025;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+  z-index: 0;
+}
+
+.paper-texture > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* ============================================================================
+   GLASSMORPHISM
+   ============================================================================ */
+
+.glass {
+  background: rgba(255, 255, 255, 0.75);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+}
+
+.glass-dark {
+  background: rgba(19, 19, 42, 0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+/* ============================================================================
+   SKETCH BORDERS — CSS-only hand-drawn look
+   ============================================================================ */
+
+.sketch-border {
+  border: 2px solid var(--color-heading);
+  border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px;
+}
+
+/* ============================================================================
+   SCROLLBAR
+   ============================================================================ */
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-border);
+  border-radius: 999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-muted);
+}
+
+/* ============================================================================
+   SELECTION
+   ============================================================================ */
+
+::selection {
+  background: rgba(139, 92, 246, 0.2);
+  color: var(--color-violet-dark);
+}
+
+/* ============================================================================
+   UTILITY ANIMATIONS
+   ============================================================================ */
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(-10px) rotate(2deg); }
+}
+
+@keyframes float-slow {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(-20px) rotate(-3deg); }
+}
+
+@keyframes wiggle {
+  0%, 100% { transform: rotate(-3deg); }
+  50% { transform: rotate(3deg); }
+}
+
+@keyframes fade-in-up {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 20px rgba(139, 92, 246, 0.1); }
+  50% { box-shadow: 0 0 40px rgba(139, 92, 246, 0.25); }
+}
+
+.animate-float { animation: float 3s ease-in-out infinite; }
+.animate-float-slow { animation: float-slow 5s ease-in-out infinite; }
+.animate-wiggle { animation: wiggle 2s ease-in-out infinite; }
+.animate-fade-in-up { animation: fade-in-up 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; }
+.animate-pulse-glow { animation: pulse-glow 3s ease-in-out infinite; }

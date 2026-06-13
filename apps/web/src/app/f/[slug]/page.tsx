@@ -1,0 +1,645 @@
+"use client";
+
+import React, { useEffect, useState } from "react";
+import { fetchFormBySlug, submitFormResponse } from "@/lib/supabase-actions";
+import { useParams } from "next/navigation";
+import { motion, AnimatePresence } from "framer-motion";
+import { Loader2, CheckCircle2, Star, Upload, ChevronDown } from "lucide-react";
+import { toast } from "sonner";
+
+// ============================================================================
+// Field renderer for all supported types
+// ============================================================================
+function FieldInput({
+  field,
+  value,
+  onChange,
+  textColor,
+}: {
+  field: any;
+  value: any;
+  onChange: (val: any) => void;
+  textColor: string;
+}) {
+  const baseInput =
+    "w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-xl focus:outline-none focus:border-[#8B5CF6] transition-colors font-comic text-[#333333] placeholder-gray-400";
+  const opts: string[] = (field.config?.options as string[]) || ["Option 1", "Option 2"];
+
+  switch (field.type) {
+    case "short_text":
+      return (
+        <input
+          type="text"
+          required={field.required}
+          value={value || ""}
+          onChange={(e) => onChange(e.target.value)}
+          placeholder={field.config?.placeholder || "Type your answer here..."}
+          className={baseInput}
+        />
+      );
+
+    case "long_text":
+      return (
+        <textarea
+          required={field.required}
+          value={value || ""}
+          onChange={(e) => onChange(e.target.value)}
+          placeholder={field.config?.placeholder || "Type your answer here..."}
+          rows={4}
+          className={`${baseInput} resize-y`}
+        />
+      );
+
+    case "email":
+      return (
+        <input
+          type="email"
+          required={field.required}
+          value={value || ""}
+          onChange={(e) => onChange(e.target.value)}
+          placeholder={field.config?.placeholder || "name@example.com"}
+          className={baseInput}
+        />
+      );
+
+    case "phone":
+      return (
+        <input
+          type="tel"
+          required={field.required}
+          value={value || ""}
+          onChange={(e) => onChange(e.target.value)}
+          placeholder={field.config?.placeholder || "+1 234 567 8900"}
+          className={baseInput}
+        />
+      );
+
+    case "number":
+      return (
+        <input
+          type="number"
+          required={field.required}
+          value={value || ""}
+          onChange={(e) => onChange(e.target.value)}
+          placeholder={field.config?.placeholder || "0"}
+          className={baseInput}
+        />
+      );
+
+    case "url":
+      return (
+        <input
+          type="url"
+          required={field.required}
+          value={value || ""}
+          onChange={(e) => onChange(e.target.value)}
+          placeholder={field.config?.placeholder || "https://example.com"}
+          className={baseInput}
+        />
+      );
+
+    case "date":
+      return (
+        <input
+          type="date"
+          required={field.required}
+          value={value || ""}
+          onChange={(e) => onChange(e.target.value)}
+          className={baseInput}
+        />
+      );
+
+    case "time":
+      return (
+        <input
+          type="time"
+          required={field.required}
+          value={value || ""}
+          onChange={(e) => onChange(e.target.value)}
+          className={baseInput}
+        />
+      );
+
+    case "dropdown":
+      return (
+        <div className="relative">
+          <select
+            required={field.required}
+            value={value || ""}
+            onChange={(e) => onChange(e.target.value)}
+            className={`${baseInput} appearance-none pr-10`}
+          >
+            <option value="">Select an option...</option>
+            {opts.map((opt, i) => (
+              <option key={i} value={opt}>{opt}</option>
+            ))}
+          </select>
+          <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
+        </div>
+      );
+
+    case "radio":
+      return (
+        <div className="space-y-3">
+          {opts.map((opt, i) => (
+            <label key={i} className="flex items-center gap-3 cursor-pointer group">
+              <input
+                type="radio"
+                name={field.id}
+                value={opt}
+                checked={value === opt}
+                onChange={() => onChange(opt)}
+                required={field.required}
+                className="w-5 h-5 text-[#8B5CF6] border-2 border-gray-300 focus:ring-[#8B5CF6]"
+              />
+              <span className="font-comic text-[#333333] group-hover:text-[#8B5CF6] transition-colors">{opt}</span>
+            </label>
+          ))}
+        </div>
+      );
+
+    case "checkbox":
+      return (
+        <div className="space-y-3">
+          {opts.map((opt, i) => {
+            const selected: string[] = value || [];
+            const isChecked = selected.includes(opt);
+            return (
+              <label key={i} className="flex items-center gap-3 cursor-pointer group">
+                <input
+                  type="checkbox"
+                  checked={isChecked}
+                  onChange={() => {
+                    if (isChecked) {
+                      onChange(selected.filter((v) => v !== opt));
+                    } else {
+                      onChange([...selected, opt]);
+                    }
+                  }}
+                  className="w-5 h-5 rounded text-[#8B5CF6] border-2 border-gray-300 focus:ring-[#8B5CF6]"
+                />
+                <span className="font-comic text-[#333333] group-hover:text-[#8B5CF6] transition-colors">{opt}</span>
+              </label>
+            );
+          })}
+        </div>
+      );
+
+    case "multiple_select":
+      return (
+        <div className="space-y-3">
+          {opts.map((opt, i) => {
+            const selected: string[] = value || [];
+            const isChecked = selected.includes(opt);
+            return (
+              <label key={i} className="flex items-center gap-3 cursor-pointer group">
+                <input
+                  type="checkbox"
+                  checked={isChecked}
+                  onChange={() => {
+                    if (isChecked) {
+                      onChange(selected.filter((v) => v !== opt));
+                    } else {
+                      onChange([...selected, opt]);
+                    }
+                  }}
+                  className="w-5 h-5 rounded text-[#8B5CF6] border-2 border-gray-300 focus:ring-[#8B5CF6]"
+                />
+                <span className="font-comic text-[#333333] group-hover:text-[#8B5CF6] transition-colors">{opt}</span>
+              </label>
+            );
+          })}
+        </div>
+      );
+
+    case "rating":
+    case "stars": {
+      const maxRating = field.config?.maxRating || 5;
+      const currentVal = Number(value) || 0;
+      return (
+        <div className="flex gap-2 flex-wrap">
+          {Array.from({ length: maxRating }, (_, i) => i + 1).map((star) => (
+            <button
+              key={star}
+              type="button"
+              onClick={() => onChange(star === currentVal ? 0 : star)}
+              className={`w-11 h-11 flex items-center justify-center rounded-xl border-2 text-xl transition-all hover:scale-110 ${
+                star <= currentVal
+                  ? "border-[#8B5CF6] bg-[#E9D5FF] grayscale-0"
+                  : "border-gray-200 bg-white grayscale"
+              }`}
+            >
+              ⭐
+            </button>
+          ))}
+        </div>
+      );
+    }
+
+    case "slider": {
+      const min = field.config?.sliderMin ?? 0;
+      const max = field.config?.sliderMax ?? 100;
+      const step = field.config?.sliderStep ?? 1;
+      const current = value ?? min;
+      return (
+        <div className="space-y-2">
+          <input
+            type="range"
+            min={min}
+            max={max}
+            step={step}
+            value={current}
+            onChange={(e) => onChange(Number(e.target.value))}
+            className="w-full accent-[#8B5CF6]"
+          />
+          <div className="flex justify-between text-sm text-gray-500 font-comic font-bold">
+            <span>{min}</span>
+            <span className="text-[#8B5CF6] text-base font-bold">{current}</span>
+            <span>{max}</span>
+          </div>
+        </div>
+      );
+    }
+
+    case "nps": {
+      const currentNps = Number(value);
+      return (
+        <div className="space-y-3">
+          <div className="flex gap-1 flex-wrap">
+            {Array.from({ length: 11 }, (_, i) => i).map((num) => (
+              <button
+                key={num}
+                type="button"
+                onClick={() => onChange(num)}
+                className={`w-10 h-10 rounded-lg border-2 font-bold font-comic text-sm transition-all hover:scale-105 ${
+                  currentNps === num
+                    ? "border-[#8B5CF6] bg-[#8B5CF6] text-white"
+                    : "border-gray-200 bg-white text-[#333333] hover:border-[#8B5CF6]"
+                }`}
+              >
+                {num}
+              </button>
+            ))}
+          </div>
+          <div className="flex justify-between text-xs text-gray-400 font-comic">
+            <span>{field.config?.npsLeftLabel || "Not likely"}</span>
+            <span>{field.config?.npsRightLabel || "Very likely"}</span>
+          </div>
+        </div>
+      );
+    }
+
+    case "ranking": {
+      const rankOpts: string[] = value || [...opts];
+      return (
+        <div className="space-y-2">
+          {rankOpts.map((opt, i) => (
+            <div key={i} className="flex items-center gap-3 p-3 bg-white border-2 border-gray-200 rounded-xl">
+              <span className="w-7 h-7 rounded-full bg-[#8B5CF6] text-white text-xs font-bold flex items-center justify-center shrink-0">
+                {i + 1}
+              </span>
+              <span className="font-comic text-[#333333] flex-1">{opt}</span>
+              <div className="flex flex-col gap-1">
+                <button
+                  type="button"
+                  disabled={i === 0}
+                  onClick={() => {
+                    const newRank = [...rankOpts];
+                    [newRank[i - 1], newRank[i]] = [newRank[i], newRank[i - 1]];
+                    onChange(newRank);
+                  }}
+                  className="text-gray-400 hover:text-[#8B5CF6] disabled:opacity-30 text-xs leading-none"
+                >▲</button>
+                <button
+                  type="button"
+                  disabled={i === rankOpts.length - 1}
+                  onClick={() => {
+                    const newRank = [...rankOpts];
+                    [newRank[i], newRank[i + 1]] = [newRank[i + 1], newRank[i]];
+                    onChange(newRank);
+                  }}
+                  className="text-gray-400 hover:text-[#8B5CF6] disabled:opacity-30 text-xs leading-none"
+                >▼</button>
+              </div>
+            </div>
+          ))}
+        </div>
+      );
+    }
+
+    case "address":
+      return (
+        <div className="space-y-3">
+          <input type="text" placeholder="Street address" onChange={(e) => onChange({ ...(value || {}), street: e.target.value })} className={baseInput} />
+          <div className="grid grid-cols-2 gap-3">
+            <input type="text" placeholder="City" onChange={(e) => onChange({ ...(value || {}), city: e.target.value })} className={baseInput} />
+            <input type="text" placeholder="State / Province" onChange={(e) => onChange({ ...(value || {}), state: e.target.value })} className={baseInput} />
+          </div>
+          <div className="grid grid-cols-2 gap-3">
+            <input type="text" placeholder="ZIP / Postal code" onChange={(e) => onChange({ ...(value || {}), zip: e.target.value })} className={baseInput} />
+            <input type="text" placeholder="Country" onChange={(e) => onChange({ ...(value || {}), country: e.target.value })} className={baseInput} />
+          </div>
+        </div>
+      );
+
+    case "file_upload":
+      return (
+        <label className="block">
+          <div className="h-32 rounded-xl border-2 border-dashed border-gray-300 bg-white flex flex-col items-center justify-center text-gray-400 font-comic cursor-pointer hover:border-[#8B5CF6] hover:bg-[#F5F3FF] transition-colors">
+            <Upload className="w-6 h-6 mb-2 text-[#8B5CF6]" />
+            <span className="font-bold text-sm">Click to upload a file</span>
+            <span className="text-xs mt-1">Max 10MB</span>
+          </div>
+          <input
+            type="file"
+            className="sr-only"
+            onChange={(e) => {
+              const file = e.target.files?.[0];
+              if (file) onChange(file.name);
+            }}
+          />
+        </label>
+      );
+
+    case "signature":
+      return (
+        <div className="h-32 rounded-xl border-2 border-dashed border-gray-300 bg-white flex items-center justify-center text-gray-400 font-comic">
+          <span className="font-bold text-sm">✍️ Signature pad (draw here)</span>
+        </div>
+      );
+
+    case "matrix": {
+      const rows: string[] = field.config?.rows || ["Row 1", "Row 2"];
+      const cols: string[] = field.config?.columns || ["Col 1", "Col 2", "Col 3"];
+      const matrixVal = value || {};
+      return (
+        <div className="overflow-x-auto">
+          <table className="w-full text-sm font-comic">
+            <thead>
+              <tr>
+                <th className="py-2 pr-4"></th>
+                {cols.map((col, ci) => (
+                  <th key={ci} className="py-2 px-3 text-center text-[#333333] font-bold">{col}</th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {rows.map((row, ri) => (
+                <tr key={ri} className={ri % 2 === 0 ? "bg-gray-50" : "bg-white"}>
+                  <td className="py-3 pr-4 font-bold text-[#333333]">{row}</td>
+                  {cols.map((col, ci) => (
+                    <td key={ci} className="py-3 px-3 text-center">
+                      <input
+                        type="radio"
+                        name={`${field.id}_${row}`}
+                        checked={matrixVal[row] === col}
+                        onChange={() => onChange({ ...matrixVal, [row]: col })}
+                        className="w-4 h-4 text-[#8B5CF6] border-gray-300 focus:ring-[#8B5CF6]"
+                      />
+                    </td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      );
+    }
+
+    default:
+      return (
+        <p className="text-sm text-gray-400 italic font-comic">
+          Field type <strong>{field.type}</strong> is not yet supported in the preview.
+        </p>
+      );
+  }
+}
+
+// ============================================================================
+// Main Published Form View
+// ============================================================================
+export default function PublicFormView() {
+  const params = useParams();
+  const slug = params.slug as string;
+
+  const [loading, setLoading] = useState(true);
+  const [submitting, setSubmitting] = useState(false);
+  const [success, setSuccess] = useState(false);
+  const [formData, setFormData] = useState<any>(null);
+  const [fields, setFields] = useState<any[]>([]);
+  const [responses, setResponses] = useState<Record<string, any>>({});
+  const [alreadySubmitted, setAlreadySubmitted] = useState(false);
+
+  useEffect(() => {
+    async function loadForm() {
+      try {
+        const { form, fields } = await fetchFormBySlug(slug);
+        setFormData(form);
+        setFields(fields);
+
+        if (typeof window !== "undefined") {
+          const submitted = localStorage.getItem(`form_submitted_${slug}`);
+          if (submitted) setAlreadySubmitted(true);
+        }
+      } catch {
+        toast.error("Failed to load form. It may not exist.");
+      } finally {
+        setLoading(false);
+      }
+    }
+    loadForm();
+  }, [slug]);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!formData) return;
+    setSubmitting(true);
+    try {
+      await submitFormResponse(formData.id, responses);
+      setSuccess(true);
+      if (typeof window !== "undefined") {
+        localStorage.setItem(`form_submitted_${slug}`, "true");
+      }
+      toast.success("Response submitted successfully!");
+    } catch {
+      toast.error("Failed to submit response.");
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-[#FCFBF8]">
+        <Loader2 className="w-8 h-8 text-[#8B5CF6] animate-spin" />
+      </div>
+    );
+  }
+
+  if (!formData && !loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-[#FCFBF8] font-comic">
+        <div className="text-center">
+          <p className="text-6xl mb-4">🕵️‍♂️</p>
+          <h1 className="text-2xl font-bold text-[#333333]">Form not found!</h1>
+          <p className="text-gray-500 mt-2">This link may be invalid or the form has been removed.</p>
+        </div>
+      </div>
+    );
+  }
+
+  const theme = formData?.settings?.themeConfig || {};
+  const settings = formData?.settings?.formSettings || {
+    successMessage: "Thank You! 🎉 Your response has been recorded.",
+    allowMultipleResponses: true,
+  };
+
+  if (alreadySubmitted && settings.allowMultipleResponses === false) {
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center bg-[#FCFBF8] font-comic p-4 text-center">
+        <p className="text-6xl mb-4">✋</p>
+        <h1 className="text-3xl font-bold text-[#333333] mb-2 font-balsamiq">Already responded!</h1>
+        <p className="text-gray-500">This form only allows one submission per person.</p>
+      </div>
+    );
+  }
+
+  const textColor = theme.textColor || "#333333";
+  const formBg = theme.formBgColor || "#FCFBF8";
+  const fieldBg = theme.fieldBgColor || "#ffffff";
+  const fontClass = theme.fontFamily || "font-comic";
+  const roundedClass = theme.rounded || "rounded-2xl";
+  const borderClass = theme.borderStyle || "border-2";
+
+  return (
+    <div
+      className={`min-h-screen py-16 px-4 transition-colors ${fontClass}`}
+      style={{ backgroundColor: formBg }}
+    >
+      <div className="max-w-2xl mx-auto">
+        <AnimatePresence mode="wait">
+          {!success ? (
+            <motion.div
+              key="form"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95 }}
+            >
+              {/* Header */}
+              <div className="mb-10 text-center">
+                <h1
+                  className="text-4xl font-bold mb-3 font-balsamiq"
+                  style={{ color: textColor }}
+                >
+                  {formData.title || "Untitled Form"}
+                </h1>
+                {formData.description && (
+                  <p className="text-base opacity-70" style={{ color: textColor }}>
+                    {formData.description}
+                  </p>
+                )}
+              </div>
+
+              {/* Fields */}
+              <form onSubmit={handleSubmit} className="space-y-5">
+                {fields.map((field, index) => {
+                  // Statement is a display-only block
+                  if (field.type === "statement") {
+                    return (
+                      <div
+                        key={field.id}
+                        className={`p-6 ${roundedClass} ${borderClass} border-gray-200`}
+                        style={{ backgroundColor: fieldBg }}
+                      >
+                        <h2 className="text-xl font-bold font-balsamiq" style={{ color: textColor }}>
+                          {field.label}
+                        </h2>
+                        {field.description && (
+                          <p className="mt-1 opacity-70 text-sm" style={{ color: textColor }}>
+                            {field.description}
+                          </p>
+                        )}
+                      </div>
+                    );
+                  }
+
+                  return (
+                    <motion.div
+                      key={field.id}
+                      initial={{ opacity: 0, y: 12 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: index * 0.04 }}
+                      className={`p-6 ${roundedClass} ${borderClass} border-gray-200 shadow-sm`}
+                      style={{ backgroundColor: fieldBg }}
+                    >
+                      <label
+                        className="block text-base font-bold mb-1 font-balsamiq"
+                        style={{ color: textColor }}
+                      >
+                        {field.label}
+                        {field.required && <span className="text-red-500 ml-1">*</span>}
+                      </label>
+                      {field.description && (
+                        <p className="text-sm mb-3 opacity-60" style={{ color: textColor }}>
+                          {field.description}
+                        </p>
+                      )}
+                      <FieldInput
+                        field={field}
+                        value={responses[field.id]}
+                        onChange={(val) =>
+                          setResponses((prev) => ({ ...prev, [field.id]: val }))
+                        }
+                        textColor={textColor}
+                      />
+                    </motion.div>
+                  );
+                })}
+
+                <motion.button
+                  whileHover={{ scale: 1.01 }}
+                  whileTap={{ scale: 0.98 }}
+                  type="submit"
+                  disabled={submitting}
+                  className="w-full py-4 mt-4 bg-[#8B5CF6] border-2 border-[#333333] rounded-2xl font-balsamiq text-lg font-bold text-white shadow-[4px_4px_0px_#333333] hover:translate-y-[2px] hover:shadow-[2px_2px_0px_#333333] active:translate-y-[4px] active:shadow-none transition-all flex justify-center items-center gap-2"
+                >
+                  {submitting ? <Loader2 className="w-6 h-6 animate-spin" /> : "Submit Form ✨"}
+                </motion.button>
+              </form>
+            </motion.div>
+          ) : (
+            <motion.div
+              key="success"
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              className="bg-white border-2 border-[#333333] p-12 rounded-[2rem] shadow-[8px_8px_0px_#8B5CF6] text-center"
+            >
+              <CheckCircle2 className="w-20 h-20 text-[#34D399] mx-auto mb-6" />
+              <h2 className="text-4xl font-bold font-balsamiq text-[#333333] mb-4">Success! 🎉</h2>
+              <p className="text-lg text-gray-500 font-bold mb-8 whitespace-pre-line">
+                {settings.successMessage}
+              </p>
+              {settings.allowMultipleResponses && (
+                <button
+                  onClick={() => {
+                    setSuccess(false);
+                    setResponses({});
+                  }}
+                  className="text-[#8B5CF6] font-bold hover:underline font-comic"
+                >
+                  Submit another response
+                </button>
+              )}
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        <div className="mt-12 text-center">
+          <p className="text-sm text-gray-400 font-comic">
+            Powered by <span className="font-balsamiq text-[#8B5CF6]">FormForge</span>
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+}
