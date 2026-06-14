@@ -136,11 +136,6 @@ export async function fetchFormBySlug(slug: string) {
 
   if (formError || !form) throw new Error("Form not found");
 
-  // Increment view count in background (fire and forget)
-  supabase.rpc('increment_form_views', { form_slug: slug }).then(({ error }) => {
-    if (error) console.error("Failed to increment views:", error);
-  });
-
   const { data: fields, error: fieldsError } = await supabase
     .from('form_fields')
     .select('*')
@@ -172,14 +167,15 @@ export async function fetchFormById(id: string) {
   return { form, fields };
 }
 
-export async function submitFormResponse(formId: string, responseData: any, respondentEmail?: string) {
+export async function submitFormResponse(formId: string, responseData: any, respondentEmail?: string, deviceType: string = 'Desktop') {
   const { error } = await supabase
     .from('submissions')
     .insert({
       form_id: formId,
       data: responseData,
       status: 'completed',
-      respondent_email: respondentEmail || null,
+      metadata: { respondentEmail },
+      device_type: deviceType,
     });
 
   if (error) throw new Error("Failed to submit form");
@@ -227,7 +223,8 @@ export async function fetchFormSubmissions(formId: string) {
       .select(`
         id,
         started_at,
-        data
+        data,
+        device_type
       `)
       .eq('form_id', formId)
       .order('started_at', { ascending: false });

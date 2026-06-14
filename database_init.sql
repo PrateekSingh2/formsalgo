@@ -113,6 +113,7 @@ CREATE TABLE IF NOT EXISTS submissions (
     form_id UUID NOT NULL REFERENCES forms(id) ON DELETE CASCADE,
     data JSONB NOT NULL DEFAULT '{}'::jsonb,
     status TEXT NOT NULL DEFAULT 'completed', -- in_progress | completed | abandoned
+    device_type TEXT NOT NULL DEFAULT 'Desktop',
     metadata JSONB DEFAULT '{}'::jsonb,
     started_at TIMESTAMP NOT NULL DEFAULT NOW(),
     completed_at TIMESTAMP

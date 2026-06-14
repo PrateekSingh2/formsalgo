@@ -96,10 +96,11 @@ function LiveField({ field }: { field: BuilderField }) {
 
     case "rating":
     case "stars":
+      const starsCount = Math.max(1, (field.config?.max as number) || 5);
       return (
-        <div className="flex gap-1.5">
-          {[1, 2, 3, 4, 5].map((s) => (
-            <div key={s} className="w-9 h-9 flex items-center justify-center rounded-lg border border-gray-200 text-lg grayscale opacity-60">⭐</div>
+        <div className="flex gap-1">
+          {Array.from({ length: starsCount }).map((_, s) => (
+            <div key={s} className="w-8 h-8 flex items-center justify-center rounded-md border border-gray-200 text-sm grayscale opacity-50 bg-[#F9FAFB]">⭐</div>
           ))}
         </div>
       );
@@ -111,9 +112,9 @@ function LiveField({ field }: { field: BuilderField }) {
             <div className="absolute left-0 top-0 w-1/2 h-full bg-[#8B5CF6]/30 rounded-full" />
             <div className="absolute left-1/2 -translate-x-1/2 -translate-y-1 w-4 h-4 rounded-full bg-gray-300 border-2 border-white shadow" />
           </div>
-          <div className="flex justify-between text-xs text-gray-300">
-            <span>{String(field.config?.sliderMin ?? 0)}</span>
-            <span>{String(field.config?.sliderMax ?? 100)}</span>
+          <div className="flex justify-between text-[10px] text-gray-400 font-bold">
+            <span>{String(field.config?.min ?? 0)}</span>
+            <span>{String(field.config?.max ?? 100)}</span>
           </div>
         </div>
       );
@@ -121,8 +122,10 @@ function LiveField({ field }: { field: BuilderField }) {
     case "nps":
       return (
         <div className="flex gap-1 flex-wrap">
-          {Array.from({ length: 11 }, (_, i) => (
-            <div key={i} className="w-9 h-9 rounded-lg border border-gray-200 flex items-center justify-center text-xs text-gray-300 font-bold">{i}</div>
+          {Array.from({ length: (field.config?.max as number ?? 10) - (field.config?.min as number ?? 0) + 1 }, (_, i) => (
+            <div key={i} className="w-8 h-8 rounded-md border border-gray-200 flex items-center justify-center text-[10px] text-gray-400 font-bold bg-[#F9FAFB]">
+              {(field.config?.min as number ?? 0) + i}
+            </div>
           ))}
         </div>
       );
@@ -137,12 +140,41 @@ function LiveField({ field }: { field: BuilderField }) {
 
     case "address":
       return (
-        <div className="space-y-2">
+        <div className="space-y-2 max-w-md">
           <div className={`${inputCls}`} style={{ height: 34 }} />
           <div className="grid grid-cols-2 gap-2">
             <div className={`${inputCls}`} style={{ height: 34 }} />
             <div className={`${inputCls}`} style={{ height: 34 }} />
           </div>
+        </div>
+      );
+
+    case "matrix":
+    case "likert":
+      const rows = (field.config?.rows as string[]) || ["Statement 1"];
+      const cols = (field.config?.columns as string[]) || ["Scale 1", "Scale 2"];
+      return (
+        <div className="overflow-x-auto">
+          <table className="w-full text-left text-xs text-gray-400">
+            <thead>
+              <tr>
+                <th className="p-2 font-normal border-b border-gray-200"></th>
+                {cols.map((c, i) => <th key={i} className="p-2 font-normal text-center border-b border-gray-200">{c}</th>)}
+              </tr>
+            </thead>
+            <tbody>
+              {rows.map((r, i) => (
+                <tr key={i} className="border-b border-gray-100 last:border-0">
+                  <td className="p-2 max-w-[150px] truncate">{r}</td>
+                  {cols.map((_, ci) => (
+                    <td key={ci} className="p-2 text-center">
+                      <div className="w-3 h-3 rounded-full border-2 border-gray-300 mx-auto" />
+                    </td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
       );
 
@@ -172,9 +204,12 @@ function SortableCanvasField({ field }: { field: BuilderField }) {
     <div
       ref={setNodeRef}
       style={style}
-      onClick={(e) => { e.stopPropagation(); setActiveField(field.id); }}
-      className={`relative group rounded-2xl bg-white border transition-all duration-200 cursor-default flex flex-col
-        ${isActive ? "border-[#8B5CF6] ring-2 ring-[#8B5CF6]/20 shadow-sm" : "border-gray-200 hover:border-gray-300 hover:shadow-sm"}`}
+      onClick={() => setActiveField(field.id)}
+      className={`group relative rounded-xl transition-all cursor-pointer bg-white ${
+        isActive 
+          ? "ring-2 ring-[#8B5CF6] shadow-[2px_2px_0px_#333333] border-2 border-[#333333] z-20" 
+          : "border-2 border-transparent hover:border-[#333333] hover:shadow-[2px_2px_0px_#333333]"
+      } ${isDragging ? "opacity-50 scale-105 shadow-[4px_4px_0px_#333333] z-50 ring-2 ring-[#8B5CF6] border-2 border-[#333333]" : ""}`}
     >
       {/* Drag Handle */}
       <div
@@ -213,28 +248,28 @@ function SortableCanvasField({ field }: { field: BuilderField }) {
         )}
       </AnimatePresence>
 
-      <div className="p-5 w-full">
+      <div className="p-4 w-full">
         {/* Field Header */}
-        <div className="flex items-center justify-between mb-4">
-          <div className="flex items-center gap-3">
-            <span className="w-7 h-7 flex items-center justify-center bg-gray-100 rounded-lg text-xs font-bold text-gray-500 font-sans">
+        <div className="flex items-center justify-between mb-3">
+          <div className="flex items-center gap-2">
+            <span className="w-5 h-5 flex items-center justify-center bg-[#F5F3FF] border border-[#333333] rounded text-[10px] font-black text-[#8B5CF6] font-balsamiq transform -rotate-1">
               {(typeof field.order === 'number' && !isNaN(field.order) ? field.order : 0) + 1}
             </span>
-            <span className="font-semibold text-[15px] text-[#333333] font-sans">
+            <span className="font-black text-sm text-[#333333] font-balsamiq">
               {field.label}
             </span>
-            {field.required && <span className="text-red-400 text-sm font-bold shrink-0">*</span>}
+            {field.required && <span className="text-[#EF4444] text-sm font-black shrink-0">*</span>}
           </div>
-          <div className="flex items-center gap-2 text-gray-300">
-            <FieldIcon className="w-5 h-5 stroke-[1.5]" />
+          <div className="flex items-center gap-2 text-gray-400">
+            <FieldIcon className="w-4 h-4 stroke-[2]" />
           </div>
         </div>
 
         {field.description && (
-          <p className="text-xs text-gray-400 mb-3 leading-relaxed ml-10 font-sans">{field.description}</p>
+          <p className="text-[11px] text-gray-400 mb-2 leading-relaxed ml-7 font-sans">{field.description}</p>
         )}
 
-        <div className="pointer-events-none ml-10">
+        <div className="pointer-events-none ml-7">
           <LiveField field={field} />
         </div>
       </div>
@@ -319,23 +354,23 @@ export function BuilderCanvas() {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="mt-8 text-center py-24 bg-white/50 backdrop-blur-sm rounded-3xl border-2 border-dashed border-gray-300 relative overflow-hidden group"
+          className="mt-12 text-center py-16 bg-[#E9D5FF] rounded-3xl border-2 border-[#333333] relative overflow-hidden group shadow-[4px_4px_0px_#333333]"
         >
-          <div className="absolute inset-0 bg-gradient-to-br from-[#8B5CF6]/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+          <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-20 pointer-events-none"></div>
 
           <motion.div
-            animate={{ y: [0, -10, 0] }}
+            animate={{ y: [0, -8, 0], rotate: [0, 3, 0] }}
             transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-            className="w-20 h-20 mx-auto mb-6 rounded-2xl bg-white border-2 border-gray-200 shadow-sm flex items-center justify-center relative"
+            className="w-16 h-16 mx-auto mb-6 rounded-2xl bg-white border-2 border-[#333333] shadow-[2px_2px_0px_#333333] flex items-center justify-center relative"
           >
-            <div className="absolute -top-3 -right-3 w-8 h-8 bg-[#FEF3C7] rounded-full border-2 border-[#F59E0B] flex items-center justify-center animate-bounce">
-              <Sparkles className="w-4 h-4 text-[#F59E0B]" />
+            <div className="absolute -top-3 -right-3 w-8 h-8 bg-[#FEF3C7] rounded-lg border-2 border-[#333333] flex items-center justify-center shadow-[1px_1px_0px_#333333] animate-bounce">
+              <Sparkles className="w-4 h-4 text-[#F59E0B] stroke-[2]" />
             </div>
-            <Type className="w-10 h-10 text-gray-300" />
+            <Type className="w-8 h-8 text-[#8B5CF6] stroke-[2]" />
           </motion.div>
 
-          <h3 className="font-balsamiq text-2xl font-bold text-[#333333] mb-2">Build your masterpiece</h3>
-          <p className="text-gray-500 text-sm font-comic max-w-sm mx-auto">Drag and drop fields from the left panel to start creating your form. It's that easy!</p>
+          <h3 className="font-balsamiq text-2xl font-black text-[#333333] mb-3">Build your masterpiece!</h3>
+          <p className="text-[#333333] text-base font-comic font-bold max-w-sm mx-auto">Drag and drop fields from the left panel to start creating your form. It's that easy.</p>
         </motion.div>
       )}
     </div>

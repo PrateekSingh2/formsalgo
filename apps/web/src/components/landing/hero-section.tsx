@@ -10,30 +10,56 @@ export function HeroSection() {
       
       {/* Hand-drawn decorative elements */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
-        <motion.div animate={{ rotate: [-2, 2, -2] }} transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }} className="absolute top-32 left-[10%] opacity-40">
-          <svg width="40" height="40" viewBox="0 0 40 40" fill="none" stroke="#8B5CF6" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M20 5 L20 35 M5 20 L35 20 M10 10 L30 30 M10 30 L30 10" />
+        {/* Background Colorful Grid */}
+        <div className="absolute inset-0 opacity-20" style={{ backgroundImage: 'radial-gradient(#8B5CF6 2px, transparent 2px)', backgroundSize: '30px 30px' }}></div>
+        
+        {/* Pencil sketch lines */}
+        <motion.div animate={{ rotate: [-2, 2, -2] }} transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }} className="absolute top-20 left-[5%] opacity-80">
+          <svg width="150" height="150" viewBox="0 0 100 100" fill="none" stroke="#F472B6" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="opacity-70">
+            <path d="M10 50 Q 30 10, 50 50 T 90 50" strokeDasharray="6 6" />
+            <path d="M10 55 Q 32 15, 48 55 T 88 55" />
+            <circle cx="20" cy="30" r="4" fill="#F472B6" />
+            <circle cx="80" cy="70" r="6" fill="#F472B6" stroke="none" />
           </svg>
         </motion.div>
         
-        <motion.div animate={{ y: [-10, 10, -10] }} transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }} className="absolute bottom-40 right-[15%] opacity-40">
-          <svg width="60" height="40" viewBox="0 0 60 40" fill="none" stroke="#F472B6" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M5 20 Q 20 5, 35 20 T 55 20" />
+        <motion.div animate={{ y: [-10, 10, -10] }} transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }} className="absolute bottom-32 right-[10%] opacity-80">
+          <svg width="120" height="120" viewBox="0 0 100 100" fill="none" stroke="#34D399" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="opacity-70">
+            <circle cx="50" cy="50" r="40" strokeDasharray="6 6" />
+            <path d="M30 50 L70 50 M50 30 L50 70" />
+            <path d="M40 40 L60 60 M40 60 L60 40" />
+          </svg>
+        </motion.div>
+
+        <motion.div animate={{ x: [-10, 10, -10], rotate: [-10, 10, -10] }} transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }} className="absolute top-40 right-[15%] opacity-90">
+          <svg width="80" height="80" viewBox="0 0 100 100" fill="none" stroke="#FBBF24" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M50 10 L60 40 L90 50 L60 60 L50 90 L40 60 L10 50 L40 40 Z" fill="#FEF3C7" />
           </svg>
         </motion.div>
       </div>
 
       <div className="w-full max-w-5xl mx-auto px-6 flex flex-col items-center text-center relative z-10">
         
+        {/* Floating Avatars / Community */}
+        <div className="absolute top-[20%] -left-12 lg:-left-24 transform -translate-y-1/2 flex flex-col gap-6 opacity-90 hidden md:flex z-20">
+          <motion.div animate={{ y: [0, -10, 0], rotate: [-10, 5, -10] }} transition={{ duration: 4, repeat: Infinity }} className="w-16 h-16 bg-[#FCE7F3] rounded-full border-4 border-white flex items-center justify-center text-3xl shadow-md">👩🏻‍🎨</motion.div>
+          <motion.div animate={{ y: [0, 10, 0], rotate: [10, -5, 10] }} transition={{ duration: 5, repeat: Infinity, delay: 1 }} className="w-12 h-12 bg-[#DBEAFE] rounded-full border-4 border-white flex items-center justify-center text-xl shadow-md ml-10">👨🏽‍💻</motion.div>
+        </div>
+
+        <div className="absolute top-[30%] -right-12 lg:-right-24 transform -translate-y-1/2 flex flex-col gap-6 opacity-90 hidden md:flex z-20">
+          <motion.div animate={{ y: [0, -15, 0], rotate: [15, -5, 15] }} transition={{ duration: 4.5, repeat: Infinity, delay: 0.5 }} className="w-16 h-16 bg-[#D1FAE5] rounded-full border-4 border-white flex items-center justify-center text-3xl shadow-md ml-4">🦸🏻‍♀️</motion.div>
+          <motion.div animate={{ y: [0, 12, 0], rotate: [-15, 5, -15] }} transition={{ duration: 5.5, repeat: Infinity, delay: 1.5 }} className="w-14 h-14 bg-[#FEF3C7] rounded-full border-4 border-white flex items-center justify-center text-2xl shadow-md mr-12">🥷🏼</motion.div>
+        </div>
+        
         {/* Playful Badge */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
-          className="inline-flex items-center gap-2 px-4 py-1.5 bg-white border-2 border-gray-200 rounded-full mb-8 sticker-card"
+          className="inline-flex items-center gap-2 px-5 py-2 bg-[#FEF3C7] border-2 border-amber-300 rounded-2xl mb-8 shadow-sm transform -rotate-2"
         >
-          <span className="text-xl">✨</span>
-          <span className="font-comic font-bold text-gray-600 text-sm">Building forms shouldn't be boring</span>
+          <Sparkles className="w-5 h-5 text-amber-500" />
+          <span className="font-comic font-bold text-amber-800 text-sm tracking-wide">Building forms shouldn't be boring</span>
         </motion.div>
 
         {/* Headline */}
@@ -41,26 +67,25 @@ export function HeroSection() {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, delay: 0.1 }}
-          className="font-balsamiq text-6xl sm:text-7xl lg:text-8xl text-[#333333] mb-8 leading-[1.1]"
+          className="font-balsamiq text-5xl sm:text-6xl lg:text-7xl font-black text-gray-900 mb-8 leading-[1.1] tracking-tight relative"
         >
           Everything you need, <br />
-          <span className="relative inline-block">
+          <span className="relative inline-block mt-2">
             in one simple workspace
-            <svg className="absolute -bottom-2 left-0 w-full h-4" viewBox="0 0 200 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M5 8C50 2 150 2 195 8" stroke="#34D399" strokeWidth="4" strokeLinecap="round" />
+            <svg className="absolute -bottom-3 left-0 w-full h-5" viewBox="0 0 200 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M5 8C50 2 150 2 195 8" stroke="#8B5CF6" strokeWidth="5" strokeLinecap="round" strokeDasharray="8 6" />
+              <path d="M5 10C50 4 150 4 195 10" stroke="#F472B6" strokeWidth="3" strokeLinecap="round" />
             </svg>
           </span>
-          <span className="inline-block ml-4 text-4xl transform rotate-12 bg-[#D1FAE5] rounded-full w-12 h-12 flex items-center justify-center align-middle border-2 border-[#333333]">
-            <Pencil className="w-6 h-6 text-[#10B981]" />
-          </span>
+          {/* Headline Sparkles */}
+          <motion.div animate={{ scale: [1, 1.2, 1], opacity: [0.5, 1, 0.5] }} transition={{ repeat: Infinity, duration: 2 }} className="absolute -top-6 -right-10 text-4xl hidden sm:block">✨</motion.div>
         </motion.h1>
 
-        {/* Subheadline */}
         <motion.p
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, delay: 0.2 }}
-          className="text-lg sm:text-xl text-gray-600 max-w-2xl mx-auto mb-12 font-comic font-medium leading-relaxed"
+          className="font-comic text-lg sm:text-xl text-gray-700 max-w-2xl mx-auto mb-10 font-bold leading-relaxed"
         >
           Create, customize and share forms that get responses. All the tools you need, all in one place.
         </motion.p>
@@ -72,16 +97,16 @@ export function HeroSection() {
           transition={{ duration: 0.5, delay: 0.3 }}
           className="flex flex-col sm:flex-row gap-6 w-full sm:w-auto"
         >
-          <Link href="/builder" className="group relative inline-flex items-center justify-center gap-2 px-8 py-4 bg-[#8B5CF6] text-white font-balsamiq text-xl rounded-xl border-2 border-[#333333] shadow-[4px_4px_0px_#333333] hover:translate-y-[2px] hover:shadow-[2px_2px_0px_#333333] transition-all">
+          <Link href="/builder" className="group relative inline-flex items-center justify-center gap-3 px-8 py-3.5 bg-[#8B5CF6] text-white font-balsamiq font-bold text-xl rounded-2xl shadow-sm hover:shadow-md hover:-translate-y-0.5 hover:bg-[#7c3aed] transition-all">
             <span>Try the Builder</span>
             <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
           </Link>
           
-          <div className="relative">
-            <svg className="absolute -left-12 top-4 w-10 h-10 text-[#8B5CF6] transform -rotate-12 animate-wiggle" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+          <div className="relative mt-4 sm:mt-0 ml-0 sm:ml-6 flex items-center">
+            <svg className="absolute -left-12 sm:-left-16 w-12 h-12 text-[#10B981] transform -rotate-12" fill="none" viewBox="0 0 50 50" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M40 10 Q 20 20, 10 40 M10 40 L 15 30 M10 40 L 20 42" strokeDasharray="3 3" />
             </svg>
-            <span className="inline-block px-4 py-3 font-comic font-bold text-gray-500 text-lg">It's completely free!</span>
+            <span className="font-comic inline-block px-4 py-2 font-bold text-green-700 text-sm border-2 border-green-200 bg-[#D1FAE5] shadow-sm rounded-xl transform rotate-2">It's completely free!</span>
           </div>
         </motion.div>
 

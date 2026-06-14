@@ -20,17 +20,17 @@ function FaqItem({ faq, index }: { faq: (typeof faqs)[0]; index: number }) {
     <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: index * 0.08 }}
       className="border-b-2 border-dashed border-gray-200 last:border-none">
       <button onClick={() => setOpen(!open)} className="w-full flex items-center justify-between py-6 text-left group">
-        <span className="font-balsamiq text-2xl font-bold text-[#333333] group-hover:text-[#8B5CF6] transition-colors pr-8">{faq.q}</span>
+        <span className="font-balsamiq text-2xl font-black text-gray-900 group-hover:text-pink-600 transition-colors pr-8">{faq.q}</span>
         <motion.div animate={{ rotate: open ? 180 : 0 }} transition={{ duration: 0.3, type: "spring", stiffness: 300 }}>
-          <div className={`w-12 h-12 rounded-2xl flex items-center justify-center transition-colors border-2 border-[#333333] ${open ? "bg-[#8B5CF6] text-white" : "bg-[#FCFBF8] text-gray-500 group-hover:bg-[#E9D5FF] group-hover:text-[#8B5CF6]"}`}>
-            <ChevronDown className="w-6 h-6 shrink-0" />
+          <div className={`w-10 h-10 rounded-xl flex items-center justify-center transition-colors border border-gray-200 ${open ? "bg-pink-500 text-white border-pink-500" : "bg-white text-gray-500 group-hover:bg-pink-50 group-hover:text-pink-600 group-hover:border-pink-200"}`}>
+            <ChevronDown className="w-5 h-5 shrink-0" />
           </div>
         </motion.div>
       </button>
       <AnimatePresence>
         {open && (
           <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }} transition={{ duration: 0.3 }}>
-            <p className="pb-8 text-gray-500 text-lg font-comic font-bold leading-relaxed max-w-3xl pr-12">{faq.a}</p>
+            <p className="pb-8 text-gray-600 text-lg font-comic font-bold leading-relaxed max-w-3xl pr-12">{faq.a}</p>
           </motion.div>
         )}
       </AnimatePresence>
@@ -43,25 +43,34 @@ export function FaqSection() {
   const inView = useInView(ref, { once: true, margin: "-100px" });
 
   return (
-    <section id="faq" className="py-40 px-6 bg-gradient-to-b from-[#F0FDF4] to-[#FCFBF8]" ref={ref}>
-      <div className="max-w-4xl mx-auto">
+    <section id="faq" className="py-32 px-6 bg-[#FFF1F2] relative overflow-hidden" ref={ref}>
+      {/* Decorative SVGs */}
+      <div className="absolute inset-0 pointer-events-none opacity-50">
+        <svg className="absolute top-40 right-10 w-24 h-24 text-pink-200 transform rotate-12" viewBox="0 0 100 100" fill="none">
+          <path d="M10 50 Q 50 10, 90 50 T 90 90 Q 50 90, 10 90 Z" stroke="currentColor" strokeWidth="2" strokeDasharray="4 4" />
+        </svg>
+        <svg className="absolute bottom-20 left-10 w-32 h-32 text-rose-200 transform -rotate-12" viewBox="0 0 100 100" fill="none">
+          <circle cx="50" cy="50" r="40" stroke="currentColor" strokeWidth="2" strokeDasharray="6 4" />
+        </svg>
+      </div>
+      <div className="max-w-4xl mx-auto relative z-10">
         <div className="text-center mb-20 flex flex-col items-center">
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
             animate={inView ? { opacity: 1, scale: 1 } : {}}
-            className="px-6 py-2 bg-white text-[#333333] border-2 border-[#333333] rounded-full shadow-[2px_2px_0px_#333333] mb-6 flex items-center gap-2 transform rotate-1"
+            className="px-6 py-2 bg-pink-50 text-pink-800 border border-pink-200 rounded-full shadow-sm mb-6 flex items-center gap-2 transform -rotate-1"
           >
-            <MessageCircleQuestion className="w-5 h-5 text-[#F472B6]" />
-            <span className="font-comic font-bold text-xl tracking-wide">FAQ</span>
+            <MessageCircleQuestion className="w-4 h-4 text-pink-500" />
+            <span className="font-comic font-bold text-sm tracking-wide">FAQ</span>
           </motion.div>
-          <motion.h2 initial={{ opacity: 0, y: 20 }} animate={inView ? { opacity: 1, y: 0 } : {}} className="font-balsamiq text-5xl sm:text-6xl font-black text-[#333333] tracking-tight mb-6">
-            Got <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#8B5CF6] to-[#F472B6]">questions?</span>
+          <motion.h2 initial={{ opacity: 0, y: 20 }} animate={inView ? { opacity: 1, y: 0 } : {}} className="font-balsamiq text-4xl sm:text-5xl font-black text-gray-900 tracking-tight mb-6">
+            Got <span className="text-transparent bg-clip-text bg-gradient-to-r from-pink-500 to-rose-500">questions?</span>
           </motion.h2>
         </div>
         
         <motion.div initial={{ opacity: 0, y: 30 }} animate={inView ? { opacity: 1, y: 0 } : {}} transition={{ delay: 0.2 }}
-          className="bg-white rounded-[2.5rem] border-2 border-[#333333] p-10 shadow-[8px_8px_0px_#8B5CF6] relative z-10">
-          <div className="absolute -top-4 -right-4 w-12 h-12 text-5xl transform rotate-12">🤔</div>
+          className="bg-white rounded-3xl border border-gray-200 p-8 shadow-sm relative z-10">
+          <div className="absolute -top-4 -right-4 w-12 h-12 text-5xl transform rotate-12 opacity-80 filter blur-[1px]">🤔</div>
           {faqs.map((faq, i) => <FaqItem key={i} faq={faq} index={i} />)}
         </motion.div>
       </div>

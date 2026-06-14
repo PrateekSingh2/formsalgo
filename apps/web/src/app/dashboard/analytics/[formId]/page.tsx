@@ -2,14 +2,17 @@
 
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { fetchFormSubmissions } from "@/lib/supabase-actions";
-import { Loader2, ArrowLeft, Users, MousePointerClick, Calendar, BarChart3, TrendingUp, Download } from "lucide-react";
+import { fetchFormSubmissions, fetchUserForms } from "@/lib/supabase-actions";
+import { Loader2, ArrowLeft, Users, MousePointerClick, Calendar, BarChart3, TrendingUp, Download, Monitor, Smartphone, Tablet, FileText } from "lucide-react";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { toast } from "sonner";
 
+import { useAuth } from "@/providers/auth-provider";
+
 export default function AnalyticsPage() {
+  const { user } = useAuth();
   const params = useParams();
   const formId = params.formId as string;
   const router = useRouter();
@@ -19,6 +22,8 @@ export default function AnalyticsPage() {
   const [fields, setFields] = useState<any[]>([]);
   const [formData, setFormData] = useState<any>(null);
   const [chartData, setChartData] = useState<any[]>([]);
+  const [topForms, setTopForms] = useState<any[]>([]);
+  const [deviceStats, setDeviceStats] = useState<any[]>([]);
 
   useEffect(() => {
     async function loadData() {
@@ -41,6 +46,31 @@ export default function AnalyticsPage() {
         })).reverse(); // Oldest to newest
         
         setChartData(chartDataArr);
+
+        // Process Device Breakdown
+        let desktop = 0;
+        let mobile = 0;
+        let tablet = 0;
+        
+        subData.forEach((sub: any) => {
+          if (sub.device_type === "Mobile") mobile++;
+          else if (sub.device_type === "Tablet") tablet++;
+          else desktop++;
+        });
+
+        const total = subData.length || 1;
+        setDeviceStats([
+          { name: "Desktop", value: `${Math.round((desktop/total)*100)}%`, count: desktop, icon: Monitor, color: "text-[#8B5CF6]", bar: (desktop/total)*100 },
+          { name: "Mobile", value: `${Math.round((mobile/total)*100)}%`, count: mobile, icon: Smartphone, color: "text-[#EC4899]", bar: (mobile/total)*100 },
+          { name: "Tablet", value: `${Math.round((tablet/total)*100)}%`, count: tablet, icon: Tablet, color: "text-[#F59E0B]", bar: (tablet/total)*100 },
+        ]);
+
+        if (user?.uid) {
+          const userForms = await fetchUserForms(user.uid);
+          const sorted = userForms.sort((a: any, b: any) => b.responses - a.responses).slice(0, 5);
+          setTopForms(sorted);
+        }
+
       } catch (error) {
         toast.error("Failed to load analytics.");
       } finally {
@@ -48,7 +78,7 @@ export default function AnalyticsPage() {
       }
     }
     loadData();
-  }, [formId]);
+  }, [formId, user]);
 
   const handleExportCSV = () => {
     if (submissions.length === 0) return;
@@ -57,10 +87,17 @@ export default function AnalyticsPage() {
     const headers = ["Submitted At", ...dataFields.map(f => f.label.replace(/"/g, '""'))];
     const csvRows = [headers.map(h => `"${h}"`).join(",")];
 
+    const formatVal = (val: any) => {
+      if (!val) return '';
+      if (Array.isArray(val)) return val.join(", ");
+      if (typeof val === "object") return Object.entries(val).map(([k, v]) => `${k}: ${v}`).join(" | ");
+      return String(val);
+    };
+
     submissions.forEach(sub => {
       const row = [
         `"${new Date(sub.started_at).toLocaleString()}"`,
-        ...dataFields.map(f => `"${String(sub.data?.[f.id] || '').replace(/"/g, '""')}"`)
+        ...dataFields.map(f => `"${formatVal(sub.data?.[f.id]).replace(/"/g, '""')}"`)
       ];
       csvRows.push(row.join(","));
     });
@@ -75,6 +112,21 @@ export default function AnalyticsPage() {
     link.click();
     document.body.removeChild(link);
     toast.success("CSV exported successfully!");
+  };
+
+  const renderCellValue = (value: any) => {
+    if (value === undefined || value === null || value === "") {
+      return <span className="text-gray-300 italic">Empty</span>;
+    }
+    if (Array.isArray(value)) {
+      return value.join(", ");
+    }
+    if (typeof value === "object") {
+      return Object.entries(value)
+        .map(([k, v]) => `${k}: ${v}`)
+        .join(" | ");
+    }
+    return String(value);
   };
 
   if (loading) {
@@ -103,7 +155,7 @@ export default function AnalyticsPage() {
       </div>
 
       {/* KPI Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
         <div className="bg-white p-6 rounded-2xl border-2 border-[#333333] shadow-[4px_4px_0px_#333333] flex items-center gap-4">
           <div className="w-12 h-12 rounded-xl bg-[#E9D5FF] border-2 border-[#8B5CF6] flex items-center justify-center">
             <Users className="w-6 h-6 text-[#8B5CF6]" />
@@ -146,7 +198,7 @@ export default function AnalyticsPage() {
             <p className="text-sm font-bold text-gray-500 uppercase">Latest Response</p>
             <p className="text-xl font-bold font-balsamiq text-[#333333]">
               {submissions.length > 0 
-                ? new Date(submissions[0].started_at).toLocaleDateString()
+                ? new Date(submissions[0].started_at).toLocaleString(undefined, { dateStyle: 'short', timeStyle: 'short' })
                 : "None"
               }
             </p>
@@ -173,6 +225,64 @@ export default function AnalyticsPage() {
           </div>
         </div>
       )}
+
+      {/* Top Forms & Devices Grid */}
+      <div className="grid lg:grid-cols-2 gap-6 mb-10">
+        {/* Top Forms */}
+        <div className="bg-white rounded-2xl border-2 border-[#333333] shadow-[4px_4px_0px_#333333] overflow-hidden">
+          <div className="px-5 py-4 border-b-2 border-[#333333] bg-gray-50">
+            <h3 className="text-lg font-balsamiq font-bold text-[#333333] flex items-center gap-2">
+              <FileText className="w-5 h-5 text-[#3B82F6]" /> Your Top Forms
+            </h3>
+          </div>
+          <div className="divide-y-2 divide-dashed divide-gray-200">
+            {topForms.map((form, i) => (
+              <div key={form.id} className="p-4 flex items-center gap-3">
+                <span className="text-sm font-bold text-gray-500 w-5">{i + 1}</span>
+                <div className="flex-1 min-w-0">
+                  <div className="text-sm font-bold text-[#333333] truncate">{form.title}</div>
+                  <div className="text-xs font-bold text-gray-500">{form.responses} responses</div>
+                </div>
+                <Link href={`/dashboard/analytics/${form.id}`} className="text-xs font-bold text-[#8B5CF6] hover:underline">
+                  View
+                </Link>
+              </div>
+            ))}
+            {topForms.length === 0 && (
+              <div className="p-5 text-sm font-bold text-gray-500 text-center">
+                No other forms found.
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Devices */}
+        <div className="bg-white rounded-2xl border-2 border-[#333333] shadow-[4px_4px_0px_#333333] overflow-hidden">
+          <div className="px-5 py-4 border-b-2 border-[#333333] bg-gray-50">
+            <h3 className="text-lg font-balsamiq font-bold text-[#333333] flex items-center gap-2">
+              <Monitor className="w-5 h-5 text-[#F59E0B]" /> Device Breakdown
+            </h3>
+          </div>
+          <div className="p-5 space-y-6">
+            {deviceStats.map((d) => (
+              <div key={d.name} className="flex items-center gap-4">
+                <div className="w-12 h-12 rounded-xl bg-[#F9F9F9] flex items-center justify-center border-2 border-[#333333]">
+                  <d.icon className={`w-6 h-6 ${d.color} stroke-[3]`} />
+                </div>
+                <div className="flex-1">
+                  <div className="flex items-center justify-between mb-1">
+                    <span className="text-sm font-bold text-gray-500">{d.name} <span className="font-normal">({d.count})</span></span>
+                    <span className="text-sm font-bold text-[#333333]">{d.value}</span>
+                  </div>
+                  <div className="h-2 bg-gray-200 rounded-full overflow-hidden border-2 border-[#333333]">
+                    <motion.div initial={{ width: 0 }} animate={{ width: `${d.bar}%` }} transition={{ delay: 0.3, duration: 0.6 }} className="h-full bg-[#8B5CF6] border-r-2 border-[#333333]" />
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
 
       {/* Responses Table */}
       <div className="bg-white rounded-2xl border-2 border-[#333333] shadow-[4px_4px_0px_#333333] overflow-hidden">
@@ -220,8 +330,8 @@ export default function AnalyticsPage() {
                       {new Date(sub.started_at).toLocaleString()}
                     </td>
                     {fields.filter(f => f.type !== 'statement').map((field) => (
-                      <td key={field.id} className="p-4 text-sm text-[#333333] max-w-[300px] truncate" title={sub.data?.[field.id]}>
-                        {sub.data?.[field.id] || <span className="text-gray-300 italic">Empty</span>}
+                      <td key={field.id} className="p-4 text-sm text-[#333333] max-w-[300px] truncate" title={typeof sub.data?.[field.id] === 'string' ? sub.data?.[field.id] : ""}>
+                        {renderCellValue(sub.data?.[field.id])}
                       </td>
                     ))}
                   </motion.tr>

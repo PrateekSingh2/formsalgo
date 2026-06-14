@@ -2,146 +2,110 @@
 
 import { motion, useInView } from "framer-motion";
 import { useRef } from "react";
-import { ArrowRight, Star, Settings, FileText, Send, Bell, Database, Sparkles } from "lucide-react";
+import { ArrowRight, Star, Settings, FileText, Send, Bell, Database, Sparkles, Palette } from "lucide-react";
 
 export function MarketplaceSection() {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
 
   return (
-    <section id="marketplace" className="py-32 px-6 bg-[#F5F3FF] relative overflow-hidden" ref={ref}>
+    <section id="marketplace" className="py-32 px-6 bg-[#ECFEFF] relative overflow-hidden" ref={ref}>
       {/* Decorative background elements */}
-      <div className="absolute top-0 left-0 w-full h-full pointer-events-none opacity-30">
-        <div className="absolute top-20 left-10 w-32 h-32 bg-purple-200 rounded-full mix-blend-multiply filter blur-2xl"></div>
-        <div className="absolute bottom-20 right-10 w-40 h-40 bg-pink-200 rounded-full mix-blend-multiply filter blur-2xl"></div>
+      <div className="absolute top-0 left-0 w-full h-full pointer-events-none opacity-40">
+        <div className="absolute top-20 left-10 w-32 h-32 bg-[#CFFAFE] border-2 border-cyan-200 rounded-full rotate-12"></div>
+        <div className="absolute bottom-20 right-10 w-40 h-40 bg-[#CCFBF1] border-2 border-teal-200 rounded-full -rotate-6"></div>
       </div>
 
       <div className="max-w-[1300px] mx-auto relative z-10">
         
         {/* Section Header */}
-        <div className="text-center mb-20">
+        <div className="text-center mb-20 relative z-10">
           <motion.h2 
             initial={{ opacity: 0, y: 20 }}
             animate={isInView ? { opacity: 1, y: 0 } : {}}
-            className="font-balsamiq text-5xl font-bold text-[#333333] mb-4"
+            className="font-balsamiq text-4xl sm:text-5xl font-black text-gray-900 mb-6"
           >
-            A universe of <span className="text-[#8B5CF6] relative inline-block">
+            Endless <span className="inline-block px-4 py-1 bg-[#FEF3C7] border-2 border-yellow-300 rounded-2xl transform -rotate-2">
               possibilities
-              <svg className="absolute -bottom-2 left-0 w-full h-3" viewBox="0 0 100 10" preserveAspectRatio="none">
-                <path d="M0 5 Q 50 -5, 100 5" fill="none" stroke="#F472B6" strokeWidth="3" />
-              </svg>
             </span>
           </motion.h2>
-          <p className="font-comic text-xl text-gray-600 max-w-2xl mx-auto font-bold">Themes, automations, and a thriving community to help you build faster.</p>
+          <p className="font-comic text-xl text-gray-700 max-w-2xl mx-auto font-bold bg-white/60 backdrop-blur-sm border border-gray-200 shadow-sm p-4 rounded-xl">Themes, automations, and a thriving community to help you build faster.</p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-stretch">
           
           {/* LEFT: Community Forms (Floating Cards) */}
           <motion.div 
             initial={{ opacity: 0, x: -30 }}
             animate={isInView ? { opacity: 1, x: 0 } : {}}
             transition={{ duration: 0.6 }}
-            className="lg:col-span-5 relative min-h-[400px]"
+            className="relative"
           >
-            <div className="bg-white p-8 rounded-[2rem] border-2 border-[#333333] shadow-[8px_8px_0px_#8B5CF6] relative z-10">
-              <h3 className="font-balsamiq text-3xl font-bold text-[#333333] mb-2">Explore Community Forms</h3>
-              <p className="font-comic text-gray-500 font-bold mb-8">Don't start from scratch. Use forms created by top creators.</p>
+            <div className="bg-white p-10 rounded-[2.5rem] border border-gray-200 shadow-sm relative z-10 h-full flex flex-col items-center text-center group hover:border-rose-200 transition-colors">
+              <div className="w-16 h-16 bg-rose-50 rounded-2xl flex items-center justify-center mb-6 transform -rotate-3 border border-rose-100 group-hover:-rotate-6 transition-transform">
+                <FileText className="w-8 h-8 text-rose-500" />
+              </div>
+              <h3 className="font-balsamiq text-3xl font-black text-gray-900 mb-3">Community Forms</h3>
+              <p className="font-comic text-gray-600 font-bold mb-12 max-w-sm">Don't start from scratch. Clone top-performing forms created by expert builders.</p>
               
-              <div className="relative h-[200px]">
+              <div className="relative h-[260px] w-full max-w-xs mt-auto">
                 {/* Form Card 1 */}
-                <div className="absolute top-0 left-0 bg-[#FFF5F5] border-2 border-[#333333] rounded-xl p-4 w-48 transform -rotate-6 shadow-sm z-20 hover:rotate-0 hover:scale-105 transition-all cursor-pointer">
-                  <div className="washi-tape -top-3 left-1/2 -translate-x-1/2 w-16 h-4 bg-red-300" style={{ transform: 'rotate(2deg)' }}></div>
-                  <div className="text-3xl mb-2">🍪</div>
-                  <h4 className="font-balsamiq font-bold text-[#333333] text-sm">Anime Fan Survey</h4>
-                  <div className="flex items-center gap-1 mt-2 text-xs font-comic font-bold text-gray-500">
-                    <Star className="w-3 h-3 text-orange-400 fill-current" /> 4.8 (341)
+                <div className="absolute top-0 left-0 bg-[#FFF1F2] border border-rose-200 rounded-3xl p-6 w-56 transform -rotate-6 shadow-sm z-20 hover:rotate-0 hover:scale-105 hover:shadow-md transition-all cursor-pointer">
+                  <div className="text-4xl mb-4">🍪</div>
+                  <h4 className="font-balsamiq font-black text-rose-900 text-lg mb-1">Anime Fan Survey</h4>
+                  <div className="flex items-center gap-1 mt-2 text-sm font-comic font-bold text-rose-700">
+                    <Star className="w-4 h-4 text-orange-400 fill-current" /> 4.8 (341)
                   </div>
                 </div>
 
                 {/* Form Card 2 */}
-                <div className="absolute top-10 left-32 bg-[#F0FDF4] border-2 border-[#333333] rounded-xl p-4 w-48 transform rotate-3 shadow-sm z-10 hover:rotate-6 hover:scale-105 transition-all cursor-pointer">
-                  <div className="text-3xl mb-2">🚀</div>
-                  <h4 className="font-balsamiq font-bold text-[#333333] text-sm">Startup Onboarding</h4>
-                  <div className="flex items-center gap-1 mt-2 text-xs font-comic font-bold text-gray-500">
-                    <Star className="w-3 h-3 text-orange-400 fill-current" /> 4.9 (363)
+                <div className="absolute top-16 right-0 bg-[#F0FDF4] border border-green-200 rounded-3xl p-6 w-56 transform rotate-6 shadow-sm z-10 hover:rotate-12 hover:scale-105 hover:shadow-md transition-all cursor-pointer">
+                  <div className="text-4xl mb-4">🚀</div>
+                  <h4 className="font-balsamiq font-black text-green-900 text-lg mb-1">Startup Onboarding</h4>
+                  <div className="flex items-center gap-1 mt-2 text-sm font-comic font-bold text-green-700">
+                    <Star className="w-4 h-4 text-orange-400 fill-current" /> 4.9 (363)
                   </div>
                 </div>
               </div>
 
-              <button className="mt-4 font-balsamiq font-bold text-[#8B5CF6] flex items-center gap-2 hover:gap-3 transition-all">
-                Browse Gallery <ArrowRight className="w-4 h-4" />
+              <button className="mt-12 font-balsamiq font-black text-rose-600 bg-rose-50 border border-rose-200 px-8 py-4 rounded-2xl flex items-center gap-2 hover:gap-3 hover:-translate-y-1 hover:bg-rose-100 transition-all shadow-sm">
+                Browse Gallery <ArrowRight className="w-5 h-5 stroke-[2]" />
               </button>
             </div>
           </motion.div>
 
-          {/* RIGHT: Themes & Automations Stack */}
-          <div className="lg:col-span-7 flex flex-col gap-8">
-            
-            {/* Themes Scrapbook */}
-            <motion.div 
-              initial={{ opacity: 0, x: 30 }}
-              animate={isInView ? { opacity: 1, x: 0 } : {}}
-              transition={{ duration: 0.6, delay: 0.2 }}
-              className="bg-[#FDF9F1] p-8 rounded-[2rem] border-2 border-[#333333] shadow-[8px_8px_0px_#F472B6] relative overflow-hidden"
-            >
-              <div className="absolute -right-10 -top-10 text-[10rem] opacity-5">🎨</div>
-              <div className="flex justify-between items-start mb-6">
-                <div>
-                  <h3 className="font-balsamiq text-3xl font-bold text-[#333333] mb-2">Beautiful Themes</h3>
-                  <p className="font-comic text-gray-500 font-bold">Match your brand's exact vibe in seconds.</p>
-                </div>
-                <button className="bg-white border-2 border-[#333333] p-3 rounded-xl shadow-[2px_2px_0px_#333333] hover:translate-y-[2px] hover:shadow-none transition-all">
-                  <ArrowRight className="w-5 h-5 text-[#333333]" />
-                </button>
+          {/* RIGHT: Themes Scrapbook */}
+          <motion.div 
+            initial={{ opacity: 0, x: 30 }}
+            animate={isInView ? { opacity: 1, x: 0 } : {}}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            className="relative"
+          >
+            <div className="bg-[#FEF3C7] p-10 rounded-[2.5rem] border border-yellow-200 shadow-sm relative overflow-hidden h-full flex flex-col items-center text-center group hover:shadow-md transition-all">
+              <div className="absolute -right-10 -top-10 text-[10rem] opacity-30 transform rotate-12 filter blur-[2px] group-hover:rotate-45 transition-transform duration-700">🎨</div>
+              
+              <div className="w-16 h-16 bg-yellow-100 rounded-2xl flex items-center justify-center mb-6 transform rotate-3 border border-yellow-300 relative z-10 group-hover:rotate-6 transition-transform">
+                <Palette className="w-8 h-8 text-yellow-600" />
               </div>
+              <h3 className="font-balsamiq text-3xl font-black text-gray-900 mb-3 relative z-10">Beautiful Themes</h3>
+              <p className="font-comic text-gray-700 font-bold max-w-sm mb-12 relative z-10">Match your brand's exact vibe in seconds. Choose from presets or build your own.</p>
 
-              <div className="flex flex-wrap gap-4 mt-8">
-                {['Cyber Punk', 'Notebook', 'Pastel', 'Minimal', 'Sketch'].map((theme, i) => (
-                  <div key={i} className={`px-4 py-2 border-2 border-[#333333] rounded-full font-balsamiq font-bold text-sm transform hover:scale-110 transition-transform cursor-pointer
-                    ${i % 2 === 0 ? 'bg-white text-[#333333] rotate-2' : 'bg-[#333333] text-white -rotate-2'}
+              <div className="flex flex-wrap justify-center gap-4 mt-auto mb-12 relative z-10 max-w-md">
+                {['Cyber Punk', 'Notebook', 'Pastel', 'Minimal', 'Sketch', 'Glassmorphism'].map((theme, i) => (
+                  <div key={i} className={`px-5 py-2.5 border border-gray-200 rounded-full font-balsamiq font-black text-sm transform hover:scale-110 shadow-sm transition-transform cursor-pointer
+                    ${i % 2 === 0 ? 'bg-white text-gray-800 rotate-2 hover:rotate-6' : 'bg-gray-800 text-white -rotate-2 hover:-rotate-6'}
                   `}>
                     {theme}
                   </div>
                 ))}
               </div>
-            </motion.div>
+              
+              <button className="mt-auto font-balsamiq font-black text-yellow-900 bg-yellow-300 border border-yellow-400 px-8 py-4 rounded-2xl flex items-center gap-2 hover:gap-3 hover:-translate-y-1 hover:bg-yellow-400 transition-all relative z-10 shadow-sm">
+                Explore Themes <ArrowRight className="w-5 h-5 stroke-[2]" />
+              </button>
+            </div>
+          </motion.div>
 
-            {/* Automations Ribbon */}
-            <motion.div 
-              initial={{ opacity: 0, y: 30 }}
-              animate={isInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.6, delay: 0.4 }}
-              className="bg-white p-8 rounded-[2rem] border-2 border-[#333333] shadow-[8px_8px_0px_#34D399] relative"
-            >
-              <div className="flex flex-col md:flex-row items-center justify-between gap-6">
-                <div className="md:w-1/3 text-center md:text-left">
-                  <h3 className="font-balsamiq text-2xl font-bold text-[#333333] mb-2">Power Automations</h3>
-                  <p className="font-comic text-gray-500 font-bold text-sm">We handle the boring stuff automatically.</p>
-                </div>
-                
-                <div className="md:w-2/3 flex items-center justify-center gap-2 flex-wrap">
-                  {[
-                    { icon: FileText, label: "Submit", color: "text-gray-500", bg: "bg-gray-100" },
-                    { icon: ArrowRight, label: "", color: "text-gray-300", bg: "bg-transparent border-none" },
-                    { icon: Settings, label: "Process", color: "text-green-500", bg: "bg-green-100" },
-                    { icon: ArrowRight, label: "", color: "text-gray-300", bg: "bg-transparent border-none" },
-                    { icon: Send, label: "Email", color: "text-blue-500", bg: "bg-blue-100" },
-                    { icon: ArrowRight, label: "", color: "text-gray-300", bg: "bg-transparent border-none" },
-                    { icon: Database, label: "Save", color: "text-purple-500", bg: "bg-purple-100" },
-                  ].map((step, i) => (
-                    <div key={i} className="flex flex-col items-center gap-2">
-                      <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${step.bg} ${step.bg === 'bg-transparent border-none' ? '' : 'border-2 border-[#333333]'}`}>
-                        <step.icon className={`w-5 h-5 ${step.color}`} />
-                      </div>
-                      {step.label && <span className="font-comic font-bold text-[10px] text-gray-500">{step.label}</span>}
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </motion.div>
-
-          </div>
         </div>
       </div>
     </section>

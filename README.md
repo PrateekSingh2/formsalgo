@@ -1,7 +1,7 @@
 <div align="center">
-  <img src="https://via.placeholder.com/150x150/8B5CF6/FFFFFF?text=FormForge" alt="FormForge Logo" width="120" height="120" style="border-radius: 20px;" />
+  <img src="https://via.placeholder.com/150x150/8B5CF6/FFFFFF?text=Formsalgo" alt="FormForge Logo" width="120" height="120" style="border-radius: 20px;" />
   <br/>
-  <h1>✨ FormForge ✨</h1>
+  <h1>✨ Formsalgo ✨</h1>
   <p><strong>Next-Generation Form Builder & Audience CRM</strong></p>
   <p>Craft beautiful, interactive, and intelligent forms with a premium "Notebook" experience.</p>
 
@@ -65,7 +65,7 @@
 ## 📂 Project Structure
 
 ```text
-forms-chaicode/
+formsalgo/
 ├── .github/                 # GitHub Actions & Workflows
 ├── apps/
 │   ├── api/                 # Fastify + tRPC Backend Server
@@ -103,8 +103,8 @@ forms-chaicode/
 
 1. **Clone the repository:**
    ```bash
-   git clone https://github.com/yourusername/forms-chaicode.git
-   cd forms-chaicode
+   git clone https://github.com/yourusername/formsalgo.git
+   cd formsalgo
    ```
 
 2. **Install dependencies:**
@@ -133,7 +133,7 @@ forms-chaicode/
 ---
 
 ## 🤝 Contributing
-Contributions, issues, and feature requests are welcome! Feel free to check [issues page](https://github.com/yourusername/forms-chaicode/issues).
+Contributions, issues, and feature requests are welcome! Feel free to check [issues page](https://github.com/yourusername/formsalgo/issues).
 
 ## 📝 License
 This project is [MIT](LICENSE) licensed.

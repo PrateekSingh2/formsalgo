@@ -29,9 +29,6 @@ const sidebarLinks = [
   { href: "/admin", label: "Overview", icon: LayoutDashboard },
   { href: "/admin/users", label: "Users", icon: Users },
   { href: "/admin/forms", label: "Forms", icon: FileText },
-  { href: "/admin/analytics", label: "Analytics", icon: BarChart3 },
-  { href: "/admin/themes", label: "Themes", icon: Palette },
-  { href: "/admin/settings", label: "Settings", icon: Settings },
 ];
 
 export default function AdminLayout({
@@ -45,8 +42,8 @@ export default function AdminLayout({
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-dark-bg flex items-center justify-center">
-        <Loader2 className="w-8 h-8 text-violet-light animate-spin" />
+      <div className="min-h-screen bg-[#F6F1E8] flex items-center justify-center">
+        <Loader2 className="w-8 h-8 text-[#8B5CF6] animate-spin" />
       </div>
     );
   }
@@ -57,18 +54,18 @@ export default function AdminLayout({
   }
 
   return (
-    <div className="min-h-screen bg-dark-bg text-dark-text flex">
+    <div className="min-h-screen bg-[#F6F1E8] bg-[url('https://www.transparenttextures.com/patterns/lined-paper.png')] text-[#333333] flex font-comic">
       {/* Sidebar */}
       <motion.aside
         animate={{ width: collapsed ? 72 : 240 }}
         transition={{ duration: 0.3, ease: [0.34, 1.56, 0.64, 1] }}
-        className="fixed top-0 left-0 h-screen glass-dark border-r border-dark-border flex flex-col z-40"
+        className="fixed top-0 left-0 h-screen bg-white border-r-4 border-[#333333] flex flex-col z-40 shadow-[8px_0px_0px_rgba(0,0,0,0.05)]"
       >
         {/* Logo */}
-        <div className="h-16 flex items-center gap-3 px-5 border-b border-dark-border shrink-0">
+        <div className="h-16 flex items-center gap-3 px-5 border-b-4 border-[#333333] shrink-0">
           <motion.div
             whileHover={{ rotate: 12, scale: 1.1 }}
-            className="w-8 h-8 rounded-lg bg-violet flex items-center justify-center shrink-0"
+            className="w-8 h-8 rounded-lg bg-[#8B5CF6] border-2 border-[#333333] flex items-center justify-center shrink-0 shadow-[2px_2px_0px_#333333]"
           >
             <Sparkles className="w-4 h-4 text-white" />
           </motion.div>
@@ -80,12 +77,12 @@ export default function AdminLayout({
                 exit={{ opacity: 0, width: 0 }}
                 className="overflow-hidden whitespace-nowrap"
               >
-                <span className="font-heading text-xl font-bold text-white">
+                <span className="font-balsamiq text-xl font-bold text-[#333333]">
                   FormForge
                 </span>
                 <div className="flex items-center gap-1 mt-0.5">
-                  <Shield className="w-3 h-3 text-violet-light" />
-                  <span className="text-[10px] text-violet-light font-medium uppercase tracking-wider">
+                  <Shield className="w-3 h-3 text-[#8B5CF6]" />
+                  <span className="text-[10px] text-[#8B5CF6] font-bold uppercase tracking-wider">
                     Admin
                   </span>
                 </div>
@@ -95,7 +92,7 @@ export default function AdminLayout({
         </div>
 
         {/* Nav links */}
-        <nav className="flex-1 p-3 space-y-1 overflow-y-auto">
+        <nav className="flex-1 p-3 space-y-2 overflow-y-auto">
           {sidebarLinks.map((link) => {
             const isActive =
               pathname === link.href ||
@@ -104,19 +101,19 @@ export default function AdminLayout({
             return (
               <Link key={link.href} href={link.href}>
                 <motion.div
-                  whileHover={{ x: collapsed ? 0 : 4 }}
+                  whileHover={{ x: collapsed ? 0 : 4, y: -2 }}
                   whileTap={{ scale: 0.97 }}
                   className={cn(
-                    "flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-200",
+                    "flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-200 border-2",
                     isActive
-                      ? "bg-violet/15 text-violet-light"
-                      : "text-dark-text-secondary hover:text-white hover:bg-white/5"
+                      ? "bg-[#E9D5FF] text-[#333333] border-[#333333] shadow-[2px_2px_0px_#333333]"
+                      : "text-gray-600 border-transparent hover:border-[#333333] hover:text-[#333333] hover:shadow-[2px_2px_0px_#333333] hover:bg-white"
                   )}
                 >
                   <link.icon
                     className={cn(
                       "w-5 h-5 shrink-0",
-                      isActive ? "text-violet-light" : ""
+                      isActive ? "text-[#8B5CF6]" : ""
                     )}
                   />
                   <AnimatePresence>
@@ -125,7 +122,7 @@ export default function AdminLayout({
                         initial={{ opacity: 0, width: 0 }}
                         animate={{ opacity: 1, width: "auto" }}
                         exit={{ opacity: 0, width: 0 }}
-                        className="text-sm font-medium overflow-hidden whitespace-nowrap"
+                        className="text-sm font-bold overflow-hidden whitespace-nowrap"
                       >
                         {link.label}
                       </motion.span>
@@ -138,12 +135,12 @@ export default function AdminLayout({
         </nav>
 
         {/* Bottom actions */}
-        <div className="p-3 border-t border-dark-border space-y-1">
+        <div className="p-3 border-t-4 border-[#333333] space-y-2 bg-[#F9F9F9]">
           <Link href="/">
-            <div className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-dark-text-secondary hover:text-white hover:bg-white/5 transition-all">
+            <div className="flex items-center gap-3 px-3 py-2.5 rounded-xl border-2 border-transparent text-gray-600 hover:text-[#333333] hover:border-[#333333] hover:shadow-[2px_2px_0px_#333333] hover:bg-white hover:-translate-y-1 transition-all">
               <LogOut className="w-5 h-5 shrink-0" />
               {!collapsed && (
-                <span className="text-sm font-medium">Back to App</span>
+                <span className="text-sm font-bold">Back to App</span>
               )}
             </div>
           </Link>
@@ -151,12 +148,12 @@ export default function AdminLayout({
           {/* Collapse toggle */}
           <button
             onClick={() => setCollapsed(!collapsed)}
-            className="w-full flex items-center justify-center py-2 rounded-xl text-dark-text-secondary hover:text-white hover:bg-white/5 transition-all"
+            className="w-full flex items-center justify-center py-2 rounded-xl border-2 border-transparent text-gray-600 hover:text-[#333333] hover:border-[#333333] hover:shadow-[2px_2px_0px_#333333] hover:bg-white hover:-translate-y-1 transition-all"
           >
             {collapsed ? (
-              <ChevronRight className="w-4 h-4" />
+              <ChevronRight className="w-5 h-5 font-bold" />
             ) : (
-              <ChevronLeft className="w-4 h-4" />
+              <ChevronLeft className="w-5 h-5 font-bold" />
             )}
           </button>
         </div>

@@ -55,62 +55,90 @@ export function AiFeaturesSection() {
   const isInView = useInView(ref, { once: true, margin: "-100px" });
 
   return (
-    <section id="ai" className="py-40 px-6 bg-cream paper-texture" ref={ref}>
-      <div className="max-w-6xl w-full mx-auto flex flex-col items-center">
+    <section id="ai" className="py-32 px-6 bg-[#FAF5FF] relative overflow-hidden" ref={ref}>
+      {/* Decorative SVGs */}
+      <div className="absolute inset-0 pointer-events-none opacity-40">
+        <motion.svg 
+          animate={{ rotate: 360 }} 
+          transition={{ duration: 50, repeat: Infinity, ease: "linear" }}
+          className="absolute top-20 right-20 w-32 h-32 text-purple-200" viewBox="0 0 100 100" fill="none"
+        >
+          <circle cx="50" cy="50" r="40" stroke="currentColor" strokeWidth="2" strokeDasharray="4 4" />
+        </motion.svg>
+        <motion.svg 
+          animate={{ y: [0, -20, 0], rotate: [-10, 10, -10] }} 
+          transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+          className="absolute bottom-20 left-20 w-40 h-40 text-pink-200" viewBox="0 0 100 100" fill="none"
+        >
+          <path d="M10 90 L50 10 L90 90 Z" stroke="currentColor" strokeWidth="2" strokeDasharray="4 4" />
+        </motion.svg>
+      </div>
+      <div className="max-w-6xl w-full mx-auto flex flex-col items-center relative z-10">
         
         <div className="text-center mb-24 flex flex-col items-center">
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
             animate={isInView ? { opacity: 1, scale: 1 } : {}}
-            className="px-6 py-2 bg-amber-100 text-amber-600 border border-amber-200 rounded-full shadow-sm mb-6 flex items-center gap-2 sketch-border"
+            className="px-6 py-2 bg-white border-2 border-purple-200 rounded-2xl shadow-sm mb-6 flex items-center gap-2 transform -rotate-2"
           >
-            <Brain className="w-5 h-5" />
-            <span className="font-handwriting text-xl tracking-wide">Powered by Intelligence</span>
+            <Brain className="w-5 h-5 text-purple-500" />
+            <span className="font-comic font-bold text-purple-900 tracking-wide uppercase text-sm">Powered by Intelligence</span>
           </motion.div>
           
           <motion.h2
             initial={{ opacity: 0, y: 30 }}
             animate={isInView ? { opacity: 1, y: 0 } : {}}
             transition={{ delay: 0.1 }}
-            className="font-display text-5xl sm:text-6xl font-black mb-6 tracking-tight text-heading"
+            className="font-balsamiq text-4xl sm:text-6xl font-black mb-6 tracking-tight text-gray-900 leading-tight"
           >
-            AI that <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-500 to-orange-500">understands</span> forms.
+            AI that <span className="inline-block px-4 py-1 bg-[#F3E8FF] border-2 border-purple-300 rounded-2xl transform rotate-2">understands</span> forms.
           </motion.h2>
           
           <motion.p
             initial={{ opacity: 0, y: 20 }}
             animate={isInView ? { opacity: 1, y: 0 } : {}}
             transition={{ delay: 0.2 }}
-            className="text-xl max-w-2xl text-body font-medium text-center"
+            className="text-lg max-w-2xl text-gray-600 font-comic font-bold text-center"
           >
-            From generating complete forms to critiquing your UX — our AI doesn&apos;t just help, it transforms your workflow.
+            From generating complete forms to critiquing your UX — our AI doesn't just help, it transforms your workflow.
           </motion.p>
         </div>
 
         <div className="w-full grid lg:grid-cols-2 gap-12 items-center relative z-10">
           {/* Demo */}
           <motion.div initial={{ opacity: 0, x: -40 }} animate={isInView ? { opacity: 1, x: 0 } : {}} transition={{ duration: 0.6, delay: 0.3 }}
-            className="bg-white rounded-3xl border-2 border-border shadow-heavy overflow-hidden sketch-border">
-            <div className="p-8 border-b-2 border-dashed border-border bg-cream/50">
+            className="bg-white rounded-[2rem] border border-gray-200 shadow-sm overflow-hidden transform -rotate-1">
+            <div className="p-8 border-b border-gray-100 bg-gray-50/50">
               <div className="flex items-center gap-2 mb-4">
-                <Sparkles className="w-5 h-5 text-amber-500" />
-                <span className="font-handwriting text-xl font-bold text-muted">AI Prompt</span>
+                <Sparkles className="w-5 h-5 text-purple-500" />
+                <span className="font-comic font-bold text-sm text-gray-500 uppercase tracking-wide">AI Prompt</span>
               </div>
-              <div className="font-display text-2xl text-heading min-h-[60px] tracking-tight">
+              <div className="font-balsamiq font-bold text-2xl text-gray-800 min-h-[60px] tracking-tight">
                 {isInView && <TypewriterText text={aiPrompt} delay={500} />}
               </div>
             </div>
-            <div className="p-8 bg-white paper-texture">
+            <div className="p-8 bg-white">
               <div className="flex items-center gap-2 mb-6">
-                <Wand2 className="w-5 h-5 text-green" />
-                <span className="font-handwriting text-xl font-bold text-muted">Generated Output</span>
+                <Wand2 className="w-5 h-5 text-emerald-500" />
+                <span className="font-comic font-bold text-sm text-gray-500 uppercase tracking-wide">Generated Output</span>
               </div>
-              <div className="space-y-4 relative z-10">
+              <div className="space-y-4 relative z-10 min-h-[300px]">
+                {/* Generating Loading State */}
+                <motion.div 
+                  initial={{ opacity: 0 }} 
+                  animate={isInView ? { opacity: [0, 1, 0] } : {}} 
+                  transition={{ delay: 2, duration: 1.5, times: [0, 0.2, 1] }}
+                  className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none"
+                >
+                  <motion.div animate={{ rotate: 360 }} transition={{ repeat: Infinity, duration: 1, ease: "linear" }} className="w-8 h-8 border-4 border-emerald-200 border-t-emerald-500 rounded-full mb-4" />
+                  <span className="font-comic font-bold text-gray-400">AI is thinking...</span>
+                </motion.div>
+
                 {aiResult.map((field, i) => (
-                  <motion.div key={field.field} initial={{ opacity: 0, y: 10 }} animate={isInView ? { opacity: 1, y: 0 } : {}} transition={{ delay: 3 + i * 0.15 }}
-                    className="flex items-center justify-between py-4 px-5 rounded-2xl bg-white border-2 border-border shadow-sm sketch-border">
-                    <span className="text-base font-bold text-heading">{field.field}</span>
-                    <span className="font-handwriting text-lg text-amber-600 bg-amber-100 px-4 py-1 rounded-xl tracking-wide sketch-border">{field.type}</span>
+                  <motion.div key={field.field} initial={{ opacity: 0, y: 20, scale: 0.9 }} animate={isInView ? { opacity: 1, y: 0, scale: 1 } : {}} transition={{ delay: 3.5 + i * 0.15, type: "spring", stiffness: 100 }}
+                    className="flex items-center justify-between py-4 px-5 rounded-xl bg-white border border-gray-200 shadow-sm hover:border-purple-200 hover:shadow-md transition-all cursor-default">
+                    <span className="text-sm font-balsamiq font-bold text-gray-800">{field.field}</span>
+                    <span className="font-comic text-xs text-purple-700 font-bold bg-purple-50 px-3 py-1 rounded-lg border border-purple-100">{field.type}</span>
                   </motion.div>
                 ))}
               </div>
@@ -120,15 +148,22 @@ export function AiFeaturesSection() {
           {/* Features */}
           <div className="space-y-6">
             {aiFeatures.map((feature, i) => (
-              <motion.div key={feature.title} initial={{ opacity: 0, x: 40 }} animate={isInView ? { opacity: 1, x: 0 } : {}} transition={{ duration: 0.5, delay: 0.4 + i * 0.1 }}
-                whileHover={{ x: -6, scale: 1.02 }}
-                className="bg-white rounded-[2rem] p-8 border-2 border-border flex gap-6 items-start group cursor-default transition-all shadow-card sketch-border">
-                <div className={`w-16 h-16 rounded-2xl flex items-center justify-center shrink-0 ${feature.bg} sketch-border group-hover:rotate-6 transition-transform`}>
-                  <feature.icon className={`w-8 h-8 ${feature.color}`} />
+              <motion.div key={feature.title} 
+                initial={{ opacity: 0, x: 40 }} 
+                animate={isInView ? { opacity: 1, x: 0, y: [0, -5, 0] } : {}} 
+                transition={{ 
+                  opacity: { duration: 0.5, delay: 0.4 + i * 0.1 },
+                  x: { duration: 0.5, delay: 0.4 + i * 0.1 },
+                  y: { repeat: Infinity, duration: 4, delay: i * 0.5, ease: "easeInOut" }
+                }}
+                whileHover={{ scale: 1.02, y: -5, transition: { duration: 0.2 } }}
+                className="bg-white rounded-2xl p-6 border border-gray-200 flex gap-5 items-start group cursor-default transition-all shadow-sm rotate-1 hover:rotate-0 hover:shadow-md hover:border-amber-200">
+                <div className={`w-14 h-14 rounded-xl flex items-center justify-center shrink-0 ${feature.bg} border border-amber-200 shadow-sm group-hover:-rotate-6 transition-transform`}>
+                  <feature.icon className={`w-7 h-7 ${feature.color} stroke-[1.5]`} />
                 </div>
                 <div>
-                  <h4 className="font-display text-2xl font-bold text-heading mb-2">{feature.title}</h4>
-                  <p className="text-base text-body font-medium leading-relaxed">{feature.description}</p>
+                  <h4 className="font-balsamiq text-xl font-black text-gray-900 mb-1">{feature.title}</h4>
+                  <p className="text-sm text-gray-600 font-comic font-bold leading-relaxed">{feature.description}</p>
                 </div>
               </motion.div>
             ))}

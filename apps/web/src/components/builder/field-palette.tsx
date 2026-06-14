@@ -63,22 +63,21 @@ export function FieldPalette() {
   const addField = useFormBuilderStore((s) => s.addField);
 
   return (
-    <div className="p-6 bg-white h-full border-r-2 border-[#333333]">
-      <h3 className="text-xl font-balsamiq font-bold text-[#333333] mb-6 flex items-center gap-2">
-        <div className="w-8 h-8 rounded-lg bg-[#FEF3C7] border-2 border-[#F59E0B] flex items-center justify-center">
-          <Plus className="w-5 h-5 text-[#F59E0B]" />
+    <div className="p-4 bg-white h-full border-r-2 border-[#333333] shadow-[4px_0px_0px_rgba(0,0,0,0.05)] relative z-10 overflow-y-auto">
+      <h3 className="text-xl font-balsamiq font-black text-[#333333] mb-6 flex items-center gap-2 border-b-2 border-[#333333] pb-3">
+        <div className="w-8 h-8 rounded-lg bg-[#FEF3C7] border-2 border-[#333333] shadow-[2px_2px_0px_#333333] flex items-center justify-center transform -rotate-3">
+          <Plus className="w-5 h-5 text-[#F59E0B] stroke-[2]" />
         </div>
         Add Fields
       </h3>
 
       <div className="space-y-6">
         {fieldCategories.map((cat, ci) => (
-          <div key={cat.name} className="mb-2">
-            <p className="text-xs font-bold text-black uppercase tracking-widest mb-3 flex items-center gap-2">
+          <div key={cat.name} className="mb-3">
+            <p className="text-[10px] font-black text-[#333333] uppercase tracking-widest mb-3 flex items-center gap-2 bg-[#F5F3FF] px-2 py-0.5 rounded border-2 border-[#333333] w-fit transform -rotate-1">
               {cat.name}
-              <span className="flex-1 h-px bg-gray-200"></span>
             </p>
-            <div className="space-y-3">
+            <div className="space-y-2">
               {cat.fields.map((field, fi) => (
                 <div
                   key={field.type}
@@ -96,13 +95,10 @@ export function FieldPalette() {
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
                     onClick={() => addField(field.type)}
-                    className="w-full flex items-center gap-3 px-3 py-2 text-sm text-[#333333] bg-white border-2 border-[#333333] hover:bg-[#F5F3FF] rounded-xl transition-all text-left group shadow-[2px_2px_0px_#333333] hover:translate-y-[-2px] hover:shadow-[4px_4px_0px_#333333]"
+                    className="w-full flex items-center gap-2 px-3 py-2 text-[13px] text-[#333333] font-bold font-balsamiq bg-white border-2 border-[#333333] hover:bg-[#F5F3FF] rounded-xl transition-all text-left group shadow-[2px_2px_0px_#333333] hover:translate-y-[-1px] hover:shadow-[3px_3px_0px_#333333] active:translate-y-[1px] active:shadow-none"
                   >
-                    <div className="w-8 h-8 rounded-lg bg-gray-100 border-2 border-[#333333] flex items-center justify-center group-hover:bg-white transition-colors pointer-events-none">
-                      <field.icon className="w-4 h-4 shrink-0 text-[#333333]" />
-                    </div>
-                    <span className="flex-1 font-bold font-balsamiq pointer-events-none">{field.label}</span>
-                    <Plus className="w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity text-[#333333] pointer-events-none" />
+                    <field.icon className="w-4 h-4 text-gray-400 group-hover:text-[#8B5CF6] transition-colors stroke-[2]" />
+                    {field.label}
                   </motion.button>
                 </div>
               ))}

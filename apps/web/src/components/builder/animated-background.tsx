@@ -59,6 +59,27 @@ export function AnimatedBackground({ pattern }: AnimatedBackgroundProps) {
             {eduIcons[index % eduIcons.length]}
           </div>
         );
+      case "business":
+        const busIcons = ["💼", "📈", "💰", "👔", "📊", "🤝"];
+        return (
+          <div className="opacity-20 text-4xl grayscale hover:grayscale-0 transition-all duration-1000">
+            {busIcons[index % busIcons.length]}
+          </div>
+        );
+      case "nature":
+        const natIcons = ["🌿", "🌳", "🌸", "☀️", "🦋", "🍄"];
+        return (
+          <div className="opacity-20 text-4xl grayscale hover:grayscale-0 transition-all duration-1000">
+            {natIcons[index % natIcons.length]}
+          </div>
+        );
+      case "food":
+        const foodIcons = ["🍕", "🍔", "🍎", "☕", "🍩", "🌮"];
+        return (
+          <div className="opacity-20 text-4xl grayscale hover:grayscale-0 transition-all duration-1000">
+            {foodIcons[index % foodIcons.length]}
+          </div>
+        );
       case "playful":
       default:
         // Abstract shapes (circles, squares, triangles)
@@ -71,7 +92,7 @@ export function AnimatedBackground({ pattern }: AnimatedBackgroundProps) {
     }
   };
 
-  if (!["programmer", "healthcare", "education", "playful"].includes(pattern)) {
+  if (!["programmer", "healthcare", "education", "playful", "business", "nature", "food"].includes(pattern)) {
     return null; // Don't render for standard/static themes
   }
 

@@ -8,6 +8,7 @@ import { Loader2, CheckCircle2, Star, Upload, ChevronDown } from "lucide-react";
 import { toast } from "sonner";
 import { AnimatedBackground } from "@/components/builder/animated-background";
 import { useAuth } from "@/providers/auth-provider";
+import FormViewTracker from "@/components/FormViewTracker";
 
 // ============================================================================
 // Interactive Signature Pad
@@ -138,6 +139,8 @@ function FieldInput({
         <input
           type="text"
           required={field.required}
+          minLength={field.config?.minLength as number | undefined}
+          maxLength={field.config?.maxLength as number | undefined}
           value={value || ""}
           onChange={(e) => onChange(e.target.value)}
           placeholder={field.config?.placeholder || "Type your answer here..."}
@@ -149,6 +152,8 @@ function FieldInput({
       return (
         <textarea
           required={field.required}
+          minLength={field.config?.minLength as number | undefined}
+          maxLength={field.config?.maxLength as number | undefined}
           value={value || ""}
           onChange={(e) => onChange(e.target.value)}
           placeholder={field.config?.placeholder || "Type your answer here..."}
@@ -186,6 +191,8 @@ function FieldInput({
         <input
           type="number"
           required={field.required}
+          min={field.config?.min as number | undefined}
+          max={field.config?.max as number | undefined}
           value={value || ""}
           onChange={(e) => onChange(e.target.value)}
           placeholder={field.config?.placeholder || "0"}
@@ -322,7 +329,7 @@ function FieldInput({
 
     case "rating":
     case "stars": {
-      const maxRating = field.config?.maxRating || 5;
+      const maxRating = (field.config?.max as number) || 5;
       const currentVal = Number(value) || 0;
       return (
         <div className="flex gap-2 flex-wrap">
@@ -344,9 +351,9 @@ function FieldInput({
     }
 
     case "slider": {
-      const min = field.config?.sliderMin ?? 0;
-      const max = field.config?.sliderMax ?? 100;
-      const step = field.config?.sliderStep ?? 1;
+      const min = (field.config?.min as number) ?? 0;
+      const max = (field.config?.max as number) ?? 100;
+      const step = (field.config?.step as number) ?? 1;
       const current = value ?? min;
       return (
         <div className="space-y-2">
@@ -370,10 +377,12 @@ function FieldInput({
 
     case "nps": {
       const currentNps = Number(value);
+      const min = (field.config?.min as number) ?? 0;
+      const max = (field.config?.max as number) ?? 10;
       return (
         <div className="space-y-3">
           <div className="flex gap-1 flex-wrap">
-            {Array.from({ length: 11 }, (_, i) => i).map((num) => (
+            {Array.from({ length: max - min + 1 }, (_, i) => min + i).map((num) => (
               <button
                 key={num}
                 type="button"
@@ -472,14 +481,23 @@ function FieldInput({
           <div className="h-32 rounded-xl border-2 border-dashed border-gray-300 bg-white flex flex-col items-center justify-center text-gray-400 font-comic cursor-pointer hover:border-[#8B5CF6] hover:bg-[#F5F3FF] transition-colors">
             <Upload className="w-6 h-6 mb-2 text-[#8B5CF6]" />
             <span className="font-bold text-sm">Click to upload a file</span>
-            <span className="text-xs mt-1">Max 10MB</span>
+            <span className="text-xs mt-1">Max {field.config?.maxSize as number || 5}MB</span>
+            <span className="text-[10px] mt-1 opacity-70">Allowed: {field.config?.allowedTypes as string || "Any"}</span>
           </div>
           <input
             type="file"
+            accept={field.config?.allowedTypes as string || "*"}
             className="sr-only"
             onChange={(e) => {
               const file = e.target.files?.[0];
-              if (file) onChange(file.name);
+              if (file) {
+                const maxSize = (field.config?.maxSize as number || 5) * 1024 * 1024;
+                if (file.size > maxSize) {
+                  toast.error(`File size must be less than ${field.config?.maxSize || 5}MB`);
+                  return;
+                }
+                onChange(file.name);
+              }
             }}
           />
         </label>
@@ -488,9 +506,10 @@ function FieldInput({
     case "signature":
       return <SignaturePad value={value || ""} onChange={(val) => onChange(val)} />;
 
+    case "likert":
     case "matrix": {
-      const rows: string[] = field.config?.rows || ["Row 1", "Row 2"];
-      const cols: string[] = field.config?.columns || ["Col 1", "Col 2", "Col 3"];
+      const rows: string[] = (field.config?.rows as string[]) || ["Row 1", "Row 2"];
+      const cols: string[] = (field.config?.columns as string[]) || ["Col 1", "Col 2", "Col 3"];
       const matrixVal = value || {};
       return (
         <div className="overflow-x-auto">
@@ -649,7 +668,19 @@ export default function PublicFormView() {
       const payload = { ...responses };
       if (respondentName) payload.__respondent_name = respondentName;
       
-      await submitFormResponse(formData.id, payload, respondentEmail);
+      let deviceType = "Desktop";
+      if (typeof navigator !== 'undefined') {
+        const ua = navigator.userAgent.toLowerCase();
+        if (/ipad|tablet|playbook|silk/i.test(ua)) {
+          deviceType = "Tablet";
+        } else if (/android|webos|iphone|ipod|blackberry|iemobile|opera mini/i.test(ua)) {
+          deviceType = "Mobile";
+        } else if (window.innerWidth < 768) {
+          deviceType = "Mobile";
+        }
+      }
+
+      await submitFormResponse(formData.id, payload, respondentEmail, deviceType);
       setSuccess(true);
       if (typeof window !== "undefined") {
         localStorage.setItem(`form_submitted_${slug}`, "true");
@@ -753,6 +784,7 @@ export default function PublicFormView() {
   if (!hasEnteredEmail && !success) {
     return (
       <div className={`min-h-screen flex items-center justify-center p-4 relative overflow-hidden ${theme.backgroundColor || "bg-[#FCFBF8]"}`}>
+        <FormViewTracker formSlug={slug} />
         <AnimatedBackground pattern={theme.backgroundPattern || "solid"} />
         
         <motion.div 
@@ -857,12 +889,12 @@ export default function PublicFormView() {
 
   return (
     <div
-      className={`min-h-screen py-16 px-4 transition-colors ${fontClass} relative`}
+      className={`min-h-screen py-8 px-4 transition-colors ${fontClass} relative flex flex-col justify-center`}
       style={bgStyles}
     >
       <AnimatedBackground pattern={pattern || "solid"} />
       
-      <div className="max-w-2xl mx-auto relative z-10">
+      <div className="max-w-4xl w-full mx-auto relative z-10">
         {!success && fields.length > 0 ? (
           <div
             className={`bg-[#FCFBF8] p-6 md:p-12 rounded-[2rem] border-4 border-[#333333] shadow-[8px_8px_0px_#333333] relative overflow-hidden transition-all duration-500 w-full`}
@@ -946,10 +978,10 @@ export default function PublicFormView() {
                           type="button"
                           onClick={prevField}
                           disabled={currentFieldIndex === 0}
-                          className={`px-4 py-2 font-balsamiq font-bold text-base rounded-xl border-2 transition-all flex items-center gap-2 ${
+                          className={`px-3 py-1.5 font-balsamiq font-bold text-sm rounded-xl border-2 transition-all flex items-center gap-2 ${
                             currentFieldIndex === 0 
                               ? "bg-gray-100 text-gray-400 border-gray-200 cursor-not-allowed" 
-                              : "bg-white text-[#333333] border-[#333333] shadow-[4px_4px_0px_#333333] hover:translate-y-[2px] hover:shadow-[2px_2px_0px_#333333] active:translate-y-[4px] active:shadow-none"
+                              : "bg-white text-[#333333] border-[#333333] shadow-[2px_2px_0px_#333333] hover:translate-y-[1px] hover:shadow-[1px_1px_0px_#333333] active:translate-y-[2px] active:shadow-none"
                           }`}
                         >
                           Back
@@ -959,9 +991,9 @@ export default function PublicFormView() {
                           type="button"
                           onClick={nextField}
                           disabled={submitting}
-                          className="flex-1 max-w-[160px] py-3 bg-[#8B5CF6] border-4 border-[#333333] rounded-xl font-balsamiq text-lg font-bold text-white shadow-[4px_4px_0px_#333333] hover:translate-y-[2px] hover:shadow-[2px_2px_0px_#333333] active:translate-y-[4px] active:shadow-none transition-all flex justify-center items-center gap-2"
+                          className="flex-1 max-w-[140px] py-2 bg-[#8B5CF6] border-2 border-[#333333] rounded-xl font-balsamiq text-base font-bold text-white shadow-[2px_2px_0px_#333333] hover:translate-y-[1px] hover:shadow-[1px_1px_0px_#333333] active:translate-y-[2px] active:shadow-none transition-all flex justify-center items-center gap-2"
                         >
-                          {submitting ? <Loader2 className="w-6 h-6 animate-spin" /> : currentFieldIndex === fields.length - 1 ? "Submit ✨" : "Next ➔"}
+                          {submitting ? <Loader2 className="w-5 h-5 animate-spin" /> : currentFieldIndex === fields.length - 1 ? "Submit ✨" : "Next ➔"}
                         </button>
                       </div>
                     </form>

@@ -16,103 +16,78 @@ import {
   CheckCircle2,
   Clock,
   Palette,
+  Loader2,
 } from "lucide-react";
 
-// Mock data — will be replaced with tRPC calls once DB is connected
-const stats = [
-  {
-    label: "Total Users",
-    value: "8,247",
-    change: "+12.5%",
-    up: true,
-    icon: Users,
-    color: "violet",
-  },
-  {
-    label: "Total Forms",
-    value: "24,891",
-    change: "+8.3%",
-    up: true,
-    icon: FileText,
-    color: "blue",
-  },
-  {
-    label: "Submissions",
-    value: "152,430",
-    change: "+23.1%",
-    up: true,
-    icon: BarChart3,
-    color: "green",
-  },
-  {
-    label: "Active Forms",
-    value: "6,102",
-    change: "-2.4%",
-    up: false,
-    icon: TrendingUp,
-    color: "amber",
-  },
+// Live data fetches will replace stats on mount
+const fallbackStats = [
+  { label: "Total Users", value: "0", change: "--", up: true, icon: Users, color: "violet" },
+  { label: "Total Forms", value: "0", change: "--", up: true, icon: FileText, color: "blue" },
+  { label: "Submissions", value: "0", change: "--", up: true, icon: BarChart3, color: "green" },
+  { label: "Active Forms", value: "0", change: "--", up: false, icon: TrendingUp, color: "amber" },
 ];
 
-const recentUsers = [
-  { name: "Sarah Chen", email: "sarah@example.com", forms: 12, joined: "2h ago", avatar: "🧑‍💻" },
-  { name: "Alex Rivera", email: "alex@example.com", forms: 8, joined: "5h ago", avatar: "👩‍🎨" },
-  { name: "Kira Tanaka", email: "kira@example.com", forms: 23, joined: "1d ago", avatar: "🧑‍🏫" },
-  { name: "Marco Polo", email: "marco@example.com", forms: 5, joined: "1d ago", avatar: "👨‍💼" },
-  { name: "Luna Park", email: "luna@example.com", forms: 17, joined: "2d ago", avatar: "👩‍🔬" },
-];
-
-const recentForms = [
-  { title: "Event Registration 2026", creator: "Sarah Chen", responses: 342, status: "published" },
-  { title: "Customer Feedback Survey", creator: "Alex Rivera", responses: 89, status: "published" },
-  { title: "Job Application Form", creator: "Kira Tanaka", responses: 156, status: "published" },
-  { title: "Product Review Quiz", creator: "Marco Polo", responses: 0, status: "draft" },
-  { title: "Workshop Signup", creator: "Luna Park", responses: 67, status: "published" },
-];
-
-const colorMap: Record<string, { bg: string; text: string; border: string }> = {
-  violet: { bg: "bg-violet/10", text: "text-violet-light", border: "border-violet/20" },
-  blue: { bg: "bg-blue/10", text: "text-blue-light", border: "border-blue/20" },
-  green: { bg: "bg-green/10", text: "text-green-light", border: "border-green/20" },
-  amber: { bg: "bg-amber/10", text: "text-amber-light", border: "border-amber/20" },
-};
-
-function StatCard({ stat, index }: { stat: (typeof stats)[0]; index: number }) {
-  const c = colorMap[stat.color] || colorMap.violet;
+function StatCard({ stat, index }: { stat: (typeof fallbackStats)[0]; index: number }) {
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: index * 0.08, ease: [0.34, 1.56, 0.64, 1] }}
-      whileHover={{ y: -4, boxShadow: "0 8px 30px rgba(0,0,0,0.3)" }}
-      className={`glass-dark rounded-2xl p-5 border ${c.border} cursor-default`}
+      whileHover={{ y: -4, boxShadow: "6px 6px 0px #8B5CF6" }}
+      className={`bg-white rounded-2xl p-5 border-4 border-[#333333] shadow-[6px_6px_0px_#333333] cursor-default transition-all`}
     >
       <div className="flex items-start justify-between mb-4">
-        <div className={`w-10 h-10 rounded-xl ${c.bg} flex items-center justify-center`}>
-          <stat.icon className={`w-5 h-5 ${c.text}`} />
+        <div className={`w-10 h-10 rounded-xl border-2 border-[#333333] bg-[#F0EBFF] flex items-center justify-center`}>
+          <stat.icon className={`w-5 h-5 text-[#333333]`} />
         </div>
         <div
-          className={`flex items-center gap-1 text-xs font-medium px-2 py-1 rounded-full ${
+          className={`flex items-center gap-1 text-xs font-comic font-bold px-2 py-1 rounded-full border-2 border-[#333333] ${
             stat.up
-              ? "bg-green/10 text-green-light"
-              : "bg-pink/10 text-pink-light"
+              ? "bg-[#4ADE80] text-[#333333]"
+              : "bg-[#F472B6] text-[#333333]"
           }`}
         >
           {stat.up ? (
-            <ArrowUpRight className="w-3 h-3" />
+            <ArrowUpRight className="w-3 h-3 stroke-[3]" />
           ) : (
-            <ArrowDownRight className="w-3 h-3" />
+            <ArrowDownRight className="w-3 h-3 stroke-[3]" />
           )}
           {stat.change}
         </div>
       </div>
-      <div className="text-2xl font-bold text-white mb-0.5">{stat.value}</div>
-      <div className="text-xs text-dark-text-secondary">{stat.label}</div>
+      <div className="text-4xl font-balsamiq font-bold text-[#333333] mb-0.5">{stat.value}</div>
+      <div className="text-sm font-comic font-bold text-gray-500">{stat.label}</div>
     </motion.div>
   );
 }
 
+import { useState, useEffect } from "react";
+import { fetchAdminOverview } from "@/lib/admin-actions";
+
 export default function AdminOverviewPage() {
+  const [loading, setLoading] = useState(true);
+  const [data, setData] = useState<{
+    stats: any;
+    recentUsers: any[];
+    recentForms: any[];
+  } | null>(null);
+
+  useEffect(() => {
+    async function loadData() {
+      const overview = await fetchAdminOverview();
+      setData(overview);
+      setLoading(false);
+    }
+    loadData();
+  }, []);
+
+  const stats = data ? [
+    { label: "Total Users", value: data.stats.totalUsers.toLocaleString(), change: "Live", up: true, icon: Users, color: "violet" },
+    { label: "Total Forms", value: data.stats.totalForms.toLocaleString(), change: "Live", up: true, icon: FileText, color: "blue" },
+    { label: "Submissions", value: data.stats.submissions.toLocaleString(), change: "Live", up: true, icon: BarChart3, color: "green" },
+    { label: "Active Forms", value: data.stats.activeForms.toLocaleString(), change: "Live", up: true, icon: TrendingUp, color: "amber" },
+  ] : fallbackStats;
+
   return (
     <div>
       {/* Header */}
@@ -121,8 +96,8 @@ export default function AdminOverviewPage() {
         animate={{ opacity: 1, y: 0 }}
         className="mb-8"
       >
-        <h1 className="text-2xl font-bold text-white mb-1">Dashboard Overview</h1>
-        <p className="text-sm text-dark-text-secondary">
+        <h1 className="text-3xl font-balsamiq font-bold text-[#333333] mb-1">Dashboard Overview</h1>
+        <p className="text-sm font-comic font-bold text-gray-600">
           Welcome back — here&apos;s what&apos;s happening with FormForge.
         </p>
       </motion.div>
@@ -141,41 +116,45 @@ export default function AdminOverviewPage() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.35 }}
-          className="glass-dark rounded-2xl border border-dark-border overflow-hidden"
+          className="bg-white rounded-3xl border-4 border-[#333333] shadow-[8px_8px_0px_#333333] overflow-hidden"
         >
-          <div className="px-5 py-4 border-b border-dark-border flex items-center justify-between">
-            <h3 className="text-sm font-semibold text-white flex items-center gap-2">
-              <Users className="w-4 h-4 text-violet-light" />
+          <div className="px-5 py-4 border-b-4 border-[#333333] bg-[#F9F9F9] flex items-center justify-between">
+            <h3 className="text-lg font-balsamiq font-bold text-[#333333] flex items-center gap-2">
+              <Users className="w-5 h-5 text-[#8B5CF6]" />
               Recent Users
             </h3>
-            <span className="text-xs text-dark-text-secondary">Last 7 days</span>
+            <span className="text-xs font-comic font-bold text-gray-500">Last 7 days</span>
           </div>
-          <div className="divide-y divide-dark-border">
-            {recentUsers.map((user, i) => (
+          <div className="divide-y-2 divide-dashed divide-gray-300 font-comic">
+            {loading ? (
+              <div className="px-5 py-6 flex justify-center"><Loader2 className="w-5 h-5 animate-spin text-gray-500" /></div>
+            ) : data?.recentUsers.length === 0 ? (
+              <div className="px-5 py-4 text-sm text-gray-500 font-bold text-center">No users found.</div>
+            ) : data?.recentUsers.map((user, i) => (
               <motion.div
                 key={user.email}
                 initial={{ opacity: 0, x: -10 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: 0.4 + i * 0.05 }}
-                className="px-5 py-3 flex items-center gap-3 hover:bg-white/[0.02] transition-colors"
+                className="px-5 py-3 flex items-center gap-3 hover:bg-[#F0EBFF] transition-colors"
               >
-                <div className="w-8 h-8 rounded-full bg-dark-card flex items-center justify-center text-sm">
-                  {user.avatar}
+                <div className="w-10 h-10 rounded-full border-2 border-[#333333] bg-[#E9D5FF] flex items-center justify-center text-sm font-bold uppercase text-[#333333]">
+                  {user.name ? user.name.substring(0, 2) : user.email.substring(0, 2)}
                 </div>
                 <div className="flex-1 min-w-0">
-                  <div className="text-sm font-medium text-white truncate">
-                    {user.name}
+                  <div className="text-sm font-bold text-[#333333] truncate">
+                    {user.name || "Anonymous User"}
                   </div>
-                  <div className="text-xs text-dark-text-secondary truncate">
+                  <div className="text-xs font-bold text-gray-500 truncate">
                     {user.email}
                   </div>
                 </div>
                 <div className="text-right shrink-0">
-                  <div className="text-xs text-dark-text-secondary">
-                    {user.forms} forms
+                  <div className="text-xs font-bold text-[#333333]">
+                    {user.forms?.[0]?.count || 0} forms
                   </div>
-                  <div className="text-[10px] text-dark-text-secondary">
-                    {user.joined}
+                  <div className="text-[10px] font-bold text-gray-500">
+                    {new Date(user.created_at).toLocaleDateString()}
                   </div>
                 </div>
               </motion.div>
@@ -188,40 +167,44 @@ export default function AdminOverviewPage() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4 }}
-          className="glass-dark rounded-2xl border border-dark-border overflow-hidden"
+          className="bg-white rounded-3xl border-4 border-[#333333] shadow-[8px_8px_0px_#333333] overflow-hidden"
         >
-          <div className="px-5 py-4 border-b border-dark-border flex items-center justify-between">
-            <h3 className="text-sm font-semibold text-white flex items-center gap-2">
-              <FileText className="w-4 h-4 text-blue-light" />
+          <div className="px-5 py-4 border-b-4 border-[#333333] bg-[#F9F9F9] flex items-center justify-between">
+            <h3 className="text-lg font-balsamiq font-bold text-[#333333] flex items-center gap-2">
+              <FileText className="w-5 h-5 text-[#3B82F6]" />
               Recent Forms
             </h3>
-            <span className="text-xs text-dark-text-secondary">All time</span>
+            <span className="text-xs font-comic font-bold text-gray-500">All time</span>
           </div>
-          <div className="divide-y divide-dark-border">
-            {recentForms.map((form, i) => (
+          <div className="divide-y-2 divide-dashed divide-gray-300 font-comic">
+            {loading ? (
+              <div className="px-5 py-6 flex justify-center"><Loader2 className="w-5 h-5 animate-spin text-gray-500" /></div>
+            ) : data?.recentForms.length === 0 ? (
+              <div className="px-5 py-4 text-sm font-bold text-gray-500 text-center">No forms found.</div>
+            ) : data?.recentForms.map((form, i) => (
               <motion.div
-                key={form.title}
+                key={form.title + i}
                 initial={{ opacity: 0, x: -10 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: 0.45 + i * 0.05 }}
-                className="px-5 py-3 flex items-center gap-3 hover:bg-white/[0.02] transition-colors"
+                className="px-5 py-3 flex items-center gap-3 hover:bg-[#EFF6FF] transition-colors"
               >
                 <div
-                  className={`w-2 h-2 rounded-full shrink-0 ${
-                    form.status === "published" ? "bg-green" : "bg-amber"
+                  className={`w-3 h-3 rounded-full border-2 border-[#333333] shrink-0 ${
+                    form.status === "published" ? "bg-[#4ADE80]" : "bg-[#FBBF24]"
                   }`}
                 />
                 <div className="flex-1 min-w-0">
-                  <div className="text-sm font-medium text-white truncate">
+                  <div className="text-sm font-bold text-[#333333] truncate">
                     {form.title}
                   </div>
-                  <div className="text-xs text-dark-text-secondary">
-                    by {form.creator}
+                  <div className="text-xs font-bold text-gray-500">
+                    by {form.users?.name || form.users?.email || "Unknown"}
                   </div>
                 </div>
                 <div className="text-right shrink-0">
-                  <div className="text-xs text-white">{form.responses}</div>
-                  <div className="text-[10px] text-dark-text-secondary">
+                  <div className="text-xs font-bold text-[#333333]">{form.submissions?.[0]?.count || 0}</div>
+                  <div className="text-[10px] font-bold text-gray-500">
                     responses
                   </div>
                 </div>

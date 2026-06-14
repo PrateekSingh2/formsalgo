@@ -27,17 +27,24 @@ export function Navbar() {
       transition={{ duration: 0.6, ease: [0.34, 1.56, 0.64, 1] }}
       className="fixed top-0 left-0 right-0 z-50 px-4 pt-4"
     >
-      <nav className="mx-auto max-w-[1300px] bg-[#FCFBF8] border-2 border-[#333333] rounded-2xl px-6 py-3.5 flex items-center justify-between shadow-[4px_4px_0px_#333333]">
+      <nav className="mx-auto max-w-[1300px] bg-white/80 backdrop-blur-md border border-gray-200 rounded-xl px-6 py-3.5 flex items-center justify-between shadow-sm">
         {/* Logo */}
         <Link href="/" className="flex items-center gap-2.5 group shrink-0">
           <motion.div
             whileHover={{ rotate: 12, scale: 1.1 }}
             transition={{ type: "spring", stiffness: 400 }}
-            className="w-9 h-9 rounded-xl bg-[#8B5CF6] border-2 border-[#333333] flex items-center justify-center shadow-[2px_2px_0px_#333333]"
+            className="w-10 h-10 flex items-center justify-center bg-[#FEF3C7] border-2 border-amber-300 rounded-xl shadow-sm transform -rotate-3"
           >
-            <Sparkles className="w-5 h-5 text-white" />
+            <svg viewBox="0 0 24 24" fill="none" stroke="#D97706" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-6 h-6">
+              <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
+              <path d="M12 11h4" />
+              <path d="M12 15h4" />
+              <path d="M8 11h.01" />
+              <path d="M8 15h.01" />
+              <path d="M12 7h.01" />
+            </svg>
           </motion.div>
-          <span className="font-balsamiq text-2xl font-bold text-[#333333] tracking-tight">
+          <span className="font-balsamiq text-2xl font-black text-gray-900 tracking-tight">
             FormForge
           </span>
         </Link>
@@ -50,7 +57,7 @@ export function Navbar() {
               href={link.href}
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.98 }}
-              className="px-4 py-2 text-sm font-comic font-bold text-gray-500 hover:text-[#8B5CF6] rounded-xl hover:bg-[#E9D5FF] transition-colors"
+              className="font-comic px-4 py-2 text-base font-bold text-gray-600 hover:text-[#8B5CF6] hover:bg-[#F3E8FF] rounded-xl transition-colors"
             >
               {link.label}
             </motion.a>
@@ -61,14 +68,14 @@ export function Navbar() {
         <div className="hidden md:flex items-center gap-3 shrink-0">
           <Link
             href="/login"
-            className="px-4 py-2 text-sm font-comic font-bold text-gray-500 hover:text-[#333333] transition-colors"
+            className="px-4 py-2 text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors"
           >
             Log in
           </Link>
           <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.97 }}>
             <Link
               href="/signup"
-              className="px-5 py-2.5 bg-[#8B5CF6] text-white text-sm font-comic font-bold rounded-xl border-2 border-[#333333] hover:bg-[#7C3AED] transition-colors shadow-[2px_2px_0px_#333333] inline-block"
+              className="font-balsamiq px-5 py-2.5 bg-[#8B5CF6] text-white text-base font-bold rounded-xl hover:bg-[#7C3AED] transition-all shadow-sm inline-block transform hover:-translate-y-0.5"
             >
               Get Started Free
             </Link>
@@ -94,7 +101,7 @@ export function Navbar() {
             animate={{ opacity: 1, y: 0, height: "auto" }}
             exit={{ opacity: 0, y: -10, height: 0 }}
             transition={{ duration: 0.3, ease: "easeOut" }}
-            className="mx-auto max-w-[1300px] mt-2 bg-[#FCFBF8] border-2 border-[#333333] rounded-2xl px-6 py-4 md:hidden shadow-[4px_4px_0px_#333333]"
+            className="mx-auto max-w-[1300px] mt-2 bg-white border border-gray-200 rounded-xl px-6 py-4 md:hidden shadow-sm"
           >
             {navLinks.map((link, i) => (
               <motion.a
@@ -104,7 +111,7 @@ export function Navbar() {
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: i * 0.05 }}
                 onClick={() => setMobileOpen(false)}
-                className="block py-3 text-gray-500 hover:text-[#8B5CF6] font-comic font-bold border-b-2 border-dashed border-gray-200 last:border-none"
+                className="font-comic block py-3 text-gray-600 hover:text-gray-900 font-bold border-b border-gray-100 last:border-none"
               >
                 {link.label}
               </motion.a>
@@ -112,13 +119,13 @@ export function Navbar() {
             <div className="flex gap-3 mt-4">
               <Link
                 href="/login"
-                className="flex-1 text-center py-2.5 text-sm font-comic font-bold text-gray-500 border-2 border-[#333333] rounded-xl hover:bg-white hover:shadow-[2px_2px_0px_#333333] transition-all"
+                className="font-comic flex-1 text-center py-2.5 text-sm font-bold text-gray-600 border border-gray-200 rounded-lg hover:bg-gray-50 transition-all"
               >
                 Log in
               </Link>
               <Link
                 href="/signup"
-                className="flex-1 text-center py-2.5 bg-[#8B5CF6] text-white text-sm font-comic font-bold border-2 border-[#333333] shadow-[2px_2px_0px_#333333] rounded-xl hover:bg-[#7C3AED] transition-colors"
+                className="font-comic flex-1 text-center py-2.5 bg-gray-900 text-white text-sm font-bold border border-transparent shadow-sm rounded-lg hover:bg-gray-800 transition-all"
               >
                 Get Started
               </Link>

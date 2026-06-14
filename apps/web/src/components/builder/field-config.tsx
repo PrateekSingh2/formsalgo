@@ -18,24 +18,24 @@ export function FieldConfig() {
     <div className="flex flex-col h-full bg-[#FCFBF8]">
 
       {/* Tabs */}
-      <div className="flex border-b-2 border-gray-200">
+      <div className="flex border-b-2 border-[#333333] bg-[#F5F3FF]">
         <button
           onClick={() => setActiveTab("field")}
-          className={`flex-1 py-4 text-sm font-balsamiq font-bold flex flex-col items-center justify-center gap-1 transition-colors ${activeTab === 'field' ? 'text-[#8B5CF6] border-b-2 border-[#8B5CF6]' : 'text-gray-500 hover:text-gray-700 hover:bg-gray-50'}`}
+          className={`flex-1 py-3 text-sm font-balsamiq font-black flex flex-col items-center justify-center gap-1 transition-all ${activeTab === 'field' ? 'text-[#8B5CF6] bg-white border-t-2 border-t-[#8B5CF6] shadow-[inset_0px_-2px_0px_white]' : 'text-gray-500 border-t-2 border-t-transparent hover:text-[#333333] hover:bg-[#E9D5FF]'}`}
         >
-          <Settings2 className="w-4 h-4" /> Properties
+          <Settings2 className="w-4 h-4 stroke-[2]" /> Properties
         </button>
         <button
           onClick={() => setActiveTab("theme")}
-          className={`flex-1 py-4 text-sm font-balsamiq font-bold flex flex-col items-center justify-center gap-1 transition-colors ${activeTab === 'theme' ? 'text-[#8B5CF6] border-b-2 border-[#8B5CF6]' : 'text-gray-500 hover:text-gray-700 hover:bg-gray-50'}`}
+          className={`flex-1 py-3 text-sm font-balsamiq font-black flex flex-col items-center justify-center gap-1 transition-all border-l-2 border-l-[#333333] border-r-2 border-r-[#333333] ${activeTab === 'theme' ? 'text-[#8B5CF6] bg-white border-t-2 border-t-[#8B5CF6] shadow-[inset_0px_-2px_0px_white]' : 'text-gray-500 border-t-2 border-t-transparent hover:text-[#333333] hover:bg-[#E9D5FF]'}`}
         >
-          <Palette className="w-4 h-4" /> Theme
+          <Palette className="w-4 h-4 stroke-[2]" /> Theme
         </button>
         <button
           onClick={() => setActiveTab("settings")}
-          className={`flex-1 py-4 text-xs font-balsamiq font-bold flex flex-col items-center justify-center gap-1 transition-colors ${activeTab === 'settings' ? 'text-[#8B5CF6] border-b-2 border-[#8B5CF6]' : 'text-gray-500 hover:text-gray-700 hover:bg-gray-50'}`}
+          className={`flex-1 py-3 text-xs font-balsamiq font-black flex flex-col items-center justify-center gap-1 transition-all ${activeTab === 'settings' ? 'text-[#8B5CF6] bg-white border-t-2 border-t-[#8B5CF6] shadow-[inset_0px_-2px_0px_white]' : 'text-gray-500 border-t-2 border-t-transparent hover:text-[#333333] hover:bg-[#E9D5FF]'}`}
         >
-          <SlidersHorizontal className="w-4 h-4" /> Settings
+          <SlidersHorizontal className="w-4 h-4 stroke-[2]" /> Settings
         </button>
       </div>
 
@@ -46,37 +46,67 @@ export function FieldConfig() {
               <motion.div key={field.id} initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }}
                 transition={{ duration: 0.2 }} className="space-y-5 font-comic">
                 <div>
-                  <label className="text-xs font-bold text-gray-500 uppercase tracking-widest block mb-2">Label</label>
+                  <label className="text-[10px] font-black text-[#333333] uppercase tracking-widest block mb-2 bg-[#FEF3C7] w-fit px-2 py-0.5 rounded border-2 border-[#333333] transform -rotate-1">Label</label>
                   <input type="text" value={field.label} onChange={(e) => updateField(field.id, { label: e.target.value })}
-                    className="w-full px-3 py-2 text-sm bg-white border-2 border-gray-200 rounded-xl focus:border-[#8B5CF6] focus:outline-none transition-all text-[#333333] font-bold" />
+                    className="w-full px-3 py-2 text-sm bg-white border-2 border-[#333333] shadow-[2px_2px_0px_#333333] rounded-lg focus:outline-none focus:translate-y-px focus:shadow-[1px_1px_0px_#333333] transition-all text-[#333333] font-bold" />
                 </div>
 
                 <div>
-                  <label className="text-xs font-bold text-gray-500 uppercase tracking-widest block mb-2">Description</label>
+                  <label className="text-[10px] font-black text-[#333333] uppercase tracking-widest block mb-2 bg-[#D1FAE5] w-fit px-2 py-0.5 rounded border-2 border-[#333333] transform rotate-1">Description</label>
                   <textarea value={field.description || ""} onChange={(e) => updateField(field.id, { description: e.target.value })} rows={2}
-                    className="w-full px-3 py-2 text-sm bg-white border-2 border-gray-200 rounded-xl focus:border-[#8B5CF6] focus:outline-none transition-all resize-none text-[#333333]" placeholder="Add a help text..." />
+                    className="w-full px-3 py-2 text-sm bg-white border-2 border-[#333333] shadow-[2px_2px_0px_#333333] rounded-lg focus:outline-none focus:translate-y-px focus:shadow-[1px_1px_0px_#333333] transition-all resize-none text-[#333333] font-bold" placeholder="Add a help text..." />
                 </div>
 
-                <div className="flex items-center justify-between py-2">
-                  <label className="text-sm font-bold text-[#333333]">Required Field</label>
+                <div className="flex items-center justify-between py-2 px-3 bg-white border-2 border-[#333333] rounded-lg shadow-[2px_2px_0px_#333333]">
+                  <label className="text-sm font-black text-[#333333]">Required Field</label>
                   <button onClick={() => updateField(field.id, { required: !field.required })}
                     className={`w-12 h-6 rounded-full transition-colors relative border-2 border-[#333333] ${field.required ? "bg-[#34D399]" : "bg-gray-200"}`}>
                     <motion.div animate={{ x: field.required ? 24 : 2 }} transition={{ type: "spring", stiffness: 500, damping: 30 }}
-                      className="absolute top-0.5 w-4 h-4 rounded-full bg-white shadow-sm border border-[#333333]" />
+                      className="absolute top-0.5 w-4 h-4 rounded-full bg-white shadow-sm border-2 border-[#333333]" />
                   </button>
                 </div>
 
                 {["short_text", "long_text", "email", "phone", "number", "url"].includes(field.type) && (
-                  <div>
-                    <label className="text-xs font-bold text-gray-500 uppercase tracking-widest block mb-2">Placeholder</label>
-                    <input type="text" value={(field.config?.placeholder as string) || ""} onChange={(e) => updateField(field.id, { config: { ...field.config, placeholder: e.target.value } })}
-                      className="w-full px-3 py-2 text-sm bg-white border-2 border-gray-200 rounded-xl focus:border-[#8B5CF6] focus:outline-none transition-all text-gray-500" placeholder="Enter placeholder text..." />
+                  <div className="space-y-4">
+                    <div>
+                      <label className="text-[10px] font-black text-[#333333] uppercase tracking-widest block mb-2 bg-[#E0E7FF] w-fit px-2 py-0.5 rounded border-2 border-[#333333] transform rotate-1">Placeholder</label>
+                      <input type="text" value={(field.config?.placeholder as string) || ""} onChange={(e) => updateField(field.id, { config: { ...field.config, placeholder: e.target.value } })}
+                        className="w-full px-3 py-2 text-sm bg-white border-2 border-[#333333] shadow-[2px_2px_0px_#333333] rounded-lg focus:outline-none focus:translate-y-px focus:shadow-[1px_1px_0px_#333333] transition-all text-[#333333] font-bold" placeholder="Enter placeholder text..." />
+                    </div>
+                    {["short_text", "long_text"].includes(field.type) && (
+                      <div className="grid grid-cols-2 gap-3">
+                        <div>
+                          <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest block mb-2">Min Length</label>
+                          <input type="number" value={(field.config?.minLength as number) || ""} onChange={(e) => updateField(field.id, { config: { ...field.config, minLength: parseInt(e.target.value) || undefined } })}
+                            className="w-full px-3 py-2 text-sm bg-white border-2 border-gray-200 rounded-lg focus:border-[#8B5CF6] focus:outline-none transition-all text-[#333333] font-bold" placeholder="e.g. 10" />
+                        </div>
+                        <div>
+                          <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest block mb-2">Max Length</label>
+                          <input type="number" value={(field.config?.maxLength as number) || ""} onChange={(e) => updateField(field.id, { config: { ...field.config, maxLength: parseInt(e.target.value) || undefined } })}
+                            className="w-full px-3 py-2 text-sm bg-white border-2 border-gray-200 rounded-lg focus:border-[#8B5CF6] focus:outline-none transition-all text-[#333333] font-bold" placeholder="e.g. 500" />
+                        </div>
+                      </div>
+                    )}
+                    {field.type === "number" && (
+                      <div className="grid grid-cols-2 gap-3">
+                        <div>
+                          <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest block mb-2">Min Value</label>
+                          <input type="number" value={(field.config?.min as number) || ""} onChange={(e) => updateField(field.id, { config: { ...field.config, min: parseInt(e.target.value) || undefined } })}
+                            className="w-full px-3 py-2 text-sm bg-white border-2 border-gray-200 rounded-lg focus:border-[#8B5CF6] focus:outline-none transition-all text-[#333333] font-bold" placeholder="e.g. 0" />
+                        </div>
+                        <div>
+                          <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest block mb-2">Max Value</label>
+                          <input type="number" value={(field.config?.max as number) || ""} onChange={(e) => updateField(field.id, { config: { ...field.config, max: parseInt(e.target.value) || undefined } })}
+                            className="w-full px-3 py-2 text-sm bg-white border-2 border-gray-200 rounded-lg focus:border-[#8B5CF6] focus:outline-none transition-all text-[#333333] font-bold" placeholder="e.g. 100" />
+                        </div>
+                      </div>
+                    )}
                   </div>
                 )}
 
-                {["multiple_select", "radio", "checkbox", "dropdown"].includes(field.type) && (
+                {["multiple_select", "radio", "checkbox", "dropdown", "image_choice", "video_choice"].includes(field.type) && (
                   <div className="space-y-3">
-                    <label className="text-xs font-bold text-gray-500 uppercase tracking-widest block mb-2">Options</label>
+                    <label className="text-[10px] font-black text-[#333333] uppercase tracking-widest block mb-2 bg-[#FBCFE8] w-fit px-2 py-0.5 rounded border-2 border-[#333333] transform -rotate-2">Options</label>
                     {((field.config?.options as string[]) || ['Option 1', 'Option 2']).map((opt: string, idx: number) => (
                       <div key={idx} className="flex items-center gap-2">
                         <input
@@ -87,7 +117,7 @@ export function FieldConfig() {
                             newOptions[idx] = e.target.value;
                             updateField(field.id, { config: { ...field.config, options: newOptions } });
                           }}
-                          className="flex-1 px-3 py-2 text-sm bg-white border-2 border-gray-200 rounded-xl focus:border-[#8B5CF6] focus:outline-none transition-all text-[#333333] font-bold"
+                          className="flex-1 px-3 py-2 text-sm bg-white border-2 border-[#333333] rounded-lg focus:outline-none transition-all text-[#333333] font-bold shadow-[2px_2px_0px_#333333]"
                         />
                         <button
                           onClick={() => {
@@ -95,9 +125,9 @@ export function FieldConfig() {
                             newOptions.splice(idx, 1);
                             updateField(field.id, { config: { ...field.config, options: newOptions } });
                           }}
-                          className="p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors border-2 border-transparent hover:border-red-200"
+                          className="p-2 bg-white border-2 border-[#333333] shadow-[2px_2px_0px_#333333] hover:translate-y-px hover:shadow-[1px_1px_0px_#333333] hover:bg-[#FEE2E2] rounded-lg transition-all"
                         >
-                          <X className="w-4 h-4" />
+                          <X className="w-4 h-4 text-[#EF4444] stroke-[2]" />
                         </button>
                       </div>
                     ))}
@@ -107,10 +137,64 @@ export function FieldConfig() {
                         const newOptions = [...currentOpts, `Option ${currentOpts.length + 1}`];
                         updateField(field.id, { config: { ...field.config, options: newOptions } });
                       }}
-                      className="text-xs font-bold text-[#8B5CF6] hover:underline flex items-center gap-1 mt-2"
+                      className="w-full py-2 px-3 bg-white border-2 border-[#333333] border-dashed rounded-lg shadow-[2px_2px_0px_#333333] text-sm font-black text-[#8B5CF6] hover:bg-[#F5F3FF] flex items-center justify-center gap-2 transition-all hover:-translate-y-px hover:shadow-[3px_3px_0px_#333333]"
                     >
-                      <Plus className="w-3 h-3" /> Add Option
+                      <Plus className="w-4 h-4 stroke-[2]" /> Add Option
                     </button>
+                  </div>
+                )}
+
+                {["rating", "stars", "slider", "nps"].includes(field.type) && (
+                  <div className="space-y-4">
+                    <div className="grid grid-cols-2 gap-3">
+                      <div>
+                        <label className="text-[10px] font-black text-[#333333] uppercase tracking-widest block mb-2">Min Range</label>
+                        <input type="number" value={(field.config?.min as number) ?? 1} onChange={(e) => updateField(field.id, { config: { ...field.config, min: parseInt(e.target.value) } })}
+                          className="w-full px-3 py-2 text-sm bg-white border-2 border-[#333333] rounded-lg focus:outline-none transition-all text-[#333333] font-bold" />
+                      </div>
+                      <div>
+                        <label className="text-[10px] font-black text-[#333333] uppercase tracking-widest block mb-2">Max Range</label>
+                        <input type="number" value={(field.config?.max as number) ?? 5} onChange={(e) => updateField(field.id, { config: { ...field.config, max: parseInt(e.target.value) } })}
+                          className="w-full px-3 py-2 text-sm bg-white border-2 border-[#333333] rounded-lg focus:outline-none transition-all text-[#333333] font-bold" />
+                      </div>
+                    </div>
+                    {field.type === "slider" && (
+                      <div>
+                        <label className="text-[10px] font-black text-[#333333] uppercase tracking-widest block mb-2">Step Size</label>
+                        <input type="number" value={(field.config?.step as number) ?? 1} onChange={(e) => updateField(field.id, { config: { ...field.config, step: parseInt(e.target.value) } })}
+                          className="w-full px-3 py-2 text-sm bg-white border-2 border-[#333333] rounded-lg focus:outline-none transition-all text-[#333333] font-bold" />
+                      </div>
+                    )}
+                  </div>
+                )}
+
+                {field.type === "file_upload" && (
+                  <div className="space-y-4">
+                    <div>
+                      <label className="text-[10px] font-black text-[#333333] uppercase tracking-widest block mb-2">Max File Size (MB)</label>
+                      <input type="number" value={(field.config?.maxSize as number) || 5} onChange={(e) => updateField(field.id, { config: { ...field.config, maxSize: parseInt(e.target.value) } })}
+                        className="w-full px-3 py-2 text-sm bg-white border-2 border-[#333333] rounded-lg focus:outline-none transition-all text-[#333333] font-bold" />
+                    </div>
+                    <div>
+                      <label className="text-[10px] font-black text-[#333333] uppercase tracking-widest block mb-2">Allowed Formats (comma separated)</label>
+                      <input type="text" value={(field.config?.allowedTypes as string) || ".pdf, .png, .jpg"} onChange={(e) => updateField(field.id, { config: { ...field.config, allowedTypes: e.target.value } })}
+                        className="w-full px-3 py-2 text-sm bg-white border-2 border-gray-200 rounded-lg focus:border-[#8B5CF6] focus:outline-none transition-all text-[#333333] font-bold" />
+                    </div>
+                  </div>
+                )}
+
+                {["matrix", "likert"].includes(field.type) && (
+                  <div className="space-y-4">
+                    <div>
+                      <label className="text-[10px] font-black text-[#333333] uppercase tracking-widest block mb-2 bg-[#BAE6FD] w-fit px-2 py-0.5 rounded border-2 border-[#333333] transform rotate-2">Statements (Rows)</label>
+                      <textarea value={((field.config?.rows as string[]) || ["Statement 1", "Statement 2"]).join('\n')} onChange={(e) => updateField(field.id, { config: { ...field.config, rows: e.target.value.split('\n') } })} rows={3}
+                        className="w-full px-3 py-2 text-sm bg-white border-2 border-[#333333] rounded-lg focus:outline-none transition-all text-[#333333] font-bold" placeholder="One per line..." />
+                    </div>
+                    <div>
+                      <label className="text-[10px] font-black text-[#333333] uppercase tracking-widest block mb-2 bg-[#DDD6FE] w-fit px-2 py-0.5 rounded border-2 border-[#333333] transform -rotate-1">Scale (Columns)</label>
+                      <textarea value={((field.config?.columns as string[]) || ["Poor", "Average", "Excellent"]).join('\n')} onChange={(e) => updateField(field.id, { config: { ...field.config, columns: e.target.value.split('\n') } })} rows={3}
+                        className="w-full px-3 py-2 text-sm bg-white border-2 border-[#333333] rounded-lg focus:outline-none transition-all text-[#333333] font-bold" placeholder="One per line..." />
+                    </div>
                   </div>
                 )}
 
@@ -120,9 +204,11 @@ export function FieldConfig() {
                 </div>
               </motion.div>
             ) : (
-              <motion.div key="empty" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-center py-16">
-                <Settings2 className="w-12 h-12 text-gray-300 mx-auto mb-4" />
-                <p className="text-sm font-comic font-bold text-gray-500">Select a field to edit its properties</p>
+              <motion.div key="empty" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-center py-16 flex flex-col items-center">
+                <div className="w-16 h-16 bg-white border-2 border-[#333333] shadow-[4px_4px_0px_#333333] rounded-xl flex items-center justify-center mb-6 transform -rotate-6">
+                  <Settings2 className="w-8 h-8 text-[#8B5CF6] stroke-[2]" />
+                </div>
+                <p className="text-sm font-comic font-bold text-[#333333] bg-[#FEF3C7] px-3 py-2 border-2 border-[#333333] rounded-lg shadow-[2px_2px_0px_#333333] transform rotate-2">Select a field to edit its properties</p>
               </motion.div>
             )}
           </AnimatePresence>
@@ -180,6 +266,42 @@ export function FieldConfig() {
                     <div className="w-4 h-4 rounded-full bg-white border border-[#d946ef]"></div>
                   </div>
                   <span className="font-balsamiq text-xs text-[#701a75] font-bold">Playful</span>
+                </button>
+
+                {/* Business */}
+                <button
+                  onClick={() => setFormMeta({ themeConfig: { fontFamily: "font-sans", backgroundColor: "bg-gray-100", accentColor: "border-blue-700", borderStyle: "border-2", rounded: "rounded-sm", formBgColor: "#ffffff", fieldBgColor: "#f8fafc", textColor: "#0f172a", glassmorphism: false, backgroundPattern: "business" } })}
+                  className="p-3 border-2 border-blue-200 rounded-sm text-left bg-gray-50 hover:border-blue-500 transition-all"
+                >
+                  <div className="flex gap-1 mb-2">
+                    <div className="w-4 h-4 rounded-sm bg-blue-700"></div>
+                    <div className="w-4 h-4 rounded-sm bg-white border-2 border-blue-200"></div>
+                  </div>
+                  <span className="font-sans font-bold text-xs text-slate-800">Business</span>
+                </button>
+
+                {/* Nature */}
+                <button
+                  onClick={() => setFormMeta({ themeConfig: { fontFamily: "font-comic", backgroundColor: "bg-green-50", accentColor: "border-green-600", borderStyle: "border-2", rounded: "rounded-2xl", formBgColor: "#f0fdf4", fieldBgColor: "rgba(255,255,255,0.8)", textColor: "#14532d", glassmorphism: true, backgroundPattern: "nature" } })}
+                  className="p-3 border-2 border-green-200 rounded-2xl text-left bg-green-50 hover:border-green-500 transition-all"
+                >
+                  <div className="flex gap-1 mb-2">
+                    <div className="w-4 h-4 rounded-full bg-green-600"></div>
+                    <div className="w-4 h-4 rounded-full bg-white border-2 border-green-200"></div>
+                  </div>
+                  <span className="font-comic font-bold text-xs text-green-800">Nature</span>
+                </button>
+
+                {/* Food */}
+                <button
+                  onClick={() => setFormMeta({ themeConfig: { fontFamily: "font-balsamiq", backgroundColor: "bg-red-50", accentColor: "border-orange-500", borderStyle: "border-4", rounded: "rounded-xl", formBgColor: "#fef2f2", fieldBgColor: "#ffffff", textColor: "#7f1d1d", glassmorphism: false, backgroundPattern: "food" } })}
+                  className="p-3 border-4 border-red-200 rounded-xl text-left bg-red-50 hover:border-orange-500 transition-all"
+                >
+                  <div className="flex gap-1 mb-2">
+                    <div className="w-4 h-4 rounded-md bg-orange-500"></div>
+                    <div className="w-4 h-4 rounded-md bg-white border-4 border-red-200"></div>
+                  </div>
+                  <span className="font-balsamiq font-bold text-xs text-red-800">Food</span>
                 </button>
               </div>
             </div>
