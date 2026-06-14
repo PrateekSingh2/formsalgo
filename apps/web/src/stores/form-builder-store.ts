@@ -31,9 +31,11 @@ interface FormBuilderState {
     accentColor: string;
     borderStyle: string;
     rounded: string;
-    formBgColor: string;
+    formBgColor: string; // Used for solid background or fallback
     fieldBgColor: string;
     textColor: string;
+    glassmorphism?: boolean;
+    backgroundPattern?: string; // e.g. "aurora", "dots", "grid" or specific CSS string
   };
   formSettings: {
     successMessage: string;
@@ -59,6 +61,7 @@ interface FormBuilderState {
 
   // Actions
   setFormMeta: (meta: Partial<Pick<FormBuilderState, "formId" | "title" | "description" | "layoutType" | "themeConfig" | "status" | "formSlug" | "formSettings" | "isDirty">>) => void;
+  setFields: (fields: BuilderField[]) => void;
   addField: (type: FieldType, atIndex?: number) => void;
   removeField: (id: string) => void;
   updateField: (id: string, updates: Partial<BuilderField>) => void;
@@ -131,6 +134,8 @@ export const useFormBuilderStore = create<FormBuilderState>((set, get) => ({
     formBgColor: "#FCFBF8",
     fieldBgColor: "#ffffff",
     textColor: "#333333",
+    glassmorphism: false,
+    backgroundPattern: "solid"
   },
   formSettings: {
     successMessage: "Thank You! 🎉 Your response has been successfully recorded.",
@@ -145,6 +150,17 @@ export const useFormBuilderStore = create<FormBuilderState>((set, get) => ({
   isDirty: false,
 
   setFormMeta: (meta) => set((state) => ({ ...state, isDirty: true, ...meta })),
+
+  setFields: (fields) =>
+    set((state) => {
+      const newHistory = [...state.history.slice(0, state.historyIndex + 1), fields];
+      return {
+        fields,
+        history: newHistory,
+        historyIndex: newHistory.length - 1,
+        isDirty: true,
+      };
+    }),
 
   addField: (type, atIndex) =>
     set((state) => {

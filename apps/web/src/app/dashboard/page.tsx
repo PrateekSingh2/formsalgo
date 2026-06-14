@@ -7,11 +7,10 @@
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
-import { Clock, MoreVertical, ExternalLink, Sparkles, Loader2, BarChart3, LayoutDashboard, FileText, Plus, Trophy, MousePointerClick, Calendar, Search, Trash2, X } from "lucide-react";
+import { Clock, MoreVertical, ExternalLink, Sparkles, Loader2, BarChart3, LayoutDashboard, FileText, Plus, Trophy, MousePointerClick, Calendar, Search, Trash2, X, PenLine } from "lucide-react";
 import { useAuth } from "@/providers/auth-provider";
 import { fetchUserForms, deleteForm } from "@/lib/supabase-actions";
 import { toast } from "sonner";
-import { FORM_TEMPLATES } from "@/lib/templates";
 import { useRouter } from "next/navigation";
 
 type TabType = "overview" | "forms" | "analytics";
@@ -25,7 +24,6 @@ export default function DashboardPage() {
   const [sortOption, setSortOption] = useState("newest");
   const [isDeleting, setIsDeleting] = useState<string | null>(null);
   const [deleteConfirmId, setDeleteConfirmId] = useState<string | null>(null);
-  const [isTemplateModalOpen, setIsTemplateModalOpen] = useState(false);
   const router = useRouter();
 
   const confirmDelete = (id: string) => {
@@ -170,8 +168,8 @@ export default function DashboardPage() {
                   </div>
                 </Link>
 
-                <button 
-                  onClick={() => setIsTemplateModalOpen(true)}
+                <Link 
+                  href="/dashboard/templates"
                   className="w-full flex items-center gap-4 p-4 bg-white border-2 border-[#333333] rounded-2xl shadow-[4px_4px_0px_#333333] hover:translate-y-[2px] hover:shadow-[2px_2px_0px_#333333] transition-all group"
                 >
                   <div className="w-12 h-12 bg-[#FEF3C7] rounded-xl flex items-center justify-center border-2 border-[#F59E0B] group-hover:scale-105 transition-transform">
@@ -181,7 +179,7 @@ export default function DashboardPage() {
                     <p className="font-bold font-balsamiq text-[#333333]">Use Template</p>
                     <p className="text-xs text-gray-500 font-comic">Start from a preset</p>
                   </div>
-                </button>
+                </Link>
               </div>
 
               {/* Recent Forms */}
@@ -324,16 +322,16 @@ export default function DashboardPage() {
                           </div>
                         </div>
 
-                        <div className="mt-auto flex gap-2">
-                          <Link href={`/builder?id=${form.id}`} className="flex-1 text-center py-2 bg-white border-2 border-[#333333] rounded-xl text-sm font-bold text-[#333333] shadow-[2px_2px_0px_#333333] hover:translate-y-[1px] hover:shadow-none font-comic transition-all">
-                            Edit
+                        <div className="mt-auto flex flex-col gap-2 pt-4 border-t-2 border-gray-100">
+                          <Link href={`/builder?id=${form.id}`} className="w-full flex items-center justify-center gap-2 py-2 bg-white border-2 border-[#333333] rounded-xl text-sm font-bold text-[#333333] shadow-[2px_2px_0px_#333333] hover:translate-y-[1px] hover:shadow-none font-comic transition-all">
+                            <PenLine className="w-4 h-4" /> Edit Form
                           </Link>
                           {form.slug ? (
-                            <Link href={`/f/${form.slug}`} target="_blank" className="flex-1 flex items-center justify-center gap-1 py-2 bg-[#8B5CF6] text-white border-2 border-[#333333] rounded-xl text-sm font-bold shadow-[2px_2px_0px_#333333] hover:translate-y-[1px] hover:shadow-none font-comic transition-all">
-                              <ExternalLink className="w-4 h-4" /> Open
+                            <Link href={`/f/${form.slug}`} target="_blank" className="w-full flex items-center justify-center gap-2 py-2 bg-[#8B5CF6] text-white border-2 border-[#333333] rounded-xl text-sm font-bold shadow-[2px_2px_0px_#333333] hover:translate-y-[1px] hover:shadow-none font-comic transition-all">
+                              <ExternalLink className="w-4 h-4" /> Open Live
                             </Link>
                           ) : (
-                            <button className="flex-1 flex items-center justify-center gap-1 py-2 bg-gray-100 text-gray-400 border-2 border-[#333333] rounded-xl text-sm font-bold font-comic cursor-not-allowed">
+                            <button className="w-full flex items-center justify-center gap-2 py-2 bg-gray-100 text-gray-400 border-2 border-[#333333] rounded-xl text-sm font-bold font-comic cursor-not-allowed">
                               Draft
                             </button>
                           )}
@@ -404,53 +402,7 @@ export default function DashboardPage() {
             )}
           </AnimatePresence>
 
-          {/* Template Modal */}
-          <AnimatePresence>
-            {isTemplateModalOpen && (
-              <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/20 backdrop-blur-sm">
-                <motion.div 
-                  initial={{ opacity: 0, scale: 0.95, y: 20 }}
-                  animate={{ opacity: 1, scale: 1, y: 0 }}
-                  exit={{ opacity: 0, scale: 0.95, y: 20 }}
-                  className="bg-white rounded-3xl border-4 border-[#333333] shadow-[8px_8px_0px_#333333] max-w-4xl w-full max-h-[90vh] overflow-hidden flex flex-col"
-                >
-                  <div className="p-6 border-b-2 border-[#333333] flex items-center justify-between bg-gray-50">
-                    <div>
-                      <h2 className="text-2xl font-bold font-balsamiq text-[#333333]">Choose a Template</h2>
-                      <p className="text-gray-500 font-comic text-sm">Kickstart your next form with a pre-designed template.</p>
-                    </div>
-                    <button 
-                      onClick={() => setIsTemplateModalOpen(false)}
-                      className="p-2 hover:bg-gray-200 rounded-xl transition-colors"
-                    >
-                      <X className="w-6 h-6 text-[#333333]" />
-                    </button>
-                  </div>
-                  <div className="p-8 overflow-y-auto bg-[#FCFBF8]">
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                      {FORM_TEMPLATES.map((template) => (
-                        <div 
-                          key={template.id}
-                          onClick={() => {
-                            setIsTemplateModalOpen(false);
-                            router.push(`/builder?template=${template.id}`);
-                          }}
-                          className="bg-white p-6 rounded-2xl border-2 border-[#333333] shadow-[4px_4px_0px_#333333] hover:translate-y-[2px] hover:shadow-[2px_2px_0px_#333333] transition-all cursor-pointer group flex flex-col"
-                        >
-                          <div className="text-4xl mb-4 group-hover:scale-110 transition-transform origin-left">{template.icon}</div>
-                          <h3 className="font-bold font-balsamiq text-[#333333] text-lg mb-2">{template.title}</h3>
-                          <p className="text-sm font-comic text-gray-500 mb-6 flex-1">{template.description}</p>
-                          <button className="w-full py-2 bg-gray-100 border-2 border-[#333333] rounded-xl font-bold font-balsamiq text-[#333333] group-hover:bg-[#8B5CF6] group-hover:text-white transition-colors">
-                            Use Template
-                          </button>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                </motion.div>
-              </div>
-            )}
-          </AnimatePresence>
+
 
           {/* Delete Confirmation Modal */}
           <AnimatePresence>

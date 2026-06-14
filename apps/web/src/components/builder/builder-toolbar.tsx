@@ -12,11 +12,15 @@ import { ArrowLeft, Undo2, Redo2, Eye, EyeOff, Save, Sparkles, Share2, Loader2 }
 import { toast } from "sonner";
 import { saveFormToDatabase } from "@/lib/supabase-actions";
 import { useAuth } from "@/providers/auth-provider";
+import { QRShareModal } from "./qr-share-modal";
+import { AIGenerateModal } from "./ai-generate-modal";
 
 export function BuilderToolbar() {
   const { title, setFormMeta, previewMode, setPreviewMode, undo, redo, historyIndex, history, isDirty, status, fields, description, layoutType, themeConfig, formSettings, formId, formSlug } = useFormBuilderStore();
   const { user } = useAuth();
   const [isPublishing, setIsPublishing] = useState(false);
+  const [isShareModalOpen, setIsShareModalOpen] = useState(false);
+  const [isAIModalOpen, setIsAIModalOpen] = useState(false);
 
   const handlePublish = async () => {
     setIsPublishing(true);
@@ -69,8 +73,18 @@ export function BuilderToolbar() {
         </motion.button>
       </div>
 
-      {/* Right */}
       <div className="flex items-center gap-3">
+        <motion.button 
+          whileTap={{ scale: 0.95 }} 
+          onClick={() => setIsAIModalOpen(true)}
+          className="flex items-center gap-2 px-4 py-2 text-sm font-balsamiq font-bold rounded-xl border-2 border-transparent bg-[#F5F3FF] text-[#8B5CF6] hover:border-[#8B5CF6] transition-all group"
+        >
+          <Sparkles className="w-4 h-4 group-hover:scale-110 transition-transform" />
+          AI Create
+        </motion.button>
+        
+        <div className="w-px h-6 bg-gray-200 mx-1"></div>
+
         <motion.button whileTap={{ scale: 0.95 }} onClick={() => setPreviewMode(!previewMode)}
           className={`flex items-center gap-2 px-4 py-2 text-sm font-balsamiq font-bold rounded-xl border-2 transition-all ${previewMode ? "bg-[#8B5CF6] text-white border-[#333333] shadow-[2px_2px_0px_#333333]" : "bg-white text-gray-600 border-gray-200 hover:border-[#8B5CF6] hover:text-[#8B5CF6]"}`}>
           {previewMode ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
@@ -80,15 +94,11 @@ export function BuilderToolbar() {
         {formSlug && (
           <motion.button 
             whileTap={{ scale: 0.95 }} 
-            onClick={() => {
-              const url = `${window.location.origin}/f/${formSlug}`;
-              navigator.clipboard.writeText(url);
-              toast.success("Public link copied to clipboard!");
-            }}
-            className="p-2.5 rounded-xl border-2 border-gray-200 hover:border-[#333333] hover:bg-[#D1FAE5] text-gray-600 hover:text-[#333333] transition-all"
+            onClick={() => setIsShareModalOpen(true)}
+            className="p-2.5 rounded-xl border-2 border-gray-200 hover:border-[#333333] hover:bg-[#D1FAE5] text-gray-600 hover:text-[#333333] transition-all group"
             title="Share Public Link"
           >
-            <Share2 className="w-4 h-4" />
+            <Share2 className="w-4 h-4 group-hover:scale-110 transition-transform" />
           </motion.button>
         )}
 
@@ -100,6 +110,17 @@ export function BuilderToolbar() {
           {isPublishing ? "Saving..." : status === 'Published' && !isDirty ? "Published" : isDirty ? "Save & Publish" : "Publish"}
         </motion.button>
       </div>
+
+      <QRShareModal 
+        isOpen={isShareModalOpen} 
+        onClose={() => setIsShareModalOpen(false)} 
+        url={formSlug ? `${window.location.origin}/f/${formSlug}` : ""} 
+      />
+
+      <AIGenerateModal
+        isOpen={isAIModalOpen}
+        onClose={() => setIsAIModalOpen(false)}
+      />
     </div>
   );
 }

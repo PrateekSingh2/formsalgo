@@ -159,6 +159,7 @@ function FieldInput({
       );
 
     case "checkbox":
+    case "checkboxes":
       return (
         <div className="space-y-3">
           {opts.map((opt, i) => {
@@ -436,6 +437,7 @@ export default function PublicFormView() {
   const [responses, setResponses] = useState<Record<string, any>>({});
   const [alreadySubmitted, setAlreadySubmitted] = useState(false);
   const [errorDetails, setErrorDetails] = useState<string | null>(null);
+  const [focusedField, setFocusedField] = useState<string | null>(null);
 
   useEffect(() => {
     async function loadForm() {
@@ -535,11 +537,41 @@ export default function PublicFormView() {
   const fontClass = theme.fontFamily || "font-comic";
   const roundedClass = theme.rounded || "rounded-2xl";
   const borderClass = theme.borderStyle || "border-2";
+  const isGlass = theme.glassmorphism;
+  const pattern = theme.backgroundPattern;
+
+  // Background styling mapping
+  const bgStyles: any = {};
+  if (pattern === "aurora") {
+    bgStyles.background = "linear-gradient(135deg, #1e1b4b 0%, #312e81 50%, #4c1d95 100%)";
+    bgStyles.backgroundAttachment = "fixed";
+  } else if (pattern === "zen") {
+    bgStyles.background = "linear-gradient(120deg, #ecfccb 0%, #d9f99d 100%)";
+    bgStyles.backgroundAttachment = "fixed";
+  } else if (pattern === "cybergrid") {
+    bgStyles.backgroundColor = "#000000";
+    bgStyles.backgroundImage = "linear-gradient(rgba(6, 182, 212, 0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(6, 182, 212, 0.1) 1px, transparent 1px)";
+    bgStyles.backgroundSize = "20px 20px";
+    bgStyles.backgroundPosition = "center center";
+    bgStyles.backgroundAttachment = "fixed";
+  } else if (pattern === "neo-grid") {
+    bgStyles.backgroundColor = formBg;
+    bgStyles.backgroundImage = "radial-gradient(#000 1px, transparent 1px)";
+    bgStyles.backgroundSize = "20px 20px";
+    bgStyles.backgroundAttachment = "fixed";
+  } else {
+    bgStyles.backgroundColor = formBg;
+  }
+
+  // Parse accent color for inline styles if needed
+  const accentHex = theme.accentColor?.includes('[') 
+    ? theme.accentColor.replace('border-[', '').replace(']', '') 
+    : theme.accentColor?.replace('border-', '') || '#8B5CF6';
 
   return (
     <div
       className={`min-h-screen py-16 px-4 transition-colors ${fontClass}`}
-      style={{ backgroundColor: formBg }}
+      style={bgStyles}
     >
       <div className="max-w-2xl mx-auto">
         <AnimatePresence mode="wait">
@@ -570,38 +602,60 @@ export default function PublicFormView() {
               {/* Fields */}
               <form onSubmit={handleSubmit} className="space-y-5">
                 {fields.map((field, index) => {
+                  const isFocused = focusedField === field.id;
+                  const isDimmed = focusedField !== null && focusedField !== field.id;
+
                   // Statement is a display-only block
                   if (field.type === "statement") {
                     return (
-                      <div
+                      <motion.div
                         key={field.id}
-                        className={`p-6 ${roundedClass} ${borderClass} border-gray-200`}
-                        style={{ backgroundColor: fieldBg }}
+                        initial={{ opacity: 0, y: 30 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true, margin: "-50px" }}
+                        transition={{ duration: 0.5 }}
+                        className={`p-8 ${roundedClass} ${borderClass} transition-all duration-500 ${isDimmed ? "opacity-40" : ""} ${isGlass ? "backdrop-blur-xl border-white/20" : "border-gray-200"}`}
+                        style={{ backgroundColor: isGlass ? fieldBg.replace('rgb', 'rgba').replace(')', ', 0.6)').replace('a(a(', 'a(') : fieldBg }}
                       >
-                        <h2 className="text-xl font-bold font-balsamiq" style={{ color: textColor }}>
+                        <h2 className="text-2xl font-bold font-balsamiq" style={{ color: textColor }}>
                           {field.label}
                         </h2>
                         {field.description && (
-                          <p className="mt-1 opacity-70 text-sm" style={{ color: textColor }}>
+                          <p className="mt-2 opacity-80 text-base" style={{ color: textColor }}>
                             {field.description}
                           </p>
                         )}
-                      </div>
+                      </motion.div>
                     );
                   }
 
                   return (
                     <motion.div
                       key={field.id}
-                      initial={{ opacity: 0, y: 12 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: index * 0.04 }}
-                      className={`p-6 ${roundedClass} ${borderClass} border-gray-200 shadow-sm`}
-                      style={{ backgroundColor: fieldBg }}
+                      initial={{ opacity: 0, y: 40 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      viewport={{ once: true, margin: "-50px" }}
+                      transition={{ duration: 0.4 }}
+                      onFocus={() => setFocusedField(field.id)}
+                      onBlur={(e) => {
+                        // Only remove focus if the new focus target is outside this field
+                        if (!e.currentTarget.contains(e.relatedTarget as Node)) {
+                          setFocusedField(null);
+                        }
+                      }}
+                      tabIndex={-1}
+                      className={`p-8 ${roundedClass} ${borderClass} transition-all duration-500 relative ${
+                        isFocused ? "scale-[1.02] shadow-[0_10px_40px_-10px_rgba(0,0,0,0.3)] z-10" : 
+                        isDimmed ? "opacity-40 scale-[0.98] z-0" : "shadow-sm z-0"
+                      } ${isGlass ? "backdrop-blur-xl border-white/20" : "border-gray-200"}`}
+                      style={{ 
+                        backgroundColor: isGlass ? fieldBg.replace('rgb', 'rgba').replace(')', ', 0.6)').replace('a(a(', 'a(') : fieldBg,
+                        borderColor: isFocused ? accentHex : undefined
+                      }}
                     >
                       <label
-                        className="block text-base font-bold mb-1 font-balsamiq"
-                        style={{ color: textColor }}
+                        className={`block text-xl font-bold mb-2 font-balsamiq transition-colors`}
+                        style={{ color: isFocused ? accentHex : textColor }}
                       >
                         {field.label}
                         {field.required && <span className="text-red-500 ml-1">*</span>}

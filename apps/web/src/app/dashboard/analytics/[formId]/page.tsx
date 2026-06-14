@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { fetchFormSubmissions } from "@/lib/supabase-actions";
-import { Loader2, ArrowLeft, Users, MousePointerClick, Calendar, BarChart3, TrendingUp } from "lucide-react";
+import { Loader2, ArrowLeft, Users, MousePointerClick, Calendar, BarChart3, TrendingUp, Download } from "lucide-react";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 import { motion } from "framer-motion";
 import Link from "next/link";
@@ -49,6 +49,33 @@ export default function AnalyticsPage() {
     }
     loadData();
   }, [formId]);
+
+  const handleExportCSV = () => {
+    if (submissions.length === 0) return;
+
+    const dataFields = fields.filter(f => f.type !== 'statement');
+    const headers = ["Submitted At", ...dataFields.map(f => f.label.replace(/"/g, '""'))];
+    const csvRows = [headers.map(h => `"${h}"`).join(",")];
+
+    submissions.forEach(sub => {
+      const row = [
+        `"${new Date(sub.started_at).toLocaleString()}"`,
+        ...dataFields.map(f => `"${String(sub.data?.[f.id] || '').replace(/"/g, '""')}"`)
+      ];
+      csvRows.push(row.join(","));
+    });
+
+    const csvString = csvRows.join("\n");
+    const blob = new Blob([csvString], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.setAttribute("download", `${formData?.title || 'form_data'}_responses.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    toast.success("CSV exported successfully!");
+  };
 
   if (loading) {
     return (
@@ -149,10 +176,18 @@ export default function AnalyticsPage() {
 
       {/* Responses Table */}
       <div className="bg-white rounded-2xl border-2 border-[#333333] shadow-[4px_4px_0px_#333333] overflow-hidden">
-        <div className="p-6 border-b-2 border-[#333333] bg-gray-50">
+        <div className="p-6 border-b-2 border-[#333333] bg-gray-50 flex items-center justify-between">
           <h2 className="text-lg font-bold font-balsamiq flex items-center gap-2">
             <BarChart3 className="w-5 h-5 text-[#8B5CF6]" /> All Submissions
           </h2>
+          {submissions.length > 0 && (
+            <button
+              onClick={handleExportCSV}
+              className="flex items-center gap-2 px-4 py-2 bg-white text-[#333333] font-bold font-sans text-sm rounded-xl border-2 border-[#333333] hover:bg-[#E9D5FF] hover:border-[#8B5CF6] hover:text-[#8B5CF6] transition-all shadow-sm"
+            >
+              <Download className="w-4 h-4" /> Export CSV
+            </button>
+          )}
         </div>
         
         {submissions.length === 0 ? (
