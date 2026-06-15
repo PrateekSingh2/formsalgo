@@ -12,13 +12,13 @@ import { BuilderToolbar } from "@/components/builder/builder-toolbar";
 import { useFormBuilderStore } from "@/stores/form-builder-store";
 import { AuthGuard } from "@/components/auth-guard";
 import { useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
 import { fetchFormById } from "@/lib/supabase-actions";
 import { Loader2, Layers, MonitorSmartphone, SlidersHorizontal } from "lucide-react";
 import { FORM_TEMPLATES } from "@/lib/templates";
 import { AnimatedBackground } from "@/components/builder/animated-background";
 
-export default function BuilderPage() {
+function BuilderContent() {
   const { previewMode, themeConfig, loadForm, formId } = useFormBuilderStore();
   const searchParams = useSearchParams();
   const id = searchParams.get("id");
@@ -184,5 +184,17 @@ export default function BuilderPage() {
       )}
       </div>
     </AuthGuard>
+  );
+}
+
+export default function BuilderPage() {
+  return (
+    <Suspense fallback={
+      <div className="flex h-screen items-center justify-center bg-gray-50">
+        <Loader2 className="w-8 h-8 text-[#8B5CF6] animate-spin" />
+      </div>
+    }>
+      <BuilderContent />
+    </Suspense>
   );
 }
