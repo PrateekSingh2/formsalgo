@@ -96,7 +96,7 @@ export default function DashboardPage() {
         <div className="absolute right-0 top-0 bottom-0 w-1/2 pointer-events-none hidden md:block">
           {/* 3D Boy Image (Nano Banana) */}
           <motion.div animate={{ y: [0, -15, 0] }} transition={{ repeat: Infinity, duration: 5, ease: "easeInOut" }} className="absolute right-0 top-0 bottom-0 w-80 h-full flex items-center justify-center mix-blend-multiply z-30 pointer-events-none">
-            <img src="/api/image?name=boy_holding_form_1781519144702.png" alt="Boy holding form" className="w-full h-auto object-contain object-right mix-blend-multiply" />
+            <img src="/boy_holding_form_1781519144702.png" alt="Boy holding form" className="w-full h-auto object-contain object-right mix-blend-multiply" />
           </motion.div>
         </div>
 
