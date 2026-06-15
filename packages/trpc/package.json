@@ -13,9 +13,11 @@
     "@formforge/db": "workspace:*",
     "@formforge/types": "workspace:*",
     "superjson": "^2.2.0",
-    "zod": "^3.24.0"
+    "zod": "^3.24.0",
+    "drizzle-orm": "^0.39.0"
   },
   "devDependencies": {
-    "typescript": "^5.8.0"
+    "typescript": "^5.8.0",
+    "@types/node": "^22.0.0"
   }
 }

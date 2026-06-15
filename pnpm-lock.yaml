@@ -196,6 +196,9 @@ importers:
       '@trpc/server':
         specifier: ^11.1.0
         version: 11.17.0(typescript@5.9.3)
+      drizzle-orm:
+        specifier: ^0.39.0
+        version: 0.39.3(@opentelemetry/api@1.9.1)(postgres@3.4.9)
       superjson:
         specifier: ^2.2.0
         version: 2.2.6
@@ -203,6 +206,9 @@ importers:
         specifier: ^3.24.0
         version: 3.25.76
     devDependencies:
+      '@types/node':
+        specifier: ^22.0.0
+        version: 22.19.21
       typescript:
         specifier: ^5.8.0
         version: 5.9.3
