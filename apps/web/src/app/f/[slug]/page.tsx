@@ -84,7 +84,7 @@ function SignaturePad({ value, onChange }: { value: string; onChange: (val: stri
   };
 
   return (
-    <div className="relative border-2 border-dashed border-gray-300 rounded-xl overflow-hidden bg-white group hover:border-[#8B5CF6] transition-colors">
+    <div className="relative border border-dashed border-gray-300 rounded-xl shadow-sm overflow-hidden bg-white group hover:border-purple-300 hover:shadow-md transition-all">
       <canvas
         ref={canvasRef}
         width={600}
@@ -130,7 +130,7 @@ function FieldInput({
   textColor: string;
 }) {
   const baseInput =
-    "w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-xl focus:outline-none focus:border-[#8B5CF6] transition-colors font-comic text-[#333333] placeholder-gray-400";
+    "w-full px-4 py-3 bg-white border border-gray-200 shadow-sm rounded-xl focus:outline-none focus:ring-4 focus:ring-purple-50 focus:border-purple-300 transition-all font-comic text-gray-900 placeholder-gray-400";
   const opts: string[] = (field.config?.options as string[]) || ["Option 1", "Option 2"];
 
   switch (field.type) {
@@ -409,11 +409,11 @@ function FieldInput({
       return (
         <div className="space-y-2">
           {rankOpts.map((opt, i) => (
-            <div key={i} className="flex items-center gap-3 p-3 bg-white border-2 border-gray-200 rounded-xl">
-              <span className="w-7 h-7 rounded-full bg-[#8B5CF6] text-white text-xs font-bold flex items-center justify-center shrink-0">
+            <div key={i} className="flex items-center gap-3 p-3 bg-white border border-gray-200 shadow-sm rounded-xl hover:-translate-y-0.5 hover:shadow-md transition-all">
+              <span className="w-7 h-7 rounded-full bg-purple-500 text-white text-xs font-bold flex items-center justify-center shrink-0 shadow-sm">
                 {i + 1}
               </span>
-              <span className="font-comic text-[#333333] flex-1">{opt}</span>
+              <span className="font-comic text-gray-900 flex-1">{opt}</span>
               <div className="flex flex-col gap-1">
                 <button
                   type="button"
@@ -423,7 +423,7 @@ function FieldInput({
                     [newRank[i - 1], newRank[i]] = [newRank[i], newRank[i - 1]];
                     onChange(newRank);
                   }}
-                  className="text-gray-400 hover:text-[#8B5CF6] disabled:opacity-30 text-xs leading-none"
+                  className="text-gray-400 hover:text-purple-500 disabled:opacity-30 text-xs leading-none"
                 >▲</button>
                 <button
                   type="button"
@@ -433,7 +433,7 @@ function FieldInput({
                     [newRank[i], newRank[i + 1]] = [newRank[i + 1], newRank[i]];
                     onChange(newRank);
                   }}
-                  className="text-gray-400 hover:text-[#8B5CF6] disabled:opacity-30 text-xs leading-none"
+                  className="text-gray-400 hover:text-purple-500 disabled:opacity-30 text-xs leading-none"
                 >▼</button>
               </div>
             </div>
@@ -478,8 +478,8 @@ function FieldInput({
     case "file_upload":
       return (
         <label className="block">
-          <div className="h-32 rounded-xl border-2 border-dashed border-gray-300 bg-white flex flex-col items-center justify-center text-gray-400 font-comic cursor-pointer hover:border-[#8B5CF6] hover:bg-[#F5F3FF] transition-colors">
-            <Upload className="w-6 h-6 mb-2 text-[#8B5CF6]" />
+          <div className="h-32 rounded-xl border border-dashed border-gray-300 shadow-sm bg-white flex flex-col items-center justify-center text-gray-500 font-comic cursor-pointer hover:border-purple-300 hover:bg-purple-50 hover:-translate-y-0.5 hover:shadow-md transition-all">
+            <Upload className="w-6 h-6 mb-2 text-purple-500" />
             <span className="font-bold text-sm">Click to upload a file</span>
             <span className="text-xs mt-1">Max {field.config?.maxSize as number || 5}MB</span>
             <span className="text-[10px] mt-1 opacity-70">Allowed: {field.config?.allowedTypes as string || "Any"}</span>
@@ -533,7 +533,7 @@ function FieldInput({
                         name={`${field.id}_${row}`}
                         checked={matrixVal[row] === col}
                         onChange={() => onChange({ ...matrixVal, [row]: col })}
-                        className="w-4 h-4 text-[#8B5CF6] border-gray-300 focus:ring-[#8B5CF6]"
+                        className="w-4 h-4 text-purple-500 border-gray-300 focus:ring-purple-50 focus:ring-4 transition-all"
                       />
                     </td>
                   ))}
@@ -790,17 +790,17 @@ export default function PublicFormView() {
         <motion.div 
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
-          className="relative z-10 max-w-md w-full bg-white p-8 md:p-10 rounded-[2rem] border-4 border-[#333333] shadow-[8px_8px_0px_#333333] overflow-hidden"
+          className="relative z-10 max-w-md w-full bg-white p-8 md:p-10 rounded-[3rem_2rem_3rem_1rem] border-2 border-dashed border-gray-300 shadow-md overflow-hidden"
         >
           {/* Decorative Elements */}
-          <div className="absolute -top-6 -left-6 w-16 h-16 bg-[#34D399] rounded-full border-4 border-[#333333] opacity-50"></div>
-          <div className="absolute -bottom-8 -right-8 w-24 h-24 bg-[#FCD34D] rounded-full border-4 border-[#333333] opacity-50"></div>
+          <div className="absolute -top-6 -left-6 w-16 h-16 bg-emerald-300 rounded-[1rem_0.5rem_1rem_0.5rem] border border-emerald-400 opacity-50 transform -rotate-12"></div>
+          <div className="absolute -bottom-8 -right-8 w-24 h-24 bg-amber-300 rounded-[1rem_0.5rem_1rem_0.5rem] border border-amber-400 opacity-50 transform rotate-6"></div>
 
-          <div className="w-20 h-20 bg-[#E9D5FF] border-4 border-[#333333] shadow-[4px_4px_0px_#333333] transform -rotate-6 rounded-2xl flex items-center justify-center mb-6 mx-auto relative z-10">
+          <div className="w-20 h-20 bg-purple-100 border border-purple-200 shadow-sm transform -rotate-6 rounded-[1rem_0.5rem_1rem_0.5rem] flex items-center justify-center mb-6 mx-auto relative z-10">
             <span className="text-3xl">👋</span>
           </div>
           
-          <h2 className="text-3xl font-balsamiq font-bold text-center text-[#333333] mb-3 relative z-10">Welcome!</h2>
+          <h2 className="text-3xl font-balsamiq font-black text-center text-gray-900 mb-3 relative z-10">Welcome!</h2>
           <p className="text-gray-500 font-comic text-center text-md mb-8 relative z-10 font-bold">
             Before we begin, please provide your email address to continue to the form.
           </p>
@@ -816,31 +816,31 @@ export default function PublicFormView() {
           }}>
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-bold font-comic text-[#333333] mb-2">Full Name</label>
+                <label className="block text-sm font-bold font-comic text-gray-700 mb-2">Full Name</label>
                 <input 
                   type="text" 
                   value={respondentName}
                   onChange={(e) => setRespondentName(e.target.value)}
                   placeholder="John Doe"
-                  className="w-full px-5 py-4 rounded-xl border-4 border-[#333333] outline-none focus:border-[#8B5CF6] focus:shadow-[4px_4px_0px_#333333] font-comic font-bold transition-all shadow-sm"
+                  className="w-full px-5 py-4 rounded-xl border border-gray-200 outline-none focus:ring-4 focus:ring-purple-50 focus:border-purple-300 font-comic font-bold transition-all shadow-sm"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-bold font-comic text-[#333333] mb-2">Email Address *</label>
+                <label className="block text-sm font-bold font-comic text-gray-700 mb-2">Email Address *</label>
                 <input 
                   type="email" 
                   required
                   value={respondentEmail}
                   onChange={(e) => setRespondentEmail(e.target.value)}
                   placeholder="you@example.com"
-                  className="w-full px-5 py-4 rounded-xl border-4 border-[#333333] outline-none focus:border-[#8B5CF6] focus:shadow-[4px_4px_0px_#333333] font-comic font-bold transition-all shadow-sm"
+                  className="w-full px-5 py-4 rounded-xl border border-gray-200 outline-none focus:ring-4 focus:ring-purple-50 focus:border-purple-300 font-comic font-bold transition-all shadow-sm"
                 />
               </div>
               
               <button 
                 type="submit"
-                className="w-full py-4 mt-2 bg-[#8B5CF6] text-white rounded-xl border-4 border-[#333333] font-balsamiq font-bold text-xl shadow-[6px_6px_0px_#333333] hover:translate-y-[2px] hover:shadow-[4px_4px_0px_#333333] active:translate-y-[6px] active:shadow-none transition-all"
+                className="w-full py-4 mt-2 bg-purple-500 text-white rounded-xl border border-purple-600 font-balsamiq font-bold text-xl shadow-sm hover:-translate-y-0.5 hover:shadow-md hover:bg-purple-600 transition-all"
               >
                 Continue to Form
               </button>
@@ -897,27 +897,27 @@ export default function PublicFormView() {
       <div className="max-w-4xl w-full mx-auto relative z-10">
         {!success && fields.length > 0 ? (
           <div
-            className={`bg-[#FCFBF8] p-6 md:p-12 rounded-[2rem] border-4 border-[#333333] shadow-[8px_8px_0px_#333333] relative overflow-hidden transition-all duration-500 w-full`}
+            className={`bg-[#FCFBF8] p-6 md:p-12 rounded-[3rem_2rem_3rem_1rem] border-2 border-dashed border-gray-300 shadow-md relative overflow-hidden transition-all duration-500 w-full`}
           >
             {/* Spiral Binding Edge (Top on mobile, Left on desktop) */}
-            <div className="absolute top-0 left-0 w-full h-12 md:h-full md:w-16 border-b-4 md:border-b-0 md:border-r-4 border-[#333333] bg-[#E5E7EB] shadow-[inset_0_-4px_8px_rgba(0,0,0,0.05)] md:shadow-[inset_-4px_0_8px_rgba(0,0,0,0.05)] flex flex-row md:flex-col justify-evenly px-4 md:px-0 py-0 md:py-8 z-20">
+            <div className="absolute top-0 left-0 w-full h-12 md:h-full md:w-16 border-b md:border-b-0 md:border-r border-gray-200 bg-white shadow-sm flex flex-row md:flex-col justify-evenly px-4 md:px-0 py-0 md:py-8 z-20">
               {[...Array(isMobile ? 8 : 12)].map((_, i) => (
-                <div key={i} className="w-4 h-8 md:w-10 md:h-5 bg-white border-4 border-[#333333] rounded-full shadow-[2px_2px_0px_#333333] -mt-3 md:mt-0 md:ml-3 relative z-30 transform md:-rotate-12" />
+                <div key={i} className="w-4 h-8 md:w-10 md:h-5 bg-white border border-gray-200 rounded-[1rem_0.5rem_1rem_0.5rem] shadow-sm -mt-3 md:mt-0 md:ml-3 relative z-30 transform md:-rotate-12" />
               ))}
             </div>
 
             {/* Red Margin Line on the Paper (Hidden on mobile or just left) */}
-            <div className="hidden md:block absolute top-0 left-24 w-1 h-full bg-red-400 opacity-40 z-10"></div>
-            <div className="hidden md:block absolute top-0 left-26 w-[2px] h-full bg-red-400 opacity-20 z-10"></div>
-            <div className="block md:hidden absolute top-0 left-6 w-1 h-full bg-red-400 opacity-40 z-10"></div>
-            <div className="block md:hidden absolute top-0 left-8 w-[2px] h-full bg-red-400 opacity-20 z-10"></div>
+            <div className="hidden md:block absolute top-0 left-24 w-1 h-full bg-red-400 opacity-20 z-10"></div>
+            <div className="hidden md:block absolute top-0 left-26 w-[1px] h-full bg-red-400 opacity-10 z-10"></div>
+            <div className="block md:hidden absolute top-0 left-6 w-1 h-full bg-red-400 opacity-20 z-10"></div>
+            <div className="block md:hidden absolute top-0 left-8 w-[1px] h-full bg-red-400 opacity-10 z-10"></div>
 
             {/* Notebook Header */}
             <div className="mb-6 md:mb-8 pt-10 md:pt-0 pl-10 md:pl-16 flex justify-between items-center relative z-10">
-                  <span className="text-sm font-bold font-comic text-[#333333] bg-white px-3 md:px-4 py-1 md:py-1.5 border-2 border-[#333333] rounded-full shadow-[2px_2px_0px_#333333]">
+                  <span className="text-sm font-bold font-comic text-gray-700 bg-white px-3 md:px-4 py-1 md:py-1.5 border border-dashed border-gray-300 rounded-[1rem_0.5rem_1rem_0.5rem] shadow-sm transform -rotate-1">
                     {formData.title || "Untitled Form"}
                   </span>
-                  <span className="text-sm font-bold font-comic text-[#333333] bg-[#E9D5FF] px-3 md:px-4 py-1 md:py-1.5 border-2 border-[#333333] rounded-full shadow-[2px_2px_0px_#333333]">
+                  <span className="text-sm font-bold font-comic text-purple-700 bg-purple-50 px-3 md:px-4 py-1 md:py-1.5 border border-purple-200 rounded-[0.5rem_1rem_0.5rem_1rem] shadow-sm transform rotate-1">
                     {currentFieldIndex + 1} / {fields.length}
                   </span>
                 </div>
@@ -932,7 +932,7 @@ export default function PublicFormView() {
                     initial="enter"
                     animate="center"
                     exit="exit"
-                    className="w-full bg-[#FCFBF8] bg-[url('https://www.transparenttextures.com/patterns/lined-paper.png')] border-2 border-dashed border-gray-300 rounded-2xl p-6 md:p-8 min-h-[350px] shadow-sm flex flex-col justify-between"
+                    className="w-full bg-transparent p-2 md:p-4 min-h-[350px] flex flex-col justify-between"
                   >
                     <form onSubmit={(e) => { e.preventDefault(); nextField(); }} className="flex-1 flex flex-col justify-center">
                       <div className="w-full">
@@ -943,9 +943,9 @@ export default function PublicFormView() {
                           if (field.type === "statement") {
                             return (
                               <div className="mb-8">
-                                <h2 className="text-3xl font-bold font-balsamiq text-[#333333] mb-4 leading-tight">{field.label}</h2>
+                                <h2 className="text-3xl font-black font-balsamiq text-gray-900 mb-4 leading-tight">{field.label}</h2>
                                 {field.description && (
-                                  <p className="text-xl opacity-80 text-[#333333] font-comic leading-relaxed">{field.description}</p>
+                                  <p className="text-xl opacity-80 text-gray-600 font-comic leading-relaxed">{field.description}</p>
                                 )}
                               </div>
                             );
@@ -953,14 +953,14 @@ export default function PublicFormView() {
 
                           return (
                             <div className="mb-8">
-                              <label className="block text-3xl font-bold mb-4 font-balsamiq text-[#333333] leading-tight">
+                              <label className="block text-3xl font-black mb-4 font-balsamiq text-gray-900 leading-tight">
                                 {field.label}
                                 {field.required && <span className="text-red-500 ml-2">*</span>}
                               </label>
                               {field.description && (
-                                <p className="text-lg mb-6 opacity-70 text-[#333333] font-comic">{field.description}</p>
+                                <p className="text-lg mb-6 opacity-80 text-gray-600 font-comic">{field.description}</p>
                               )}
-                              <div className="bg-white/50 p-4 rounded-2xl border-2 border-[#333333] shadow-[4px_4px_0px_#333333] focus-within:shadow-[6px_6px_0px_#333333] focus-within:-translate-y-0.5 transition-all">
+                              <div className="bg-white/50 p-4 rounded-2xl border border-dashed border-gray-300 shadow-sm focus-within:border-purple-300 focus-within:ring-4 focus-within:ring-purple-50 transition-all">
                                 <FieldInput
                                   field={field}
                                   value={responses[field.id]}
@@ -973,15 +973,15 @@ export default function PublicFormView() {
                         })()}
                       </div>
 
-                      <div className="mt-8 flex items-center justify-between gap-4 pt-6 border-t-2 border-dashed border-gray-300">
+                      <div className="mt-8 flex items-center justify-between gap-4 pt-6 border-t border-dashed border-gray-200">
                         <button
                           type="button"
                           onClick={prevField}
                           disabled={currentFieldIndex === 0}
-                          className={`px-3 py-1.5 font-balsamiq font-bold text-sm rounded-xl border-2 transition-all flex items-center gap-2 ${
+                          className={`px-4 py-2 font-balsamiq font-black text-sm rounded-[1rem_0.5rem_1rem_0.5rem] transition-all flex items-center gap-2 ${
                             currentFieldIndex === 0 
-                              ? "bg-gray-100 text-gray-400 border-gray-200 cursor-not-allowed" 
-                              : "bg-white text-[#333333] border-[#333333] shadow-[2px_2px_0px_#333333] hover:translate-y-[1px] hover:shadow-[1px_1px_0px_#333333] active:translate-y-[2px] active:shadow-none"
+                              ? "bg-gray-100 text-gray-400 border border-gray-200 cursor-not-allowed" 
+                              : "bg-white text-gray-700 border border-gray-200 shadow-sm hover:-translate-y-0.5 hover:shadow-md hover:border-gray-300"
                           }`}
                         >
                           Back
@@ -991,7 +991,7 @@ export default function PublicFormView() {
                           type="button"
                           onClick={nextField}
                           disabled={submitting}
-                          className="flex-1 max-w-[140px] py-2 bg-[#8B5CF6] border-2 border-[#333333] rounded-xl font-balsamiq text-base font-bold text-white shadow-[2px_2px_0px_#333333] hover:translate-y-[1px] hover:shadow-[1px_1px_0px_#333333] active:translate-y-[2px] active:shadow-none transition-all flex justify-center items-center gap-2"
+                          className="flex-1 max-w-[140px] py-2 bg-purple-500 border border-purple-600 rounded-[0.5rem_1rem_0.5rem_1rem] font-balsamiq text-base font-black text-white shadow-sm hover:-translate-y-0.5 hover:shadow-md hover:bg-purple-600 transition-all flex justify-center items-center gap-2"
                         >
                           {submitting ? <Loader2 className="w-5 h-5 animate-spin" /> : currentFieldIndex === fields.length - 1 ? "Submit ✨" : "Next ➔"}
                         </button>
@@ -1006,11 +1006,13 @@ export default function PublicFormView() {
               key="success"
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
-              className="bg-white border-2 border-[#333333] p-12 rounded-[2rem] shadow-[8px_8px_0px_#8B5CF6] text-center"
+              className="bg-white border-2 border-dashed border-purple-200 p-12 rounded-[3rem_2rem_3rem_1rem] shadow-md text-center"
             >
-              <CheckCircle2 className="w-20 h-20 text-[#34D399] mx-auto mb-6" />
-              <h2 className="text-4xl font-bold font-balsamiq text-[#333333] mb-4">Success! 🎉</h2>
-              <p className="text-lg text-gray-500 font-bold mb-8 whitespace-pre-line">
+              <div className="w-24 h-24 bg-emerald-50 rounded-[1rem_0.5rem_1rem_0.5rem] border border-emerald-200 shadow-sm flex items-center justify-center mx-auto mb-6 transform rotate-3">
+                <CheckCircle2 className="w-12 h-12 text-emerald-500" />
+              </div>
+              <h2 className="text-4xl font-black font-balsamiq text-gray-900 mb-4">Success! 🎉</h2>
+              <p className="text-lg text-gray-600 font-bold mb-8 whitespace-pre-line">
                 {settings.successMessage}
               </p>
               {settings.allowMultipleResponses && (
@@ -1021,7 +1023,7 @@ export default function PublicFormView() {
                     setCurrentFieldIndex(0);
                     setDirection(0);
                   }}
-                  className="text-[#8B5CF6] font-bold hover:underline font-comic"
+                  className="text-purple-600 font-bold hover:underline font-comic hover:text-purple-700"
                 >
                   Submit another response
                 </button>

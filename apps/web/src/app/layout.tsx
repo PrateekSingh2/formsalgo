@@ -41,7 +41,6 @@ export default function RootLayout({
       <body className="antialiased font-comic text-[#333333] bg-[#FCFBF8] overflow-x-hidden">
         <TRPCReactProvider>
           <AuthProvider>
-            <MobileBlocker />
             {children}
             <Toaster
               position="bottom-right"

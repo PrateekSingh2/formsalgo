@@ -144,9 +144,9 @@ export default function AnalyticsPage() {
       <div className="flex items-center gap-4 mb-8">
         <button 
           onClick={() => router.push("/dashboard")}
-          className="p-2 rounded-xl bg-white border-2 border-[#333333] hover:bg-gray-50 transition-colors shadow-sm"
+          className="p-2 rounded-xl bg-white border border-gray-200 hover:bg-gray-50 transition-colors shadow-sm"
         >
-          <ArrowLeft className="w-5 h-5 text-[#333333]" />
+          <ArrowLeft className="w-5 h-5 text-gray-700" />
         </button>
         <div>
           <h1 className="text-2xl font-bold font-balsamiq text-[#333333]">{formData?.title || "Form Analytics"}</h1>
@@ -156,8 +156,8 @@ export default function AnalyticsPage() {
 
       {/* KPI Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
-        <div className="bg-white p-6 rounded-2xl border-2 border-[#333333] shadow-[4px_4px_0px_#333333] flex items-center gap-4">
-          <div className="w-12 h-12 rounded-xl bg-[#E9D5FF] border-2 border-[#8B5CF6] flex items-center justify-center">
+        <div className="bg-white p-6 rounded-[2rem_1rem_3rem_1rem] border-2 border-dashed border-purple-200 shadow-sm hover:-translate-y-1 hover:shadow-md transition-all flex items-center gap-4 group">
+          <div className="w-12 h-12 rounded-[1rem_0.5rem_1rem_0.5rem] bg-purple-50 flex items-center justify-center group-hover:scale-110 transition-transform">
             <Users className="w-6 h-6 text-[#8B5CF6]" />
           </div>
           <div>
@@ -166,8 +166,8 @@ export default function AnalyticsPage() {
           </div>
         </div>
 
-        <div className="bg-white p-6 rounded-2xl border-2 border-[#333333] shadow-[4px_4px_0px_#333333] flex items-center gap-4">
-          <div className="w-12 h-12 rounded-xl bg-[#D1FAE5] border-2 border-[#10B981] flex items-center justify-center">
+        <div className="bg-white p-6 rounded-[1rem_2rem_1rem_3rem] border-2 border-dashed border-emerald-200 shadow-sm hover:-translate-y-1 hover:shadow-md transition-all flex items-center gap-4 group">
+          <div className="w-12 h-12 rounded-[1rem_0.5rem_1rem_0.5rem] bg-emerald-50 flex items-center justify-center group-hover:scale-110 transition-transform">
             <MousePointerClick className="w-6 h-6 text-[#10B981]" />
           </div>
           <div>
@@ -176,8 +176,8 @@ export default function AnalyticsPage() {
           </div>
         </div>
         
-        <div className="bg-white p-6 rounded-2xl border-2 border-[#333333] shadow-[4px_4px_0px_#333333] flex items-center gap-4">
-          <div className="w-12 h-12 rounded-xl bg-[#FEF3C7] border-2 border-[#F59E0B] flex items-center justify-center">
+        <div className="bg-white p-6 rounded-[3rem_1rem_2rem_1rem] border-2 border-dashed border-amber-200 shadow-sm hover:-translate-y-1 hover:shadow-md transition-all flex items-center gap-4 group">
+          <div className="w-12 h-12 rounded-[1rem_0.5rem_1rem_0.5rem] bg-amber-50 flex items-center justify-center group-hover:scale-110 transition-transform">
             <TrendingUp className="w-6 h-6 text-[#F59E0B]" />
           </div>
           <div>
@@ -190,8 +190,8 @@ export default function AnalyticsPage() {
           </div>
         </div>
 
-        <div className="bg-white p-6 rounded-2xl border-2 border-[#333333] shadow-[4px_4px_0px_#333333] flex items-center gap-4">
-          <div className="w-12 h-12 rounded-xl bg-[#FEE2E2] border-2 border-[#EF4444] flex items-center justify-center">
+        <div className="bg-white p-6 rounded-[1rem_3rem_1rem_2rem] border-2 border-dashed border-red-200 shadow-sm hover:-translate-y-1 hover:shadow-md transition-all flex items-center gap-4 group">
+          <div className="w-12 h-12 rounded-[1rem_0.5rem_1rem_0.5rem] bg-red-50 flex items-center justify-center group-hover:scale-110 transition-transform">
             <Calendar className="w-6 h-6 text-[#EF4444]" />
           </div>
           <div>
@@ -208,7 +208,7 @@ export default function AnalyticsPage() {
       
       {/* Chart */}
       {submissions.length > 0 && (
-        <div className="bg-white p-6 rounded-2xl border-2 border-[#333333] shadow-[4px_4px_0px_#333333] mb-10">
+        <div className="bg-white p-6 rounded-3xl border-2 border-dashed border-gray-200 shadow-sm mb-10">
           <h2 className="text-lg font-bold font-balsamiq flex items-center gap-2 mb-6">
             <BarChart3 className="w-5 h-5 text-[#8B5CF6]" /> Responses Over Time
           </h2>
@@ -218,7 +218,7 @@ export default function AnalyticsPage() {
                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E5E7EB" />
                 <XAxis dataKey="date" axisLine={false} tickLine={false} tick={{ fontSize: 12, fill: '#9CA3AF' }} />
                 <YAxis axisLine={false} tickLine={false} tick={{ fontSize: 12, fill: '#9CA3AF' }} allowDecimals={false} />
-                <Tooltip cursor={{ fill: '#F5F3FF' }} contentStyle={{ borderRadius: '12px', border: '2px solid #333333', boxShadow: '4px 4px 0px #333333', fontWeight: 'bold' }} />
+                <Tooltip cursor={{ fill: '#F5F3FF' }} contentStyle={{ borderRadius: '16px', border: '2px dashed #E5E7EB', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)', fontWeight: 'bold' }} />
                 <Bar dataKey="Responses" fill="#8B5CF6" radius={[4, 4, 0, 0]} maxBarSize={50} />
               </BarChart>
             </ResponsiveContainer>
@@ -229,8 +229,8 @@ export default function AnalyticsPage() {
       {/* Top Forms & Devices Grid */}
       <div className="grid lg:grid-cols-2 gap-6 mb-10">
         {/* Top Forms */}
-        <div className="bg-white rounded-2xl border-2 border-[#333333] shadow-[4px_4px_0px_#333333] overflow-hidden">
-          <div className="px-5 py-4 border-b-2 border-[#333333] bg-gray-50">
+        <div className="bg-white rounded-[2rem_1rem_3rem_1rem] border-2 border-dashed border-gray-200 shadow-sm overflow-hidden">
+          <div className="px-5 py-4 border-b border-gray-100 bg-gray-50/50">
             <h3 className="text-lg font-balsamiq font-bold text-[#333333] flex items-center gap-2">
               <FileText className="w-5 h-5 text-[#3B82F6]" /> Your Top Forms
             </h3>
@@ -257,8 +257,8 @@ export default function AnalyticsPage() {
         </div>
 
         {/* Devices */}
-        <div className="bg-white rounded-2xl border-2 border-[#333333] shadow-[4px_4px_0px_#333333] overflow-hidden">
-          <div className="px-5 py-4 border-b-2 border-[#333333] bg-gray-50">
+        <div className="bg-white rounded-[1rem_2rem_1rem_3rem] border-2 border-dashed border-gray-200 shadow-sm overflow-hidden">
+          <div className="px-5 py-4 border-b border-gray-100 bg-gray-50/50">
             <h3 className="text-lg font-balsamiq font-bold text-[#333333] flex items-center gap-2">
               <Monitor className="w-5 h-5 text-[#F59E0B]" /> Device Breakdown
             </h3>
@@ -266,16 +266,16 @@ export default function AnalyticsPage() {
           <div className="p-5 space-y-6">
             {deviceStats.map((d) => (
               <div key={d.name} className="flex items-center gap-4">
-                <div className="w-12 h-12 rounded-xl bg-[#F9F9F9] flex items-center justify-center border-2 border-[#333333]">
-                  <d.icon className={`w-6 h-6 ${d.color} stroke-[3]`} />
+                <div className="w-12 h-12 rounded-[1rem_0.5rem_1rem_0.5rem] bg-gray-50 flex items-center justify-center border border-gray-200">
+                  <d.icon className={`w-6 h-6 ${d.color} stroke-[2]`} />
                 </div>
                 <div className="flex-1">
                   <div className="flex items-center justify-between mb-1">
                     <span className="text-sm font-bold text-gray-500">{d.name} <span className="font-normal">({d.count})</span></span>
                     <span className="text-sm font-bold text-[#333333]">{d.value}</span>
                   </div>
-                  <div className="h-2 bg-gray-200 rounded-full overflow-hidden border-2 border-[#333333]">
-                    <motion.div initial={{ width: 0 }} animate={{ width: `${d.bar}%` }} transition={{ delay: 0.3, duration: 0.6 }} className="h-full bg-[#8B5CF6] border-r-2 border-[#333333]" />
+                  <div className="h-2 bg-purple-50 rounded-full overflow-hidden border border-purple-100">
+                    <motion.div initial={{ width: 0 }} animate={{ width: `${d.bar}%` }} transition={{ delay: 0.3, duration: 0.6 }} className="h-full bg-purple-500 rounded-full" />
                   </div>
                 </div>
               </div>
@@ -285,15 +285,15 @@ export default function AnalyticsPage() {
       </div>
 
       {/* Responses Table */}
-      <div className="bg-white rounded-2xl border-2 border-[#333333] shadow-[4px_4px_0px_#333333] overflow-hidden">
-        <div className="p-6 border-b-2 border-[#333333] bg-gray-50 flex items-center justify-between">
+      <div className="bg-white rounded-[3rem_2rem_3rem_1rem] border-2 border-dashed border-gray-300 shadow-sm overflow-hidden relative">
+        <div className="p-6 border-b border-gray-100 bg-gray-50/50 flex items-center justify-between">
           <h2 className="text-lg font-bold font-balsamiq flex items-center gap-2">
             <BarChart3 className="w-5 h-5 text-[#8B5CF6]" /> All Submissions
           </h2>
           {submissions.length > 0 && (
             <button
               onClick={handleExportCSV}
-              className="flex items-center gap-2 px-4 py-2 bg-white text-[#333333] font-bold font-sans text-sm rounded-xl border-2 border-[#333333] hover:bg-[#E9D5FF] hover:border-[#8B5CF6] hover:text-[#8B5CF6] transition-all shadow-sm"
+              className="flex items-center gap-2 px-4 py-2 bg-white text-gray-700 font-bold font-sans text-sm rounded-[1rem_0.5rem_1rem_0.5rem] border border-gray-200 hover:bg-purple-50 hover:border-purple-200 hover:text-purple-700 transition-all shadow-sm hover:-translate-y-0.5"
             >
               <Download className="w-4 h-4" /> Export CSV
             </button>
@@ -308,10 +308,10 @@ export default function AnalyticsPage() {
           <div className="overflow-x-auto">
             <table className="w-full text-left font-sans">
               <thead>
-                <tr className="bg-gray-50 border-b-2 border-[#333333]">
-                  <th className="p-4 font-bold text-[#333333] whitespace-nowrap">Submitted At</th>
+                <tr className="bg-gray-50/50 border-b border-gray-200">
+                  <th className="p-4 font-bold text-gray-500 text-sm whitespace-nowrap">Submitted At</th>
                   {fields.filter(f => f.type !== 'statement').map((field) => (
-                    <th key={field.id} className="p-4 font-bold text-[#333333] min-w-[150px] max-w-[300px] truncate">
+                    <th key={field.id} className="p-4 font-bold text-gray-500 text-sm min-w-[150px] max-w-[300px] truncate">
                       {field.label}
                     </th>
                   ))}

@@ -43,15 +43,12 @@ export function FaqSection() {
   const inView = useInView(ref, { once: true, margin: "-100px" });
 
   return (
-    <section id="faq" className="py-32 px-6 bg-[#FFF1F2] relative overflow-hidden" ref={ref}>
-      {/* Decorative SVGs */}
-      <div className="absolute inset-0 pointer-events-none opacity-50">
-        <svg className="absolute top-40 right-10 w-24 h-24 text-pink-200 transform rotate-12" viewBox="0 0 100 100" fill="none">
-          <path d="M10 50 Q 50 10, 90 50 T 90 90 Q 50 90, 10 90 Z" stroke="currentColor" strokeWidth="2" strokeDasharray="4 4" />
-        </svg>
-        <svg className="absolute bottom-20 left-10 w-32 h-32 text-rose-200 transform -rotate-12" viewBox="0 0 100 100" fill="none">
-          <circle cx="50" cy="50" r="40" stroke="currentColor" strokeWidth="2" strokeDasharray="6 4" />
-        </svg>
+    <section id="faq" className="py-32 px-6 bg-gray-50 relative overflow-hidden" ref={ref}>
+      {/* Decorative Background Elements */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden">
+        <div className="absolute bottom-[-20%] left-[-20%] w-[60%] h-[60%] bg-sky-200/40 rounded-full blur-3xl mix-blend-multiply"></div>
+        <div className="absolute top-[20%] right-[30%] w-[30%] h-[30%] bg-lime-200/40 rounded-full blur-3xl mix-blend-multiply"></div>
+        <div className="absolute top-[-10%] right-[-10%] w-[40%] h-[40%] bg-purple-200/40 rounded-full blur-3xl mix-blend-multiply"></div>
       </div>
       <div className="max-w-4xl mx-auto relative z-10">
         <div className="text-center mb-20 flex flex-col items-center">
@@ -69,7 +66,7 @@ export function FaqSection() {
         </div>
         
         <motion.div initial={{ opacity: 0, y: 30 }} animate={inView ? { opacity: 1, y: 0 } : {}} transition={{ delay: 0.2 }}
-          className="bg-white rounded-3xl border border-gray-200 p-8 shadow-sm relative z-10">
+          className="bg-white/70 backdrop-blur-xl rounded-3xl border border-white/50 p-8 shadow-sm relative z-10">
           <div className="absolute -top-4 -right-4 w-12 h-12 text-5xl transform rotate-12 opacity-80 filter blur-[1px]">🤔</div>
           {faqs.map((faq, i) => <FaqItem key={i} faq={faq} index={i} />)}
         </motion.div>

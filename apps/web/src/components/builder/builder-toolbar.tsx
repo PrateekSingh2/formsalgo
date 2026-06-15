@@ -79,73 +79,73 @@ export function BuilderToolbar() {
   }, [isDirty, fields, title, themeConfig, user]);
 
   return (
-    <div className="h-14 border-b-2 border-[#333333] bg-[#F5F3FF] px-4 flex items-center justify-between shrink-0 relative z-20">
+    <div className="h-16 border-b border-white/50 bg-white/70 backdrop-blur-xl px-2 sm:px-4 flex items-center justify-between shrink-0 relative z-20 shadow-sm overflow-x-auto hide-scrollbar">
       {/* Left */}
-      <div className="flex items-center gap-3">
-        <Link href="/dashboard" className="p-1.5 bg-white rounded-lg border-2 border-[#333333] shadow-[2px_2px_0px_#333333] hover:-translate-y-px hover:shadow-[3px_3px_0px_#333333] active:translate-y-px active:shadow-none text-[#333333] transition-all">
-          <ArrowLeft className="w-4 h-4 stroke-[2]" />
+      <div className="flex items-center gap-1 sm:gap-3 shrink-0">
+        <Link href="/dashboard" className="p-1.5 sm:p-2 bg-white rounded-[1rem_0.5rem_1rem_0.5rem] border-2 border-dashed border-gray-300 shadow-sm hover:-translate-y-0.5 hover:shadow-md hover:border-purple-300 active:translate-y-0 text-gray-600 transition-all">
+          <ArrowLeft className="w-5 h-5 stroke-[2]" />
         </Link>
-        <div className="flex items-center gap-2 group px-2 py-1 bg-[#FEF3C7] border-2 border-[#333333] shadow-[2px_2px_0px_#333333] rounded-lg transform -rotate-1 transition-colors">
-          <Sparkles className="w-3 h-3 text-[#F59E0B] stroke-[2]" />
+        <div className="flex items-center gap-1 sm:gap-2 group px-2 sm:px-3 py-1.5 bg-amber-50 border-2 border-dashed border-amber-200 shadow-sm rounded-[0.5rem_1rem_0.5rem_1rem] transform -rotate-1 hover:rotate-0 transition-all">
+          <Sparkles className="w-4 h-4 text-amber-500 stroke-[2] shrink-0" />
           <input type="text" value={title} onChange={(e) => setFormMeta({ title: e.target.value })}
-            className="text-sm font-balsamiq font-black text-[#333333] bg-transparent border-none outline-none focus:ring-0 max-w-[200px] placeholder:text-gray-400" placeholder="Untitled Form" />
+            className="text-xs sm:text-sm font-balsamiq font-black text-gray-900 bg-transparent border-none outline-none focus:ring-0 w-24 sm:w-auto max-w-[100px] sm:max-w-[200px] placeholder:text-gray-400" placeholder="Untitled Form" />
         </div>
       </div>
 
       {/* Center — Undo/Redo */}
-      <div className="flex items-center gap-1 bg-white p-1 rounded-lg border-2 border-[#333333] shadow-[2px_2px_0px_#333333]">
+      <div className="hidden md:flex items-center gap-1 bg-white p-1 rounded-2xl border border-gray-200 shadow-sm">
         <motion.button whileTap={{ scale: 0.9 }} onClick={undo} disabled={historyIndex <= 0}
-          className="p-1.5 rounded-md hover:bg-[#E9D5FF] text-[#333333] disabled:opacity-30 transition-all font-bold">
+          className="p-1.5 rounded-xl hover:bg-purple-50 text-gray-700 disabled:opacity-30 transition-all font-bold">
           <Undo2 className="w-4 h-4 stroke-[2]" />
         </motion.button>
         <motion.button whileTap={{ scale: 0.9 }} onClick={redo} disabled={historyIndex >= history.length - 1}
-          className="p-1.5 rounded-md hover:bg-[#D1FAE5] text-[#333333] disabled:opacity-30 transition-all font-bold">
+          className="p-1.5 rounded-xl hover:bg-emerald-50 text-gray-700 disabled:opacity-30 transition-all font-bold">
           <Redo2 className="w-4 h-4 stroke-[2]" />
         </motion.button>
       </div>
 
-      <div className="flex items-center gap-2">
-        <div className="flex flex-col items-end mr-1 bg-white px-2 py-0.5 border-2 border-[#333333] rounded-md shadow-[1px_1px_0px_#333333] transform rotate-1">
+      <div className="flex items-center gap-1.5 sm:gap-3 shrink-0">
+        <div className="hidden lg:flex flex-col items-end mr-2 bg-white px-3 py-1 border border-gray-200 rounded-[1rem_0.5rem_1rem_0.5rem] shadow-sm transform rotate-1">
           {lastSaved && !isDirty && (
-            <span className="text-[9px] font-comic font-bold text-[#10B981]">Saved {lastSaved.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</span>
+            <span className="text-[10px] font-comic font-bold text-emerald-500">Saved {lastSaved.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</span>
           )}
           {isDirty && (
-             <span className="text-[9px] font-comic font-bold text-[#F59E0B] flex items-center gap-1"><Loader2 className="w-3 h-3 animate-spin"/> Unsaved</span>
+             <span className="text-[10px] font-comic font-bold text-amber-500 flex items-center gap-1"><Loader2 className="w-3 h-3 animate-spin"/> Unsaved</span>
           )}
         </div>
 
         <motion.button 
           whileTap={{ scale: 0.95 }} 
           onClick={() => setIsAIModalOpen(true)}
-          className="flex items-center gap-1.5 px-2.5 py-1.5 text-xs font-balsamiq font-black rounded-lg border-2 border-[#333333] bg-[#E9D5FF] text-[#333333] shadow-[2px_2px_0px_#333333] hover:-translate-y-px hover:shadow-[3px_3px_0px_#333333] active:translate-y-px active:shadow-none transition-all group"
+          className="flex items-center gap-1 sm:gap-1.5 px-2.5 sm:px-3 md:px-4 py-2 text-xs font-balsamiq font-black rounded-2xl border-2 border-dashed border-purple-300 bg-purple-50 text-purple-700 shadow-sm hover:-translate-y-0.5 hover:shadow-md hover:bg-purple-100 transition-all group"
         >
-          <Sparkles className="w-3 h-3 stroke-[2]" />
-          AI Create
+          <Sparkles className="w-4 h-4 stroke-[2]" />
+          <span className="hidden md:inline">AI Create</span>
         </motion.button>
 
         <motion.button whileTap={{ scale: 0.95 }} onClick={() => setPreviewMode(!previewMode)}
-          className={`flex items-center gap-1.5 px-2.5 py-1.5 text-xs font-balsamiq font-black rounded-lg border-2 border-[#333333] shadow-[2px_2px_0px_#333333] hover:-translate-y-px hover:shadow-[3px_3px_0px_#333333] active:translate-y-px active:shadow-none transition-all ${previewMode ? "bg-[#8B5CF6] text-white" : "bg-white text-[#333333]"}`}>
-          {previewMode ? <EyeOff className="w-3 h-3 stroke-[2]" /> : <Eye className="w-3 h-3 stroke-[2]" />}
-          {previewMode ? "Edit" : "Preview"}
+          className={`flex items-center gap-1 sm:gap-1.5 px-2.5 sm:px-3 md:px-4 py-2 text-xs font-balsamiq font-black rounded-2xl shadow-sm hover:-translate-y-0.5 hover:shadow-md transition-all ${previewMode ? "bg-purple-500 text-white border border-purple-600" : "bg-white text-gray-700 border border-gray-200"}`}>
+          {previewMode ? <EyeOff className="w-4 h-4 stroke-[2]" /> : <Eye className="w-4 h-4 stroke-[2]" />}
+          <span className="hidden sm:inline">{previewMode ? "Edit" : "Preview"}</span>
         </motion.button>
         
         {formSlug && (
           <motion.button 
             whileTap={{ scale: 0.95 }} 
             onClick={() => setIsShareModalOpen(true)}
-            className="p-1.5 rounded-lg border-2 border-[#333333] bg-white hover:bg-[#D1FAE5] text-[#333333] shadow-[2px_2px_0px_#333333] hover:-translate-y-px hover:shadow-[3px_3px_0px_#333333] active:translate-y-px active:shadow-none transition-all group"
+            className="p-2 rounded-2xl border border-gray-200 bg-white hover:bg-emerald-50 text-gray-700 shadow-sm hover:-translate-y-0.5 hover:shadow-md hover:border-emerald-200 transition-all group"
             title="Share Public Link"
           >
-            <Share2 className="w-3 h-3 stroke-[2]" />
+            <Share2 className="w-4 h-4 stroke-[2]" />
           </motion.button>
         )}
 
         <motion.button whileTap={{ scale: 0.95 }}
           onClick={() => handlePublish(false)}
           disabled={isPublishing}
-          className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-balsamiq font-black rounded-lg border-2 border-[#333333] shadow-[2px_2px_0px_#333333] hover:-translate-y-px hover:shadow-[3px_3px_0px_#333333] active:translate-y-px active:shadow-none transition-all disabled:opacity-70 ${status === 'Published' && !isDirty ? 'bg-[#34D399] text-[#333333]' : 'bg-[#F59E0B] text-[#333333]'}`}>
-          {isPublishing && !autoSaveTimerRef.current ? <Loader2 className="w-3 h-3 animate-spin stroke-[2]" /> : <Save className="w-3 h-3 stroke-[2]" />}
-          {status === 'Published' && !isDirty ? "Published" : isDirty ? "Save & Publish" : "Publish"}
+          className={`flex items-center gap-1 sm:gap-1.5 px-3 sm:px-3 md:px-5 py-2 text-xs font-balsamiq font-black rounded-2xl shadow-sm hover:-translate-y-0.5 hover:shadow-md transition-all disabled:opacity-70 ${status === 'Published' && !isDirty ? 'bg-emerald-100 text-emerald-800 border border-emerald-300' : 'bg-purple-500 text-white border border-purple-600 hover:bg-purple-600'}`}>
+          {isPublishing && !autoSaveTimerRef.current ? <Loader2 className="w-4 h-4 animate-spin stroke-[2]" /> : <Save className="w-4 h-4 stroke-[2]" />}
+          <span className="hidden sm:inline">{status === 'Published' && !isDirty ? "Published" : isDirty ? "Save & Publish" : "Publish"}</span>
         </motion.button>
       </div>
 

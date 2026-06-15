@@ -6,12 +6,13 @@ import { ArrowRight, Pencil, Sparkles } from "lucide-react";
 
 export function HeroSection() {
   return (
-    <section className="relative min-h-screen flex flex-col items-center justify-center pt-32 pb-20 overflow-hidden bg-[#FCFBF8]" id="hero">
+    <section className="relative min-h-screen flex flex-col items-center justify-center pt-32 pb-20 overflow-hidden bg-gray-50" id="hero">
       
-      {/* Hand-drawn decorative elements */}
-      <div className="absolute inset-0 pointer-events-none overflow-hidden">
-        {/* Background Colorful Grid */}
-        <div className="absolute inset-0 opacity-20" style={{ backgroundImage: 'radial-gradient(#8B5CF6 2px, transparent 2px)', backgroundSize: '30px 30px' }}></div>
+      {/* Decorative Background Elements */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden z-0">
+        <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-purple-200/40 rounded-full blur-3xl mix-blend-multiply"></div>
+        <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-amber-200/40 rounded-full blur-3xl mix-blend-multiply"></div>
+        <div className="absolute top-[20%] right-[10%] w-[20%] h-[20%] bg-emerald-200/30 rounded-full blur-3xl mix-blend-multiply"></div>
         
         {/* Pencil sketch lines */}
         <motion.div animate={{ rotate: [-2, 2, -2] }} transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }} className="absolute top-20 left-[5%] opacity-80">
@@ -56,10 +57,10 @@ export function HeroSection() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
-          className="inline-flex items-center gap-2 px-5 py-2 bg-[#FEF3C7] border-2 border-amber-300 rounded-2xl mb-8 shadow-sm transform -rotate-2"
+          className="inline-flex items-center gap-2 px-5 py-2 bg-white/80 backdrop-blur-md border border-amber-200 rounded-2xl mb-8 shadow-sm transform -rotate-2"
         >
           <Sparkles className="w-5 h-5 text-amber-500" />
-          <span className="font-comic font-bold text-amber-800 text-sm tracking-wide">Building forms shouldn't be boring</span>
+          <span className="font-balsamiq font-bold text-amber-800 text-sm tracking-wide">Building forms shouldn't be boring</span>
         </motion.div>
 
         {/* Headline */}
@@ -85,7 +86,7 @@ export function HeroSection() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, delay: 0.2 }}
-          className="font-comic text-lg sm:text-xl text-gray-700 max-w-2xl mx-auto mb-10 font-bold leading-relaxed"
+          className="font-sans text-xl sm:text-2xl text-gray-600 max-w-2xl mx-auto mb-10 leading-relaxed"
         >
           Create, customize and share forms that get responses. All the tools you need, all in one place.
         </motion.p>
@@ -103,10 +104,10 @@ export function HeroSection() {
           </Link>
           
           <div className="relative mt-4 sm:mt-0 ml-0 sm:ml-6 flex items-center">
-            <svg className="absolute -left-12 sm:-left-16 w-12 h-12 text-[#10B981] transform -rotate-12" fill="none" viewBox="0 0 50 50" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M40 10 Q 20 20, 10 40 M10 40 L 15 30 M10 40 L 20 42" strokeDasharray="3 3" />
+            <svg className="absolute -left-12 sm:-left-16 w-12 h-12 text-[#10B981] transform -rotate-12 z-0 pointer-events-none" fill="none" viewBox="0 0 50 50" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M40 10 C 20 20, 10 30, 10 40 M10 40 L 15 30 M10 40 L 20 42" strokeDasharray="3 3" />
             </svg>
-            <span className="font-comic inline-block px-4 py-2 font-bold text-green-700 text-sm border-2 border-green-200 bg-[#D1FAE5] shadow-sm rounded-xl transform rotate-2">It's completely free!</span>
+            <span className="font-balsamiq relative z-10 inline-block px-4 py-2 font-bold text-emerald-700 text-sm border border-emerald-200 bg-white/80 backdrop-blur-md shadow-sm rounded-xl transform rotate-2">It's completely free!</span>
           </div>
         </motion.div>
 

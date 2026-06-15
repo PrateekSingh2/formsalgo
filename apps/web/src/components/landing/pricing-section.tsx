@@ -28,15 +28,12 @@ export function PricingSection() {
   const inView = useInView(ref, { once: true, margin: "-100px" });
 
   return (
-    <section id="pricing" className="py-32 px-6 bg-[#F8FAFC] relative overflow-hidden" ref={ref}>
-      {/* Decorative SVGs */}
-      <div className="absolute inset-0 pointer-events-none opacity-50">
-        <svg className="absolute top-10 left-10 w-24 h-24 text-blue-200" viewBox="0 0 100 100" fill="none">
-          <path d="M10 50 Q 50 10, 90 50 T 90 90 Q 50 90, 10 90 Z" stroke="currentColor" strokeWidth="2" strokeDasharray="4 4" />
-        </svg>
-        <svg className="absolute bottom-10 right-10 w-32 h-32 text-indigo-200" viewBox="0 0 100 100" fill="none">
-          <circle cx="50" cy="50" r="40" stroke="currentColor" strokeWidth="2" strokeDasharray="6 4" />
-        </svg>
+    <section id="pricing" className="py-32 px-6 bg-gray-50 relative overflow-hidden" ref={ref}>
+      {/* Decorative Background Elements */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden">
+        <div className="absolute top-[15%] left-[10%] w-[30%] h-[30%] bg-green-200/40 rounded-full blur-3xl mix-blend-multiply"></div>
+        <div className="absolute bottom-[-10%] left-[40%] w-[50%] h-[50%] bg-indigo-200/40 rounded-full blur-3xl mix-blend-multiply"></div>
+        <div className="absolute top-[-10%] right-[-10%] w-[40%] h-[40%] bg-red-200/40 rounded-full blur-3xl mix-blend-multiply"></div>
       </div>
       <div className="max-w-[1300px] mx-auto flex flex-col items-center">
         
@@ -76,8 +73,8 @@ export function PricingSection() {
             <motion.div key={plan.name} initial={{ opacity: 0, y: 50 }} animate={inView ? { opacity: 1, y: 0 } : {}} transition={{ delay: i * 0.15 }} whileHover={{ y: -10 }}
               className={`relative rounded-3xl p-10 transition-all duration-300 flex flex-col border ${
                 plan.highlighted 
-                  ? "bg-gradient-to-b from-blue-50 to-indigo-50 border-blue-200 text-gray-900 shadow-md lg:scale-105 z-10" 
-                  : "bg-white border-gray-200 shadow-sm"
+                  ? "bg-gradient-to-b from-blue-50/80 to-indigo-50/80 backdrop-blur-xl border-white/50 text-gray-900 shadow-md lg:scale-105 z-10" 
+                  : "bg-white/70 backdrop-blur-xl border-white/50 shadow-sm"
               }`}
             >
               {plan.highlighted && (

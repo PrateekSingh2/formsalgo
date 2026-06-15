@@ -1,7 +1,29 @@
 import { NextResponse } from 'next/server';
 
+// Simple in-memory rate limiter
+const rateLimitMap = new Map<string, { count: number; timestamp: number }>();
+const RATE_LIMIT_WINDOW_MS = 60 * 1000; // 1 minute
+const MAX_REQUESTS_PER_WINDOW = 5; // Max 5 AI generations per minute per IP
+
 export async function POST(req: Request) {
   try {
+    const ip = req.headers.get("x-forwarded-for") || "unknown_ip";
+    const now = Date.now();
+    const rateLimitData = rateLimitMap.get(ip);
+
+    if (rateLimitData) {
+      if (now - rateLimitData.timestamp < RATE_LIMIT_WINDOW_MS) {
+        if (rateLimitData.count >= MAX_REQUESTS_PER_WINDOW) {
+          return NextResponse.json({ error: 'Too many requests. Please wait a minute before generating again.' }, { status: 429 });
+        }
+        rateLimitData.count++;
+      } else {
+        rateLimitMap.set(ip, { count: 1, timestamp: now });
+      }
+    } else {
+      rateLimitMap.set(ip, { count: 1, timestamp: now });
+    }
+
     const { prompt } = await req.json();
 
     if (!prompt) {

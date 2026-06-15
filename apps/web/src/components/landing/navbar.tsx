@@ -27,15 +27,15 @@ export function Navbar() {
       transition={{ duration: 0.6, ease: [0.34, 1.56, 0.64, 1] }}
       className="fixed top-0 left-0 right-0 z-50 px-4 pt-4"
     >
-      <nav className="mx-auto max-w-[1300px] bg-white/80 backdrop-blur-md border border-gray-200 rounded-xl px-6 py-3.5 flex items-center justify-between shadow-sm">
+      <nav className="mx-auto max-w-[1300px] bg-white/60 backdrop-blur-xl border border-white/50 rounded-2xl px-6 py-3.5 flex items-center justify-between shadow-md">
         {/* Logo */}
         <Link href="/" className="flex items-center gap-2.5 group shrink-0">
           <motion.div
             whileHover={{ rotate: 12, scale: 1.1 }}
             transition={{ type: "spring", stiffness: 400 }}
-            className="w-10 h-10 flex items-center justify-center bg-[#FEF3C7] border-2 border-amber-300 rounded-xl shadow-sm transform -rotate-3"
+            className="w-10 h-10 flex items-center justify-center bg-white border border-gray-100 rounded-xl shadow-sm transform -rotate-2"
           >
-            <svg viewBox="0 0 24 24" fill="none" stroke="#D97706" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-6 h-6">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#8B5CF6" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-6 h-6">
               <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
               <path d="M12 11h4" />
               <path d="M12 15h4" />
@@ -57,7 +57,7 @@ export function Navbar() {
               href={link.href}
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.98 }}
-              className="font-comic px-4 py-2 text-base font-bold text-gray-600 hover:text-[#8B5CF6] hover:bg-[#F3E8FF] rounded-xl transition-colors"
+              className="font-sans px-4 py-2 text-sm font-semibold text-gray-600 hover:text-[#8B5CF6] hover:bg-white/50 rounded-xl transition-colors"
             >
               {link.label}
             </motion.a>
@@ -68,7 +68,7 @@ export function Navbar() {
         <div className="hidden md:flex items-center gap-3 shrink-0">
           <Link
             href="/login"
-            className="px-4 py-2 text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors"
+            className="px-4 py-2 text-sm font-semibold text-gray-600 hover:text-gray-900 transition-colors"
           >
             Log in
           </Link>

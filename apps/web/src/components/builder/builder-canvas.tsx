@@ -205,11 +205,11 @@ function SortableCanvasField({ field }: { field: BuilderField }) {
       ref={setNodeRef}
       style={style}
       onClick={() => setActiveField(field.id)}
-      className={`group relative rounded-xl transition-all cursor-pointer bg-white ${
+      className={`group relative rounded-[1rem_0.5rem_1rem_0.5rem] transition-all cursor-pointer bg-white border-2 border-dashed ${
         isActive 
-          ? "ring-2 ring-[#8B5CF6] shadow-[2px_2px_0px_#333333] border-2 border-[#333333] z-20" 
-          : "border-2 border-transparent hover:border-[#333333] hover:shadow-[2px_2px_0px_#333333]"
-      } ${isDragging ? "opacity-50 scale-105 shadow-[4px_4px_0px_#333333] z-50 ring-2 ring-[#8B5CF6] border-2 border-[#333333]" : ""}`}
+          ? "border-purple-300 shadow-md z-20 ring-4 ring-purple-50" 
+          : "border-transparent hover:border-gray-300 hover:shadow-sm"
+      } ${isDragging ? "opacity-50 scale-105 shadow-lg z-50 border-purple-400" : ""}`}
     >
       {/* Drag Handle */}
       <div
@@ -252,13 +252,13 @@ function SortableCanvasField({ field }: { field: BuilderField }) {
         {/* Field Header */}
         <div className="flex items-center justify-between mb-3">
           <div className="flex items-center gap-2">
-            <span className="w-5 h-5 flex items-center justify-center bg-[#F5F3FF] border border-[#333333] rounded text-[10px] font-black text-[#8B5CF6] font-balsamiq transform -rotate-1">
+            <span className="w-5 h-5 flex items-center justify-center bg-purple-50 border border-purple-200 rounded-[0.3rem_0.5rem_0.2rem_0.5rem] text-[10px] font-black text-purple-600 font-balsamiq transform -rotate-2">
               {(typeof field.order === 'number' && !isNaN(field.order) ? field.order : 0) + 1}
             </span>
-            <span className="font-black text-sm text-[#333333] font-balsamiq">
+            <span className="font-black text-sm text-gray-900 font-balsamiq">
               {field.label}
             </span>
-            {field.required && <span className="text-[#EF4444] text-sm font-black shrink-0">*</span>}
+            {field.required && <span className="text-red-500 text-sm font-black shrink-0">*</span>}
           </div>
           <div className="flex items-center gap-2 text-gray-400">
             <FieldIcon className="w-4 h-4 stroke-[2]" />
@@ -320,10 +320,10 @@ export function BuilderCanvas() {
           type="text"
           value={title}
           onChange={(e) => setFormMeta({ title: e.target.value })}
-          className="w-full font-balsamiq text-3xl font-bold text-[#333333] bg-transparent border-none focus:outline-none focus:ring-2 focus:ring-[#8B5CF6]/30 rounded-lg px-2 py-1.5 transition-all hover:bg-black/[0.02] placeholder:text-gray-300"
+          className="w-full font-balsamiq text-3xl font-bold text-gray-900 bg-transparent border-none focus:outline-none focus:ring-4 focus:ring-purple-50 rounded-[1rem_0.5rem_1rem_0.5rem] px-2 py-1.5 transition-all hover:bg-gray-50 placeholder:text-gray-300"
           placeholder="Untitled Form"
         />
-        <div className="h-px bg-gradient-to-r from-[#8B5CF6]/30 to-transparent mt-2 ml-2 mb-2" />
+        <div className="h-px bg-gradient-to-r from-purple-200 to-transparent mt-2 ml-2 mb-2" />
         <textarea
           value={useFormBuilderStore.getState().description || ""}
           onChange={(e) => setFormMeta({ description: e.target.value })}
@@ -354,23 +354,23 @@ export function BuilderCanvas() {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="mt-12 text-center py-16 bg-[#E9D5FF] rounded-3xl border-2 border-[#333333] relative overflow-hidden group shadow-[4px_4px_0px_#333333]"
+          className="mt-12 text-center py-16 bg-purple-50 rounded-[3rem_2rem_3rem_1rem] border-2 border-dashed border-purple-200 relative overflow-hidden group shadow-sm"
         >
-          <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-20 pointer-events-none"></div>
+          <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10 pointer-events-none"></div>
 
           <motion.div
             animate={{ y: [0, -8, 0], rotate: [0, 3, 0] }}
             transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-            className="w-16 h-16 mx-auto mb-6 rounded-2xl bg-white border-2 border-[#333333] shadow-[2px_2px_0px_#333333] flex items-center justify-center relative"
+            className="w-16 h-16 mx-auto mb-6 rounded-[1rem_0.5rem_1rem_0.5rem] bg-white border border-purple-200 shadow-sm flex items-center justify-center relative"
           >
-            <div className="absolute -top-3 -right-3 w-8 h-8 bg-[#FEF3C7] rounded-lg border-2 border-[#333333] flex items-center justify-center shadow-[1px_1px_0px_#333333] animate-bounce">
-              <Sparkles className="w-4 h-4 text-[#F59E0B] stroke-[2]" />
+            <div className="absolute -top-3 -right-3 w-8 h-8 bg-amber-50 rounded-lg border border-amber-200 flex items-center justify-center shadow-sm animate-bounce">
+              <Sparkles className="w-4 h-4 text-amber-500 stroke-[2]" />
             </div>
-            <Type className="w-8 h-8 text-[#8B5CF6] stroke-[2]" />
+            <Type className="w-8 h-8 text-purple-500 stroke-[2]" />
           </motion.div>
 
-          <h3 className="font-balsamiq text-2xl font-black text-[#333333] mb-3">Build your masterpiece!</h3>
-          <p className="text-[#333333] text-base font-comic font-bold max-w-sm mx-auto">Drag and drop fields from the left panel to start creating your form. It's that easy.</p>
+          <h3 className="font-balsamiq text-2xl font-black text-gray-900 mb-3">Build your masterpiece!</h3>
+          <p className="text-gray-500 text-base font-comic font-bold max-w-sm mx-auto">Drag and drop fields from the left panel to start creating your form. It's that easy.</p>
         </motion.div>
       )}
     </div>

@@ -9,11 +9,12 @@ export function MarketplaceSection() {
   const isInView = useInView(ref, { once: true, margin: "-100px" });
 
   return (
-    <section id="marketplace" className="py-32 px-6 bg-[#ECFEFF] relative overflow-hidden" ref={ref}>
-      {/* Decorative background elements */}
-      <div className="absolute top-0 left-0 w-full h-full pointer-events-none opacity-40">
-        <div className="absolute top-20 left-10 w-32 h-32 bg-[#CFFAFE] border-2 border-cyan-200 rounded-full rotate-12"></div>
-        <div className="absolute bottom-20 right-10 w-40 h-40 bg-[#CCFBF1] border-2 border-teal-200 rounded-full -rotate-6"></div>
+    <section id="marketplace" className="py-32 px-6 bg-gray-50 relative overflow-hidden" ref={ref}>
+      {/* Decorative Background Elements */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden">
+        <div className="absolute bottom-[-20%] left-[-10%] w-[50%] h-[50%] bg-amber-200/40 rounded-full blur-3xl mix-blend-multiply"></div>
+        <div className="absolute top-[10%] right-[-20%] w-[40%] h-[40%] bg-rose-200/40 rounded-full blur-3xl mix-blend-multiply"></div>
+        <div className="absolute bottom-[20%] left-[30%] w-[30%] h-[30%] bg-cyan-200/40 rounded-full blur-3xl mix-blend-multiply"></div>
       </div>
 
       <div className="max-w-[1300px] mx-auto relative z-10">
@@ -29,7 +30,7 @@ export function MarketplaceSection() {
               possibilities
             </span>
           </motion.h2>
-          <p className="font-comic text-xl text-gray-700 max-w-2xl mx-auto font-bold bg-white/60 backdrop-blur-sm border border-gray-200 shadow-sm p-4 rounded-xl">Themes, automations, and a thriving community to help you build faster.</p>
+          <p className="font-sans text-xl text-gray-700 max-w-2xl mx-auto leading-relaxed bg-white/60 backdrop-blur-md border border-white/50 shadow-sm p-4 rounded-xl">Themes, automations, and a thriving community to help you build faster.</p>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-stretch">
@@ -41,19 +42,19 @@ export function MarketplaceSection() {
             transition={{ duration: 0.6 }}
             className="relative"
           >
-            <div className="bg-white p-10 rounded-[2.5rem] border border-gray-200 shadow-sm relative z-10 h-full flex flex-col items-center text-center group hover:border-rose-200 transition-colors">
+            <div className="bg-white/70 backdrop-blur-xl p-10 rounded-[2.5rem] border border-white/50 shadow-sm relative z-10 h-full flex flex-col items-center text-center group hover:border-rose-200 transition-colors">
               <div className="w-16 h-16 bg-rose-50 rounded-2xl flex items-center justify-center mb-6 transform -rotate-3 border border-rose-100 group-hover:-rotate-6 transition-transform">
                 <FileText className="w-8 h-8 text-rose-500" />
               </div>
               <h3 className="font-balsamiq text-3xl font-black text-gray-900 mb-3">Community Forms</h3>
-              <p className="font-comic text-gray-600 font-bold mb-12 max-w-sm">Don't start from scratch. Clone top-performing forms created by expert builders.</p>
+              <p className="font-sans text-gray-600 mb-12 max-w-sm">Don't start from scratch. Clone top-performing forms created by expert builders.</p>
               
               <div className="relative h-[260px] w-full max-w-xs mt-auto">
                 {/* Form Card 1 */}
                 <div className="absolute top-0 left-0 bg-[#FFF1F2] border border-rose-200 rounded-3xl p-6 w-56 transform -rotate-6 shadow-sm z-20 hover:rotate-0 hover:scale-105 hover:shadow-md transition-all cursor-pointer">
                   <div className="text-4xl mb-4">🍪</div>
                   <h4 className="font-balsamiq font-black text-rose-900 text-lg mb-1">Anime Fan Survey</h4>
-                  <div className="flex items-center gap-1 mt-2 text-sm font-comic font-bold text-rose-700">
+                  <div className="flex items-center gap-1 mt-2 text-sm font-sans font-bold text-rose-700">
                     <Star className="w-4 h-4 text-orange-400 fill-current" /> 4.8 (341)
                   </div>
                 </div>

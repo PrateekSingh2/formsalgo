@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { Sparkles, X, Loader2, Send } from "lucide-react";
 import { useFormBuilderStore } from "@/stores/form-builder-store";
@@ -14,7 +15,12 @@ interface AIGenerateModalProps {
 export function AIGenerateModal({ isOpen, onClose }: AIGenerateModalProps) {
   const [prompt, setPrompt] = useState("");
   const [loading, setLoading] = useState(false);
+  const [mounted, setMounted] = useState(false);
   const { setFields, setFormMeta } = useFormBuilderStore();
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const handleGenerate = async () => {
     if (!prompt.trim()) return;
@@ -50,7 +56,9 @@ export function AIGenerateModal({ isOpen, onClose }: AIGenerateModalProps) {
     }
   };
 
-  return (
+  if (!mounted) return null;
+
+  return createPortal(
     <AnimatePresence>
       {isOpen && (
         <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm">
@@ -134,6 +142,7 @@ export function AIGenerateModal({ isOpen, onClose }: AIGenerateModalProps) {
           </motion.div>
         </div>
       )}
-    </AnimatePresence>
+    </AnimatePresence>,
+    document.body
   );
 }

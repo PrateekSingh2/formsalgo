@@ -14,7 +14,7 @@ import { AuthGuard } from "@/components/auth-guard";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { fetchFormById } from "@/lib/supabase-actions";
-import { Loader2 } from "lucide-react";
+import { Loader2, Layers, MonitorSmartphone, SlidersHorizontal } from "lucide-react";
 import { FORM_TEMPLATES } from "@/lib/templates";
 import { AnimatedBackground } from "@/components/builder/animated-background";
 
@@ -24,6 +24,7 @@ export default function BuilderPage() {
   const id = searchParams.get("id");
   const templateId = searchParams.get("template");
   const [loading, setLoading] = useState(!!id && id !== formId);
+  const [activeMobileTab, setActiveMobileTab] = useState<"elements" | "canvas" | "properties">("canvas");
 
   useEffect(() => {
     async function load() {
@@ -121,27 +122,31 @@ export default function BuilderPage() {
 
   return (
     <AuthGuard requireAuth={true}>
-      <div className="h-screen flex flex-col bg-[#FCFBF8] relative overflow-hidden">
-        {/* Notebook Paper Dots Pattern - Only show if no custom pattern */}
+      <div className="h-screen flex flex-col bg-gray-50 relative overflow-hidden">
+        {/* Decorative Background Elements - Only show if no custom pattern */}
         {!pattern && (
-          <div className="absolute inset-0 z-0 opacity-20 pointer-events-none" style={{ backgroundImage: 'radial-gradient(#333333 2px, transparent 2px)', backgroundSize: '30px 30px' }}></div>
+          <div className="absolute inset-0 pointer-events-none overflow-hidden z-0">
+            <div className="absolute top-[10%] left-[-15%] w-[45%] h-[45%] bg-blue-200/40 rounded-full blur-3xl mix-blend-multiply"></div>
+            <div className="absolute bottom-[-10%] right-[20%] w-[35%] h-[35%] bg-purple-200/40 rounded-full blur-3xl mix-blend-multiply"></div>
+            <div className="absolute top-[30%] right-[-5%] w-[40%] h-[40%] bg-pink-200/30 rounded-full blur-3xl mix-blend-multiply"></div>
+          </div>
         )}
         
         <BuilderToolbar />
 
-      <div className="flex-1 flex overflow-hidden relative z-10">
+      <div className="flex-1 flex overflow-hidden relative z-10 pb-[60px] md:pb-0">
         {!previewMode && (
           <motion.aside
             initial={{ x: -300, opacity: 0 }}
             animate={{ x: 0, opacity: 1 }}
             transition={{ duration: 0.4, ease: [0.34, 1.56, 0.64, 1] }}
-            className="w-64 border-r border-gray-200 bg-white overflow-y-auto shrink-0 z-20 shadow-xl"
+            className={`w-full md:w-64 border-r border-white/50 bg-white/70 backdrop-blur-xl overflow-y-auto shrink-0 z-20 shadow-xl ${activeMobileTab === "elements" ? "block" : "hidden md:block"}`}
           >
             <FieldPalette />
           </motion.aside>
         )}
 
-        <main className="flex-1 overflow-y-auto p-8 transition-colors relative" style={bgStyles}>
+        <main className={`flex-1 overflow-y-auto p-4 md:p-8 transition-colors relative ${activeMobileTab === "canvas" ? "block" : "hidden md:block"}`} style={bgStyles}>
           {pattern && <AnimatedBackground pattern={pattern} />}
           <div className="relative z-10">
             <BuilderCanvas />
@@ -153,12 +158,30 @@ export default function BuilderPage() {
             initial={{ x: 300, opacity: 0 }}
             animate={{ x: 0, opacity: 1 }}
             transition={{ duration: 0.4, ease: [0.34, 1.56, 0.64, 1] }}
-            className="w-72 border-l border-gray-200 bg-white overflow-y-auto shrink-0"
+            className={`w-full md:w-72 border-l border-white/50 bg-white/70 backdrop-blur-xl overflow-y-auto shrink-0 ${activeMobileTab === "properties" ? "block" : "hidden md:block"}`}
           >
             <FieldConfig />
           </motion.aside>
         )}
       </div>
+      
+      {/* Mobile Bottom Navigation */}
+      {!previewMode && (
+        <div className="md:hidden fixed bottom-0 left-0 right-0 h-[60px] bg-white border-t border-gray-200 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)] z-50 flex justify-around items-center px-2">
+          <button onClick={() => setActiveMobileTab("elements")} className={`flex flex-col items-center justify-center w-full h-full ${activeMobileTab === "elements" ? "text-purple-600" : "text-gray-500"}`}>
+            <Layers className="w-5 h-5 mb-1" />
+            <span className="text-[10px] font-bold font-balsamiq">Elements</span>
+          </button>
+          <button onClick={() => setActiveMobileTab("canvas")} className={`flex flex-col items-center justify-center w-full h-full ${activeMobileTab === "canvas" ? "text-purple-600" : "text-gray-500"}`}>
+            <MonitorSmartphone className="w-5 h-5 mb-1" />
+            <span className="text-[10px] font-bold font-balsamiq">Canvas</span>
+          </button>
+          <button onClick={() => setActiveMobileTab("properties")} className={`flex flex-col items-center justify-center w-full h-full ${activeMobileTab === "properties" ? "text-purple-600" : "text-gray-500"}`}>
+            <SlidersHorizontal className="w-5 h-5 mb-1" />
+            <span className="text-[10px] font-bold font-balsamiq">Properties</span>
+          </button>
+        </div>
+      )}
       </div>
     </AuthGuard>
   );

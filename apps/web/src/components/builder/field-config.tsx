@@ -15,25 +15,25 @@ export function FieldConfig() {
   const [activeTab, setActiveTab] = useState<"field" | "theme" | "settings">("field");
 
   return (
-    <div className="flex flex-col h-full bg-[#FCFBF8]">
+    <div className="flex flex-col h-full bg-white/50 backdrop-blur-sm">
 
       {/* Tabs */}
-      <div className="flex border-b-2 border-[#333333] bg-[#F5F3FF]">
+      <div className="flex border-b border-gray-200 bg-white shadow-sm z-10 relative">
         <button
           onClick={() => setActiveTab("field")}
-          className={`flex-1 py-3 text-sm font-balsamiq font-black flex flex-col items-center justify-center gap-1 transition-all ${activeTab === 'field' ? 'text-[#8B5CF6] bg-white border-t-2 border-t-[#8B5CF6] shadow-[inset_0px_-2px_0px_white]' : 'text-gray-500 border-t-2 border-t-transparent hover:text-[#333333] hover:bg-[#E9D5FF]'}`}
+          className={`flex-1 py-3 text-sm font-balsamiq font-black flex flex-col items-center justify-center gap-1 transition-all ${activeTab === 'field' ? 'text-purple-600 bg-purple-50/50 border-b-2 border-b-purple-500' : 'text-gray-500 hover:text-gray-900 hover:bg-gray-50'}`}
         >
           <Settings2 className="w-4 h-4 stroke-[2]" /> Properties
         </button>
         <button
           onClick={() => setActiveTab("theme")}
-          className={`flex-1 py-3 text-sm font-balsamiq font-black flex flex-col items-center justify-center gap-1 transition-all border-l-2 border-l-[#333333] border-r-2 border-r-[#333333] ${activeTab === 'theme' ? 'text-[#8B5CF6] bg-white border-t-2 border-t-[#8B5CF6] shadow-[inset_0px_-2px_0px_white]' : 'text-gray-500 border-t-2 border-t-transparent hover:text-[#333333] hover:bg-[#E9D5FF]'}`}
+          className={`flex-1 py-3 text-sm font-balsamiq font-black flex flex-col items-center justify-center gap-1 transition-all border-l border-r border-gray-100 ${activeTab === 'theme' ? 'text-purple-600 bg-purple-50/50 border-b-2 border-b-purple-500' : 'text-gray-500 hover:text-gray-900 hover:bg-gray-50'}`}
         >
           <Palette className="w-4 h-4 stroke-[2]" /> Theme
         </button>
         <button
           onClick={() => setActiveTab("settings")}
-          className={`flex-1 py-3 text-xs font-balsamiq font-black flex flex-col items-center justify-center gap-1 transition-all ${activeTab === 'settings' ? 'text-[#8B5CF6] bg-white border-t-2 border-t-[#8B5CF6] shadow-[inset_0px_-2px_0px_white]' : 'text-gray-500 border-t-2 border-t-transparent hover:text-[#333333] hover:bg-[#E9D5FF]'}`}
+          className={`flex-1 py-3 text-sm font-balsamiq font-black flex flex-col items-center justify-center gap-1 transition-all ${activeTab === 'settings' ? 'text-purple-600 bg-purple-50/50 border-b-2 border-b-purple-500' : 'text-gray-500 hover:text-gray-900 hover:bg-gray-50'}`}
         >
           <SlidersHorizontal className="w-4 h-4 stroke-[2]" /> Settings
         </button>
@@ -46,44 +46,44 @@ export function FieldConfig() {
               <motion.div key={field.id} initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }}
                 transition={{ duration: 0.2 }} className="space-y-5 font-comic">
                 <div>
-                  <label className="text-[10px] font-black text-[#333333] uppercase tracking-widest block mb-2 bg-[#FEF3C7] w-fit px-2 py-0.5 rounded border-2 border-[#333333] transform -rotate-1">Label</label>
+                  <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest block mb-2 bg-amber-50 w-fit px-2 py-0.5 rounded-[0.5rem_0.2rem_0.5rem_0.2rem] border border-dashed border-amber-200 transform -rotate-1">Label</label>
                   <input type="text" value={field.label} onChange={(e) => updateField(field.id, { label: e.target.value })}
-                    className="w-full px-3 py-2 text-sm bg-white border-2 border-[#333333] shadow-[2px_2px_0px_#333333] rounded-lg focus:outline-none focus:translate-y-px focus:shadow-[1px_1px_0px_#333333] transition-all text-[#333333] font-bold" />
+                    className="w-full px-3 py-2 text-sm bg-white border border-gray-200 shadow-sm rounded-xl focus:outline-none focus:ring-4 focus:ring-purple-50 focus:border-purple-300 transition-all text-gray-900 font-bold" />
                 </div>
 
                 <div>
-                  <label className="text-[10px] font-black text-[#333333] uppercase tracking-widest block mb-2 bg-[#D1FAE5] w-fit px-2 py-0.5 rounded border-2 border-[#333333] transform rotate-1">Description</label>
+                  <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest block mb-2 bg-emerald-50 w-fit px-2 py-0.5 rounded-[0.2rem_0.5rem_0.2rem_0.5rem] border border-dashed border-emerald-200 transform rotate-1">Description</label>
                   <textarea value={field.description || ""} onChange={(e) => updateField(field.id, { description: e.target.value })} rows={2}
-                    className="w-full px-3 py-2 text-sm bg-white border-2 border-[#333333] shadow-[2px_2px_0px_#333333] rounded-lg focus:outline-none focus:translate-y-px focus:shadow-[1px_1px_0px_#333333] transition-all resize-none text-[#333333] font-bold" placeholder="Add a help text..." />
+                    className="w-full px-3 py-2 text-sm bg-white border border-gray-200 shadow-sm rounded-xl focus:outline-none focus:ring-4 focus:ring-purple-50 focus:border-purple-300 transition-all resize-none text-gray-900 font-bold" placeholder="Add a help text..." />
                 </div>
 
-                <div className="flex items-center justify-between py-2 px-3 bg-white border-2 border-[#333333] rounded-lg shadow-[2px_2px_0px_#333333]">
-                  <label className="text-sm font-black text-[#333333]">Required Field</label>
+                <div className="flex items-center justify-between py-2 px-3 bg-white border border-gray-200 rounded-xl shadow-sm">
+                  <label className="text-sm font-black text-gray-900">Required Field</label>
                   <button onClick={() => updateField(field.id, { required: !field.required })}
-                    className={`w-12 h-6 rounded-full transition-colors relative border-2 border-[#333333] ${field.required ? "bg-[#34D399]" : "bg-gray-200"}`}>
+                    className={`w-12 h-6 rounded-full transition-colors relative border border-gray-200 ${field.required ? "bg-emerald-400 border-emerald-500" : "bg-gray-100"}`}>
                     <motion.div animate={{ x: field.required ? 24 : 2 }} transition={{ type: "spring", stiffness: 500, damping: 30 }}
-                      className="absolute top-0.5 w-4 h-4 rounded-full bg-white shadow-sm border-2 border-[#333333]" />
+                      className="absolute top-0.5 w-4 h-4 rounded-full bg-white shadow-sm border border-gray-200" />
                   </button>
                 </div>
 
                 {["short_text", "long_text", "email", "phone", "number", "url"].includes(field.type) && (
                   <div className="space-y-4">
                     <div>
-                      <label className="text-[10px] font-black text-[#333333] uppercase tracking-widest block mb-2 bg-[#E0E7FF] w-fit px-2 py-0.5 rounded border-2 border-[#333333] transform rotate-1">Placeholder</label>
+                      <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest block mb-2 bg-blue-50 w-fit px-2 py-0.5 rounded border border-dashed border-blue-200 transform rotate-1">Placeholder</label>
                       <input type="text" value={(field.config?.placeholder as string) || ""} onChange={(e) => updateField(field.id, { config: { ...field.config, placeholder: e.target.value } })}
-                        className="w-full px-3 py-2 text-sm bg-white border-2 border-[#333333] shadow-[2px_2px_0px_#333333] rounded-lg focus:outline-none focus:translate-y-px focus:shadow-[1px_1px_0px_#333333] transition-all text-[#333333] font-bold" placeholder="Enter placeholder text..." />
+                        className="w-full px-3 py-2 text-sm bg-white border border-gray-200 shadow-sm rounded-xl focus:outline-none focus:ring-4 focus:ring-purple-50 focus:border-purple-300 transition-all text-gray-900 font-bold" placeholder="Enter placeholder text..." />
                     </div>
                     {["short_text", "long_text"].includes(field.type) && (
                       <div className="grid grid-cols-2 gap-3">
                         <div>
                           <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest block mb-2">Min Length</label>
                           <input type="number" value={(field.config?.minLength as number) || ""} onChange={(e) => updateField(field.id, { config: { ...field.config, minLength: parseInt(e.target.value) || undefined } })}
-                            className="w-full px-3 py-2 text-sm bg-white border-2 border-gray-200 rounded-lg focus:border-[#8B5CF6] focus:outline-none transition-all text-[#333333] font-bold" placeholder="e.g. 10" />
+                            className="w-full px-3 py-2 text-sm bg-white border border-gray-200 shadow-sm rounded-xl focus:ring-4 focus:ring-purple-50 focus:border-purple-300 focus:outline-none transition-all text-gray-900 font-bold" placeholder="e.g. 10" />
                         </div>
                         <div>
                           <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest block mb-2">Max Length</label>
                           <input type="number" value={(field.config?.maxLength as number) || ""} onChange={(e) => updateField(field.id, { config: { ...field.config, maxLength: parseInt(e.target.value) || undefined } })}
-                            className="w-full px-3 py-2 text-sm bg-white border-2 border-gray-200 rounded-lg focus:border-[#8B5CF6] focus:outline-none transition-all text-[#333333] font-bold" placeholder="e.g. 500" />
+                            className="w-full px-3 py-2 text-sm bg-white border border-gray-200 shadow-sm rounded-xl focus:ring-4 focus:ring-purple-50 focus:border-purple-300 focus:outline-none transition-all text-gray-900 font-bold" placeholder="e.g. 500" />
                         </div>
                       </div>
                     )}
@@ -92,12 +92,12 @@ export function FieldConfig() {
                         <div>
                           <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest block mb-2">Min Value</label>
                           <input type="number" value={(field.config?.min as number) || ""} onChange={(e) => updateField(field.id, { config: { ...field.config, min: parseInt(e.target.value) || undefined } })}
-                            className="w-full px-3 py-2 text-sm bg-white border-2 border-gray-200 rounded-lg focus:border-[#8B5CF6] focus:outline-none transition-all text-[#333333] font-bold" placeholder="e.g. 0" />
+                            className="w-full px-3 py-2 text-sm bg-white border border-gray-200 shadow-sm rounded-xl focus:ring-4 focus:ring-purple-50 focus:border-purple-300 focus:outline-none transition-all text-gray-900 font-bold" placeholder="e.g. 0" />
                         </div>
                         <div>
                           <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest block mb-2">Max Value</label>
                           <input type="number" value={(field.config?.max as number) || ""} onChange={(e) => updateField(field.id, { config: { ...field.config, max: parseInt(e.target.value) || undefined } })}
-                            className="w-full px-3 py-2 text-sm bg-white border-2 border-gray-200 rounded-lg focus:border-[#8B5CF6] focus:outline-none transition-all text-[#333333] font-bold" placeholder="e.g. 100" />
+                            className="w-full px-3 py-2 text-sm bg-white border border-gray-200 shadow-sm rounded-xl focus:ring-4 focus:ring-purple-50 focus:border-purple-300 focus:outline-none transition-all text-gray-900 font-bold" placeholder="e.g. 100" />
                         </div>
                       </div>
                     )}
@@ -106,7 +106,7 @@ export function FieldConfig() {
 
                 {["multiple_select", "radio", "checkbox", "dropdown", "image_choice", "video_choice"].includes(field.type) && (
                   <div className="space-y-3">
-                    <label className="text-[10px] font-black text-[#333333] uppercase tracking-widest block mb-2 bg-[#FBCFE8] w-fit px-2 py-0.5 rounded border-2 border-[#333333] transform -rotate-2">Options</label>
+                    <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest block mb-2 bg-pink-50 w-fit px-2 py-0.5 rounded border border-dashed border-pink-200 transform -rotate-2">Options</label>
                     {((field.config?.options as string[]) || ['Option 1', 'Option 2']).map((opt: string, idx: number) => (
                       <div key={idx} className="flex items-center gap-2">
                         <input
@@ -117,7 +117,7 @@ export function FieldConfig() {
                             newOptions[idx] = e.target.value;
                             updateField(field.id, { config: { ...field.config, options: newOptions } });
                           }}
-                          className="flex-1 px-3 py-2 text-sm bg-white border-2 border-[#333333] rounded-lg focus:outline-none transition-all text-[#333333] font-bold shadow-[2px_2px_0px_#333333]"
+                          className="flex-1 px-3 py-2 text-sm bg-white border border-gray-200 rounded-xl shadow-sm focus:outline-none focus:ring-4 focus:ring-purple-50 focus:border-purple-300 transition-all text-gray-900 font-bold"
                         />
                         <button
                           onClick={() => {
@@ -125,9 +125,9 @@ export function FieldConfig() {
                             newOptions.splice(idx, 1);
                             updateField(field.id, { config: { ...field.config, options: newOptions } });
                           }}
-                          className="p-2 bg-white border-2 border-[#333333] shadow-[2px_2px_0px_#333333] hover:translate-y-px hover:shadow-[1px_1px_0px_#333333] hover:bg-[#FEE2E2] rounded-lg transition-all"
+                          className="p-2.5 bg-white border border-gray-200 shadow-sm hover:-translate-y-0.5 hover:shadow-md hover:bg-red-50 hover:border-red-200 rounded-xl transition-all"
                         >
-                          <X className="w-4 h-4 text-[#EF4444] stroke-[2]" />
+                          <X className="w-4 h-4 text-red-500 stroke-[2]" />
                         </button>
                       </div>
                     ))}
@@ -137,7 +137,7 @@ export function FieldConfig() {
                         const newOptions = [...currentOpts, `Option ${currentOpts.length + 1}`];
                         updateField(field.id, { config: { ...field.config, options: newOptions } });
                       }}
-                      className="w-full py-2 px-3 bg-white border-2 border-[#333333] border-dashed rounded-lg shadow-[2px_2px_0px_#333333] text-sm font-black text-[#8B5CF6] hover:bg-[#F5F3FF] flex items-center justify-center gap-2 transition-all hover:-translate-y-px hover:shadow-[3px_3px_0px_#333333]"
+                      className="w-full py-2 px-3 bg-white border-2 border-dashed border-gray-300 rounded-xl shadow-sm text-sm font-black text-purple-600 hover:bg-purple-50 hover:border-purple-300 flex items-center justify-center gap-2 transition-all hover:-translate-y-0.5 hover:shadow-md"
                     >
                       <Plus className="w-4 h-4 stroke-[2]" /> Add Option
                     </button>
@@ -148,21 +148,21 @@ export function FieldConfig() {
                   <div className="space-y-4">
                     <div className="grid grid-cols-2 gap-3">
                       <div>
-                        <label className="text-[10px] font-black text-[#333333] uppercase tracking-widest block mb-2">Min Range</label>
+                        <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest block mb-2">Min Range</label>
                         <input type="number" value={(field.config?.min as number) ?? 1} onChange={(e) => updateField(field.id, { config: { ...field.config, min: parseInt(e.target.value) } })}
-                          className="w-full px-3 py-2 text-sm bg-white border-2 border-[#333333] rounded-lg focus:outline-none transition-all text-[#333333] font-bold" />
+                          className="w-full px-3 py-2 text-sm bg-white border border-gray-200 rounded-xl shadow-sm focus:outline-none focus:ring-4 focus:ring-purple-50 focus:border-purple-300 transition-all text-gray-900 font-bold" />
                       </div>
                       <div>
-                        <label className="text-[10px] font-black text-[#333333] uppercase tracking-widest block mb-2">Max Range</label>
+                        <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest block mb-2">Max Range</label>
                         <input type="number" value={(field.config?.max as number) ?? 5} onChange={(e) => updateField(field.id, { config: { ...field.config, max: parseInt(e.target.value) } })}
-                          className="w-full px-3 py-2 text-sm bg-white border-2 border-[#333333] rounded-lg focus:outline-none transition-all text-[#333333] font-bold" />
+                          className="w-full px-3 py-2 text-sm bg-white border border-gray-200 rounded-xl shadow-sm focus:outline-none focus:ring-4 focus:ring-purple-50 focus:border-purple-300 transition-all text-gray-900 font-bold" />
                       </div>
                     </div>
                     {field.type === "slider" && (
                       <div>
-                        <label className="text-[10px] font-black text-[#333333] uppercase tracking-widest block mb-2">Step Size</label>
+                        <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest block mb-2">Step Size</label>
                         <input type="number" value={(field.config?.step as number) ?? 1} onChange={(e) => updateField(field.id, { config: { ...field.config, step: parseInt(e.target.value) } })}
-                          className="w-full px-3 py-2 text-sm bg-white border-2 border-[#333333] rounded-lg focus:outline-none transition-all text-[#333333] font-bold" />
+                          className="w-full px-3 py-2 text-sm bg-white border border-gray-200 rounded-xl shadow-sm focus:outline-none focus:ring-4 focus:ring-purple-50 focus:border-purple-300 transition-all text-gray-900 font-bold" />
                       </div>
                     )}
                   </div>
@@ -171,14 +171,14 @@ export function FieldConfig() {
                 {field.type === "file_upload" && (
                   <div className="space-y-4">
                     <div>
-                      <label className="text-[10px] font-black text-[#333333] uppercase tracking-widest block mb-2">Max File Size (MB)</label>
+                      <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest block mb-2">Max File Size (MB)</label>
                       <input type="number" value={(field.config?.maxSize as number) || 5} onChange={(e) => updateField(field.id, { config: { ...field.config, maxSize: parseInt(e.target.value) } })}
-                        className="w-full px-3 py-2 text-sm bg-white border-2 border-[#333333] rounded-lg focus:outline-none transition-all text-[#333333] font-bold" />
+                        className="w-full px-3 py-2 text-sm bg-white border border-gray-200 rounded-xl shadow-sm focus:outline-none focus:ring-4 focus:ring-purple-50 focus:border-purple-300 transition-all text-gray-900 font-bold" />
                     </div>
                     <div>
-                      <label className="text-[10px] font-black text-[#333333] uppercase tracking-widest block mb-2">Allowed Formats (comma separated)</label>
+                      <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest block mb-2">Allowed Formats (comma separated)</label>
                       <input type="text" value={(field.config?.allowedTypes as string) || ".pdf, .png, .jpg"} onChange={(e) => updateField(field.id, { config: { ...field.config, allowedTypes: e.target.value } })}
-                        className="w-full px-3 py-2 text-sm bg-white border-2 border-gray-200 rounded-lg focus:border-[#8B5CF6] focus:outline-none transition-all text-[#333333] font-bold" />
+                        className="w-full px-3 py-2 text-sm bg-white border border-gray-200 shadow-sm rounded-xl focus:outline-none focus:ring-4 focus:ring-purple-50 focus:border-purple-300 transition-all text-gray-900 font-bold" />
                     </div>
                   </div>
                 )}
@@ -186,14 +186,14 @@ export function FieldConfig() {
                 {["matrix", "likert"].includes(field.type) && (
                   <div className="space-y-4">
                     <div>
-                      <label className="text-[10px] font-black text-[#333333] uppercase tracking-widest block mb-2 bg-[#BAE6FD] w-fit px-2 py-0.5 rounded border-2 border-[#333333] transform rotate-2">Statements (Rows)</label>
+                      <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest block mb-2 bg-blue-50 w-fit px-2 py-0.5 rounded-[0.5rem_0.2rem_0.5rem_0.2rem] border border-dashed border-blue-200 transform rotate-2">Statements (Rows)</label>
                       <textarea value={((field.config?.rows as string[]) || ["Statement 1", "Statement 2"]).join('\n')} onChange={(e) => updateField(field.id, { config: { ...field.config, rows: e.target.value.split('\n') } })} rows={3}
-                        className="w-full px-3 py-2 text-sm bg-white border-2 border-[#333333] rounded-lg focus:outline-none transition-all text-[#333333] font-bold" placeholder="One per line..." />
+                        className="w-full px-3 py-2 text-sm bg-white border border-gray-200 shadow-sm rounded-xl focus:outline-none focus:ring-4 focus:ring-purple-50 focus:border-purple-300 transition-all text-gray-900 font-bold" placeholder="One per line..." />
                     </div>
                     <div>
-                      <label className="text-[10px] font-black text-[#333333] uppercase tracking-widest block mb-2 bg-[#DDD6FE] w-fit px-2 py-0.5 rounded border-2 border-[#333333] transform -rotate-1">Scale (Columns)</label>
+                      <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest block mb-2 bg-purple-50 w-fit px-2 py-0.5 rounded-[0.2rem_0.5rem_0.2rem_0.5rem] border border-dashed border-purple-200 transform -rotate-1">Scale (Columns)</label>
                       <textarea value={((field.config?.columns as string[]) || ["Poor", "Average", "Excellent"]).join('\n')} onChange={(e) => updateField(field.id, { config: { ...field.config, columns: e.target.value.split('\n') } })} rows={3}
-                        className="w-full px-3 py-2 text-sm bg-white border-2 border-[#333333] rounded-lg focus:outline-none transition-all text-[#333333] font-bold" placeholder="One per line..." />
+                        className="w-full px-3 py-2 text-sm bg-white border border-gray-200 shadow-sm rounded-xl focus:outline-none focus:ring-4 focus:ring-purple-50 focus:border-purple-300 transition-all text-gray-900 font-bold" placeholder="One per line..." />
                     </div>
                   </div>
                 )}
@@ -205,10 +205,10 @@ export function FieldConfig() {
               </motion.div>
             ) : (
               <motion.div key="empty" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-center py-16 flex flex-col items-center">
-                <div className="w-16 h-16 bg-white border-2 border-[#333333] shadow-[4px_4px_0px_#333333] rounded-xl flex items-center justify-center mb-6 transform -rotate-6">
-                  <Settings2 className="w-8 h-8 text-[#8B5CF6] stroke-[2]" />
+                <div className="w-16 h-16 bg-white border border-purple-200 shadow-sm rounded-2xl flex items-center justify-center mb-6 transform -rotate-6">
+                  <Settings2 className="w-8 h-8 text-purple-500 stroke-[2]" />
                 </div>
-                <p className="text-sm font-comic font-bold text-[#333333] bg-[#FEF3C7] px-3 py-2 border-2 border-[#333333] rounded-lg shadow-[2px_2px_0px_#333333] transform rotate-2">Select a field to edit its properties</p>
+                <p className="text-sm font-comic font-bold text-gray-600 bg-amber-50 px-4 py-2 border border-dashed border-amber-200 rounded-xl shadow-sm transform rotate-2">Select a field to edit its properties</p>
               </motion.div>
             )}
           </AnimatePresence>
@@ -307,8 +307,8 @@ export function FieldConfig() {
             </div>
 
             {/* Customization */}
-            <div className="pt-6 border-t-2 border-dashed border-gray-200">
-              <h4 className="font-balsamiq font-bold text-[#333333] mb-4 flex items-center gap-2"><Paintbrush className="w-4 h-4" /> Custom Styling</h4>
+            <div className="pt-6 border-t border-dashed border-gray-200">
+              <h4 className="font-balsamiq font-bold text-gray-900 mb-4 flex items-center gap-2"><Paintbrush className="w-4 h-4 text-purple-500" /> Custom Styling</h4>
 
               <div className="space-y-4">
 
@@ -319,9 +319,9 @@ export function FieldConfig() {
                       type="color"
                       value={themeConfig?.formBgColor || "#FCFBF8"}
                       onChange={(e) => setFormMeta({ themeConfig: { ...themeConfig!, formBgColor: e.target.value } })}
-                      className="w-10 h-10 p-1 bg-white border-2 border-[#333333] rounded-lg cursor-pointer"
+                      className="w-10 h-10 p-1 bg-white border border-gray-200 rounded-xl shadow-sm cursor-pointer"
                     />
-                    <span className="text-sm font-bold text-[#333333] uppercase">{themeConfig?.formBgColor || "#FCFBF8"}</span>
+                    <span className="text-sm font-bold text-gray-700 uppercase">{themeConfig?.formBgColor || "#FCFBF8"}</span>
                   </div>
                 </div>
 
@@ -332,9 +332,9 @@ export function FieldConfig() {
                       type="color"
                       value={themeConfig?.fieldBgColor || "#ffffff"}
                       onChange={(e) => setFormMeta({ themeConfig: { ...themeConfig!, fieldBgColor: e.target.value } })}
-                      className="w-10 h-10 p-1 bg-white border-2 border-[#333333] rounded-lg cursor-pointer"
+                      className="w-10 h-10 p-1 bg-white border border-gray-200 rounded-xl shadow-sm cursor-pointer"
                     />
-                    <span className="text-sm font-bold text-[#333333] uppercase">{themeConfig?.fieldBgColor || "#ffffff"}</span>
+                    <span className="text-sm font-bold text-gray-700 uppercase">{themeConfig?.fieldBgColor || "#ffffff"}</span>
                   </div>
                 </div>
 
@@ -345,9 +345,9 @@ export function FieldConfig() {
                       type="color"
                       value={themeConfig?.textColor || "#333333"}
                       onChange={(e) => setFormMeta({ themeConfig: { ...themeConfig!, textColor: e.target.value } })}
-                      className="w-10 h-10 p-1 bg-white border-2 border-[#333333] rounded-lg cursor-pointer"
+                      className="w-10 h-10 p-1 bg-white border border-gray-200 rounded-xl shadow-sm cursor-pointer"
                     />
-                    <span className="text-sm font-bold text-[#333333] uppercase">{themeConfig?.textColor || "#333333"}</span>
+                    <span className="text-sm font-bold text-gray-700 uppercase">{themeConfig?.textColor || "#333333"}</span>
                   </div>
                 </div>
 
@@ -356,7 +356,7 @@ export function FieldConfig() {
                   <select
                     value={themeConfig?.fontFamily || "font-balsamiq"}
                     onChange={(e) => setFormMeta({ themeConfig: { ...themeConfig!, fontFamily: e.target.value } })}
-                    className="w-full px-3 py-2 text-sm bg-white border-2 border-gray-200 rounded-xl font-bold text-[#333333] focus:outline-none focus:border-[#8B5CF6]"
+                    className="w-full px-3 py-2 text-sm bg-white border border-gray-200 shadow-sm rounded-xl font-bold text-gray-700 focus:outline-none focus:ring-4 focus:ring-purple-50 focus:border-purple-300"
                   >
                     <option value="font-balsamiq">Balsamiq (Marker)</option>
                     <option value="font-comic">Comic (Handwriting)</option>
@@ -370,7 +370,7 @@ export function FieldConfig() {
                   <select
                     value={themeConfig?.borderStyle || "border-2"}
                     onChange={(e) => setFormMeta({ themeConfig: { ...themeConfig!, borderStyle: e.target.value } })}
-                    className="w-full px-3 py-2 text-sm bg-white border-2 border-gray-200 rounded-xl font-bold text-[#333333] focus:outline-none focus:border-[#8B5CF6]"
+                    className="w-full px-3 py-2 text-sm bg-white border border-gray-200 shadow-sm rounded-xl font-bold text-gray-700 focus:outline-none focus:ring-4 focus:ring-purple-50 focus:border-purple-300"
                   >
                     <option value="border-2">Thick Solid</option>
                     <option value="border">Thin Solid</option>
@@ -386,7 +386,7 @@ export function FieldConfig() {
                       <button
                         key={r}
                         onClick={() => setFormMeta({ themeConfig: { ...themeConfig!, rounded: r } })}
-                        className={`flex-1 py-2 border-2 ${themeConfig?.rounded === r ? 'border-[#8B5CF6] bg-[#E9D5FF] text-[#8B5CF6]' : 'border-gray-200 bg-white text-gray-500'} ${r} transition-colors flex justify-center`}
+                        className={`flex-1 py-2 border ${themeConfig?.rounded === r ? 'border-purple-400 bg-purple-50 text-purple-600 shadow-sm' : 'border-gray-200 bg-white text-gray-400 hover:bg-gray-50'} ${r} transition-all flex justify-center`}
                       >
                         <div className={`w-4 h-4 border-2 border-current ${r}`}></div>
                       </button>
@@ -401,7 +401,7 @@ export function FieldConfig() {
           /* SETTINGS TAB */
           <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="space-y-6 font-comic">
             <div>
-              <h4 className="font-balsamiq font-bold text-[#333333] mb-4 flex items-center gap-2"><SlidersHorizontal className="w-4 h-4" /> Form Settings</h4>
+              <h4 className="font-balsamiq font-bold text-gray-900 mb-4 flex items-center gap-2"><SlidersHorizontal className="w-4 h-4 text-purple-500" /> Form Settings</h4>
 
               <div className="space-y-6">
                 <div>
@@ -411,32 +411,32 @@ export function FieldConfig() {
                     onChange={(e) => setFormMeta({ formSettings: { ...formSettings!, successMessage: e.target.value } })}
                     rows={3}
                     placeholder="Thank You! Your response has been recorded."
-                    className="w-full px-3 py-2 text-sm bg-white border-2 border-gray-200 rounded-xl focus:border-[#8B5CF6] focus:outline-none transition-all resize-none text-[#333333] font-bold"
+                    className="w-full px-3 py-2 text-sm bg-white border border-gray-200 shadow-sm rounded-xl focus:ring-4 focus:ring-purple-50 focus:border-purple-300 focus:outline-none transition-all resize-none text-gray-900 font-bold"
                   />
                   <p className="text-xs text-gray-400 mt-1 font-sans">Message shown to users after they submit the form.</p>
                 </div>
 
-                <div className="flex items-center justify-between py-2 border-t-2 border-dashed border-gray-200 pt-6">
+                <div className="flex items-center justify-between py-2 border-t border-dashed border-gray-200 pt-6">
                   <div>
-                    <label className="text-sm font-bold text-[#333333] block">Accept Responses</label>
+                    <label className="text-sm font-bold text-gray-900 block">Accept Responses</label>
                     <p className="text-xs text-gray-400 mt-1 font-sans">Turn off to stop accepting new submissions.</p>
                   </div>
                   <button onClick={() => setFormMeta({ formSettings: { ...formSettings!, isAcceptingResponses: formSettings?.isAcceptingResponses === false ? true : false } })}
-                    className={`w-12 h-6 rounded-full transition-colors relative border-2 border-[#333333] ${formSettings?.isAcceptingResponses !== false ? "bg-[#34D399]" : "bg-red-500"}`}>
+                    className={`w-12 h-6 rounded-full transition-colors relative border border-gray-200 ${formSettings?.isAcceptingResponses !== false ? "bg-emerald-400 border-emerald-500" : "bg-red-400 border-red-500"}`}>
                     <motion.div animate={{ x: formSettings?.isAcceptingResponses !== false ? 24 : 2 }} transition={{ type: "spring", stiffness: 500, damping: 30 }}
-                      className="absolute top-0.5 w-4 h-4 rounded-full bg-white shadow-sm border border-[#333333]" />
+                      className="absolute top-0.5 w-4 h-4 rounded-full bg-white shadow-sm border border-gray-200" />
                   </button>
                 </div>
 
-                <div className="flex items-center justify-between py-2 border-t-2 border-dashed border-gray-200 pt-6">
+                <div className="flex items-center justify-between py-2 border-t border-dashed border-gray-200 pt-6">
                   <div>
-                    <label className="text-sm font-bold text-[#333333] block">Allow Multiple Responses</label>
+                    <label className="text-sm font-bold text-gray-900 block">Allow Multiple Responses</label>
                     <p className="text-xs text-gray-400 mt-1 font-sans">If disabled, users can only submit once.</p>
                   </div>
                   <button onClick={() => setFormMeta({ formSettings: { ...formSettings!, allowMultipleResponses: !formSettings?.allowMultipleResponses } })}
-                    className={`w-12 h-6 rounded-full transition-colors relative border-2 border-[#333333] ${formSettings?.allowMultipleResponses ? "bg-[#34D399]" : "bg-gray-200"}`}>
+                    className={`w-12 h-6 rounded-full transition-colors relative border border-gray-200 ${formSettings?.allowMultipleResponses ? "bg-emerald-400 border-emerald-500" : "bg-gray-100"}`}>
                     <motion.div animate={{ x: formSettings?.allowMultipleResponses ? 24 : 2 }} transition={{ type: "spring", stiffness: 500, damping: 30 }}
-                      className="absolute top-0.5 w-4 h-4 rounded-full bg-white shadow-sm border border-[#333333]" />
+                      className="absolute top-0.5 w-4 h-4 rounded-full bg-white shadow-sm border border-gray-200" />
                   </button>
                 </div>
               </div>

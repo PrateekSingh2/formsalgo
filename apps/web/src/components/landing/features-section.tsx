@@ -36,9 +36,13 @@ export function FeaturesSection() {
   const isInView = useInView(ref, { once: true, margin: "-100px" });
 
   return (
-    <section id="features" className="py-24 px-6 bg-[#F0FDF4] relative overflow-hidden" ref={ref}>
-      {/* Subtle sketch grid background */}
-      <div className="absolute inset-0 pointer-events-none opacity-30" style={{ backgroundImage: 'linear-gradient(#86EFAC 1px, transparent 1px), linear-gradient(90deg, #86EFAC 1px, transparent 1px)', backgroundSize: '40px 40px' }}></div>
+    <section id="features" className="py-24 px-6 bg-gray-50 relative overflow-hidden" ref={ref}>
+      {/* Decorative Background Elements */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden">
+        <div className="absolute top-[20%] left-[-5%] w-[40%] h-[40%] bg-pink-200/40 rounded-full blur-3xl mix-blend-multiply"></div>
+        <div className="absolute top-[10%] right-[5%] w-[40%] h-[40%] bg-cyan-200/40 rounded-full blur-3xl mix-blend-multiply"></div>
+        <div className="absolute bottom-[10%] left-[30%] w-[30%] h-[30%] bg-yellow-200/40 rounded-full blur-3xl mix-blend-multiply"></div>
+      </div>
       <div className="max-w-[1300px] mx-auto relative z-10">
         <div className="flex flex-col items-center text-center mb-20 relative">
           <motion.div
@@ -82,7 +86,7 @@ export function FeaturesSection() {
               animate={isInView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.5, delay: index * 0.1 }}
               whileHover={{ y: -8, scale: 1.02 }}
-              className={`bg-white rounded-3xl p-8 border-2 border-gray-100 shadow-sm transition-all duration-300 group flex flex-col items-center text-center relative transform ${feature.rotation} hover:rotate-0 ${feature.borderHover} hover:shadow-xl`}
+              className={`bg-white/70 backdrop-blur-md rounded-3xl p-8 border border-white/50 shadow-sm transition-all duration-300 group flex flex-col items-center text-center relative transform ${feature.rotation} hover:rotate-0 ${feature.borderHover} hover:shadow-xl`}
             >
               {/* Cute Washi Tape */}
               <div className={`absolute -top-3 left-1/2 -translate-x-1/2 w-16 h-5 ${feature.tape} opacity-80 transform rotate-2 z-10 shadow-sm`} style={{ clipPath: 'polygon(0% 10%, 100% 0%, 95% 90%, 5% 100%)' }}></div>

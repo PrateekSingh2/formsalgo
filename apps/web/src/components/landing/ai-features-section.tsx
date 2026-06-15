@@ -55,7 +55,14 @@ export function AiFeaturesSection() {
   const isInView = useInView(ref, { once: true, margin: "-100px" });
 
   return (
-    <section id="ai" className="py-32 px-6 bg-[#FAF5FF] relative overflow-hidden" ref={ref}>
+    <section id="ai" className="py-32 px-6 bg-gray-50 relative overflow-hidden" ref={ref}>
+      {/* Decorative Background Elements */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden">
+        <div className="absolute top-[-5%] right-[-5%] w-[35%] h-[35%] bg-purple-200/40 rounded-full blur-3xl mix-blend-multiply"></div>
+        <div className="absolute bottom-[10%] left-[-15%] w-[45%] h-[45%] bg-amber-200/40 rounded-full blur-3xl mix-blend-multiply"></div>
+        <div className="absolute top-[40%] right-[20%] w-[25%] h-[25%] bg-emerald-200/30 rounded-full blur-3xl mix-blend-multiply"></div>
+      </div>
+      
       {/* Decorative SVGs */}
       <div className="absolute inset-0 pointer-events-none opacity-40">
         <motion.svg 
@@ -79,10 +86,10 @@ export function AiFeaturesSection() {
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
             animate={isInView ? { opacity: 1, scale: 1 } : {}}
-            className="px-6 py-2 bg-white border-2 border-purple-200 rounded-2xl shadow-sm mb-6 flex items-center gap-2 transform -rotate-2"
+            className="px-6 py-2 bg-white/80 backdrop-blur-sm border border-purple-100 rounded-full shadow-sm mb-6 flex items-center gap-2 transform -rotate-2"
           >
             <Brain className="w-5 h-5 text-purple-500" />
-            <span className="font-comic font-bold text-purple-900 tracking-wide uppercase text-sm">Powered by Intelligence</span>
+            <span className="font-balsamiq font-bold text-purple-900 tracking-wide uppercase text-sm">Powered by Intelligence</span>
           </motion.div>
           
           <motion.h2
@@ -98,7 +105,7 @@ export function AiFeaturesSection() {
             initial={{ opacity: 0, y: 20 }}
             animate={isInView ? { opacity: 1, y: 0 } : {}}
             transition={{ delay: 0.2 }}
-            className="text-lg max-w-2xl text-gray-600 font-comic font-bold text-center"
+            className="text-xl max-w-2xl text-gray-600 font-sans text-center"
           >
             From generating complete forms to critiquing your UX — our AI doesn't just help, it transforms your workflow.
           </motion.p>
@@ -111,7 +118,7 @@ export function AiFeaturesSection() {
             <div className="p-8 border-b border-gray-100 bg-gray-50/50">
               <div className="flex items-center gap-2 mb-4">
                 <Sparkles className="w-5 h-5 text-purple-500" />
-                <span className="font-comic font-bold text-sm text-gray-500 uppercase tracking-wide">AI Prompt</span>
+                <span className="font-balsamiq font-bold text-sm text-gray-500 uppercase tracking-wide">AI Prompt</span>
               </div>
               <div className="font-balsamiq font-bold text-2xl text-gray-800 min-h-[60px] tracking-tight">
                 {isInView && <TypewriterText text={aiPrompt} delay={500} />}
@@ -120,7 +127,7 @@ export function AiFeaturesSection() {
             <div className="p-8 bg-white">
               <div className="flex items-center gap-2 mb-6">
                 <Wand2 className="w-5 h-5 text-emerald-500" />
-                <span className="font-comic font-bold text-sm text-gray-500 uppercase tracking-wide">Generated Output</span>
+                <span className="font-balsamiq font-bold text-sm text-gray-500 uppercase tracking-wide">Generated Output</span>
               </div>
               <div className="space-y-4 relative z-10 min-h-[300px]">
                 {/* Generating Loading State */}
@@ -131,14 +138,14 @@ export function AiFeaturesSection() {
                   className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none"
                 >
                   <motion.div animate={{ rotate: 360 }} transition={{ repeat: Infinity, duration: 1, ease: "linear" }} className="w-8 h-8 border-4 border-emerald-200 border-t-emerald-500 rounded-full mb-4" />
-                  <span className="font-comic font-bold text-gray-400">AI is thinking...</span>
+                  <span className="font-balsamiq font-bold text-gray-400">AI is thinking...</span>
                 </motion.div>
 
                 {aiResult.map((field, i) => (
                   <motion.div key={field.field} initial={{ opacity: 0, y: 20, scale: 0.9 }} animate={isInView ? { opacity: 1, y: 0, scale: 1 } : {}} transition={{ delay: 3.5 + i * 0.15, type: "spring", stiffness: 100 }}
                     className="flex items-center justify-between py-4 px-5 rounded-xl bg-white border border-gray-200 shadow-sm hover:border-purple-200 hover:shadow-md transition-all cursor-default">
                     <span className="text-sm font-balsamiq font-bold text-gray-800">{field.field}</span>
-                    <span className="font-comic text-xs text-purple-700 font-bold bg-purple-50 px-3 py-1 rounded-lg border border-purple-100">{field.type}</span>
+                    <span className="font-sans text-xs text-purple-700 font-bold bg-purple-50 px-3 py-1 rounded-lg border border-purple-100">{field.type}</span>
                   </motion.div>
                 ))}
               </div>
@@ -146,27 +153,47 @@ export function AiFeaturesSection() {
           </motion.div>
 
           {/* Features */}
-          <div className="space-y-6">
-            {aiFeatures.map((feature, i) => (
-              <motion.div key={feature.title} 
-                initial={{ opacity: 0, x: 40 }} 
-                animate={isInView ? { opacity: 1, x: 0, y: [0, -5, 0] } : {}} 
-                transition={{ 
-                  opacity: { duration: 0.5, delay: 0.4 + i * 0.1 },
-                  x: { duration: 0.5, delay: 0.4 + i * 0.1 },
-                  y: { repeat: Infinity, duration: 4, delay: i * 0.5, ease: "easeInOut" }
-                }}
-                whileHover={{ scale: 1.02, y: -5, transition: { duration: 0.2 } }}
-                className="bg-white rounded-2xl p-6 border border-gray-200 flex gap-5 items-start group cursor-default transition-all shadow-sm rotate-1 hover:rotate-0 hover:shadow-md hover:border-amber-200">
-                <div className={`w-14 h-14 rounded-xl flex items-center justify-center shrink-0 ${feature.bg} border border-amber-200 shadow-sm group-hover:-rotate-6 transition-transform`}>
-                  <feature.icon className={`w-7 h-7 ${feature.color} stroke-[1.5]`} />
-                </div>
-                <div>
-                  <h4 className="font-balsamiq text-xl font-black text-gray-900 mb-1">{feature.title}</h4>
-                  <p className="text-sm text-gray-600 font-comic font-bold leading-relaxed">{feature.description}</p>
-                </div>
-              </motion.div>
-            ))}
+          <div className="space-y-6 flex-1 flex flex-col relative items-center justify-center lg:items-start lg:pl-10">
+            {aiFeatures.map((feature, i) => {
+              const offsets = ["ml-4", "-ml-4", "ml-8"];
+              const zIndexes = ["z-30", "z-20", "z-10"];
+              const rotations = ["-rotate-1", "rotate-2", "-rotate-2"];
+
+              return (
+                <motion.div key={feature.title} 
+                  initial={{ opacity: 0, x: 40 }} 
+                  animate={isInView ? { opacity: 1, x: 0, y: [0, -5, 0] } : {}} 
+                  transition={{ 
+                    opacity: { duration: 0.5, delay: 0.4 + i * 0.1 },
+                    x: { duration: 0.5, delay: 0.4 + i * 0.1 },
+                    y: { repeat: Infinity, duration: 4, delay: i * 0.5, ease: "easeInOut" }
+                  }}
+                  whileHover={{ scale: 1.02, y: -5, transition: { duration: 0.2 } }}
+                  className={`bg-white/90 backdrop-blur-sm rounded-[1.5rem_2rem_1.5rem_2rem] p-6 border border-gray-100 flex gap-5 items-start group cursor-default transition-all shadow-sm ${rotations[i]} hover:rotate-0 hover:shadow-md hover:border-amber-200 w-full max-w-sm relative ${zIndexes[i]} ${offsets[i]}`}>
+                  <div className={`w-14 h-14 rounded-xl flex items-center justify-center shrink-0 ${feature.bg} border border-amber-200 shadow-sm group-hover:-rotate-6 transition-transform`}>
+                    <feature.icon className={`w-7 h-7 ${feature.color} stroke-[1.5]`} />
+                  </div>
+                  <div>
+                    <h4 className="font-balsamiq text-xl font-black text-gray-900 mb-1">{feature.title}</h4>
+                    <p className="text-sm text-gray-600 font-sans leading-relaxed">{feature.description}</p>
+                  </div>
+                  
+                  {/* Arrows */}
+                  {i === 0 && (
+                    <svg className="absolute -bottom-16 -right-12 w-24 h-32 text-amber-300 z-20 pointer-events-none" viewBox="0 0 100 150" fill="none" stroke="currentColor" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M 60 10 C 100 40 100 80 70 100 C 40 120 10 90 30 70 C 50 50 80 100 10 130" />
+                      <path d="M 10 130 L 30 120 M 10 130 L 20 145" />
+                    </svg>
+                  )}
+                  {i === 1 && (
+                    <svg className="absolute -bottom-16 -left-12 w-24 h-32 text-amber-300 z-20 pointer-events-none" viewBox="0 0 100 150" fill="none" stroke="currentColor" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M 40 10 C 0 40 0 80 30 100 C 60 120 90 90 70 70 C 50 50 20 100 90 130" />
+                      <path d="M 90 130 L 70 120 M 90 130 L 80 145" />
+                    </svg>
+                  )}
+                </motion.div>
+              );
+            })}
           </div>
         </div>
       </div>

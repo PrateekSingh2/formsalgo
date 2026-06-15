@@ -56,9 +56,13 @@ export function BuilderDemoSection() {
   };
 
   return (
-    <section id="builder-demo" className="py-24 px-6 bg-[#F5F3FF] relative overflow-hidden border-t border-gray-200" ref={ref}>
-      {/* Decorative Grid */}
-      <div className="absolute inset-0 opacity-10" style={{ backgroundImage: 'radial-gradient(#8B5CF6 2px, transparent 2px)', backgroundSize: '30px 30px' }}></div>
+    <section id="builder-demo" className="py-24 px-6 bg-gray-50 relative overflow-hidden border-t border-gray-200" ref={ref}>
+      {/* Decorative Background Elements */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden">
+        <div className="absolute bottom-[-15%] left-[20%] w-[45%] h-[45%] bg-blue-200/40 rounded-full blur-3xl mix-blend-multiply"></div>
+        <div className="absolute top-[-5%] left-[30%] w-[40%] h-[40%] bg-violet-200/40 rounded-full blur-3xl mix-blend-multiply"></div>
+        <div className="absolute bottom-[20%] right-[-10%] w-[35%] h-[35%] bg-rose-200/40 rounded-full blur-3xl mix-blend-multiply"></div>
+      </div>
 
       <div className="max-w-[1300px] mx-auto">
         <div className="text-center mb-16 relative z-10">
@@ -82,11 +86,10 @@ export function BuilderDemoSection() {
         <motion.div
           initial={{ opacity: 0, y: 50 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.8 }}
-          className="relative mx-auto rounded-xl border border-gray-200 bg-white shadow-xl overflow-hidden"
+          className="relative mx-auto rounded-xl border border-white/50 bg-white/70 backdrop-blur-xl shadow-xl overflow-hidden"
         >
           {/* Window Chrome */}
-          <div className="bg-gray-100 border-b border-gray-200 p-4 flex items-center justify-between">
+          <div className="bg-white/50 backdrop-blur-md border-b border-gray-200/50 p-4 flex items-center justify-between">
             <div className="flex gap-2">
               <div className="w-3 h-3 rounded-full bg-red-400" />
               <div className="w-3 h-3 rounded-full bg-amber-400" />
@@ -114,8 +117,8 @@ export function BuilderDemoSection() {
               </svg>
             </motion.div>
             {/* Left Sidebar (Add Fields) */}
-            <div className="w-full md:w-64 border-b md:border-b-0 md:border-r border-gray-100 bg-gray-50 flex flex-col z-10">
-              <div className="p-4 border-b border-gray-100 bg-white">
+            <div className="w-full md:w-64 border-b md:border-b-0 md:border-r border-gray-200/50 bg-white/40 flex flex-col z-10">
+              <div className="p-4 border-b border-gray-200/50 bg-white/50">
                 <h3 className="font-comic font-bold text-lg text-gray-900">Add Fields</h3>
               </div>
               <div className="flex md:flex-col overflow-x-auto md:overflow-y-auto px-4 py-4 gap-2 md:space-y-2 pb-6 md:pb-4 scrollbar-hide z-40">
